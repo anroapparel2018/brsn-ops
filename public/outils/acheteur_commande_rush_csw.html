@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Commande rush Canada Sportswear</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Fira+Sans+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F6F3F2;--paper:#fff;--ink:#0F0A0A;--mu:#6E5F61;--line:#E2D8D9;--foyer:#4A1620;--ok:#2E6B47;--chg:#9A5A00;--soft:#F3E9EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Fira Sans',system-ui,sans-serif}
+.hero{background:#0F0A0A;color:#fff;padding:22px 16px 18px}.hero p{margin:0;color:#D7A3AD}
+.hero h1{margin:4px 0 14px;font:900 30px/1.05 'Fira Sans Condensed',sans-serif}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:#2F0D14;border-radius:10px;padding:10px}
+.stats b{display:block;font:900 28px/1 'Fira Sans Condensed',sans-serif}.stats span{font-size:13px;color:#E9DCDE}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+h2{font:900 21px/1.2 'Fira Sans Condensed',sans-serif;margin:26px 0 4px}.sub{color:var(--mu);margin:0 0 10px;font-size:15px}
+.blk{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.blk.ok{border-left-color:var(--ok)}.blk.chg{border-left-color:var(--chg)}
+.blk h3{margin:0 0 8px;font-size:17px;display:flex;justify-content:space-between;gap:8px}.blk h3 small{color:var(--foyer);font-weight:700}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}th{color:var(--mu);font-weight:500}td:first-child,th:first-child{text-align:left}
+.q{display:inline-flex;align-items:center;gap:2px}.q button{width:24px;height:26px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;font-weight:700;cursor:pointer;padding:0}
+.q span{min-width:20px;font-weight:700}.att{display:block;font-size:11px;color:var(--foyer)}
+.ord{font-size:14px;margin:0;padding:0;list-style:none}.ord li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}.ord li:last-child{border:0}.ord b{min-width:52px;color:var(--foyer)}
+.btns{display:flex;gap:8px;margin-top:10px}.btns button,.big{font:inherit;font-weight:700;border-radius:10px;padding:11px;cursor:pointer;flex:1;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk.ok .b-ok{background:var(--ok);color:#fff;border-color:var(--ok)}.blk.chg .b-chg{background:var(--chg);color:#fff;border-color:var(--chg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--foyer);outline-offset:2px}
+textarea,input[type=text]{width:100%;margin-top:8px;font:inherit;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk textarea{display:none;min-height:56px}.blk.chg textarea{display:block}
+.big{display:block;width:100%;margin-top:12px;padding:15px;font-size:18px;background:#4A1620;color:#fff;border-color:#4A1620}.big.alt{background:var(--paper);color:var(--ink);font-size:16px}
+.note{color:var(--mu);font-size:14px}#prev{display:none;max-width:100%;border-radius:10px;margin-top:8px}
+</style>
+<style>.calc td{text-align:right}.calc td:first-child{text-align:left}.calc tr.tot td{font-weight:700;border-bottom:0}.att{color:var(--chg)}</style></head><body>
+<header class="hero"><p>ANRO · commande rush Canada Sportswear · 13 octobre 2026</p><h1>Commande rush : hoodies, Lapin, country et Trashh</h1>
+<div class="stats"><div><b id="sTot">0</b><span>vêtements</span></div><div><b id="sLog">0</b><span>logos DTF</span></div><div><b id="sH">0</b><span>heures de prod</span></div></div></header>
+<main>
+<p class="sub">Ajuste chaque grandeur avec + et −, approuve chaque bloc, puis Envoyer. Les logos, le matériel et les heures se recalculent tout seuls.</p>
+<div id="blocks"></div>
+<h2>Logos à commander chez NEOINK</h2><p class="sub">Transferts DTF, avec les dimensions.</p>
+<div class="blk"><table class="calc" id="logos"></table></div>
+<h2>Matériel de broderie</h2><p class="sub">Estimations à ajuster selon ton fournisseur (Super Punch pour le fil).</p>
+<div class="blk"><table class="calc" id="mat"></table></div>
+<h2>Temps de production</h2>
+<div class="blk"><table class="calc" id="time"></table></div>
+<h2>À décider</h2>
+<div class="blk"><h3>Les hoodies bleus : c'est du Navy ?</h3><input type="text" id="qBleu" placeholder="Ex. oui, Navy · ou Royal"></div>
+<div class="blk"><h3>« Chouache » : c'est quel modèle Trashh ?</h3><input type="text" id="qChou" placeholder="Ex. Renard, Panda…"></div>
+<div class="blk"><h3>Couleur des t-shirts Lapin et country ?</h3><input type="text" id="qCoul" placeholder="Ex. Lapin noir, Wild West sable…"></div>
+<h2>Une photo à me montrer ?</h2>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<button class="big alt" id="camBtn">📷 Caméra</button><p id="camInfo" class="note"></p><img id="prev" alt="Photo choisie">
+<button class="big" id="send">Envoyer</button><p id="msg" class="note" role="status"></p>
+</main>
+<script>
+const A=['S','M','L','XL','2XL','3XL','4XL'],K=['XS','S','M','L','XL'];
+const sp=(t,c)=>{const s=c.reduce((a,b)=>a+b,0);let r=c.map(x=>Math.floor(t*x/s));let d=t-r.reduce((a,b)=>a+b,0),i=2;while(d>0){r[i%r.length]++;d--;i++}return r};
+const HC=[6,8,10,10,10,10,6],TC=[4,6,18,18,18,18,14],KC=[6,12,12,12,8];
+const G=[
+['emb','Hoodies brodés · logo X 3 po côté cœur','Canada Sportswear L00550 · fil blanc · étiquette de cou incluse',[['Noir','hn',A,sp(150,HC)],['Navy (bleu)','hb',A,sp(150,HC)]]],
+['lap','T-shirts Lapin (Trashh) · DTF','Adulte S05650 : 3×3 avant + 12×16 dos · Enfant S5650Y : 3×3 avant + 10×10 dos',[['Adulte','la',A,sp(100,TC)],['Enfant','le',K,sp(100,KC)]]],
+['cty','T-shirts country · DTF','Canada Sportswear S05650 · 3×3 avant + 12×16 dos · quantités de départ à ajuster',[['Wild West','ww',A,sp(60,TC)],['Wild Earth Country','we',A,sp(60,TC)]]],
+['trh','Hoodies Trashh · DTF','Canada Sportswear L00550 noir · 3×3 avant + 12×16 dos · quantités de départ à ajuster',[['Chouache','ch',A,sp(60,HC)],['Loup','lo',A,sp(60,HC)],['Teddy Bear','tb',A,sp(60,HC)]]]];
+const st={},qty={};const B=document.getElementById('blocks');
+function qcell(k,v){qty[k]=v;return '<span class="q"><button data-k="'+k+'" data-d="-1" aria-label="moins">−</button><span id="v_'+k+'">'+v+'</span><button data-k="'+k+'" data-d="1" aria-label="plus">+</button></span>'}
+G.forEach(([id,title,note,rows])=>{let h='';const groups={};rows.forEach(r=>{const key=r[2].join();(groups[key]=groups[key]||{sz:r[2],rows:[]}).rows.push(r)});
+Object.values(groups).forEach(g=>{h+='<table><tr><th>Modèle</th>'+g.sz.map(s=>'<th>'+s+'</th>').join('')+'</tr>'+g.rows.map(([n,p,sz,v])=>'<tr><td>'+n+'</td>'+sz.map((s,i)=>'<td>'+qcell(p+'_'+s,v[i])+'</td>').join('')+'</tr>').join('')+'</table>'});
+const c=document.createElement('div');c.className='blk';c.innerHTML='<h3>'+title+'<small id="t_'+id+'"></small></h3><p class="note" style="margin:0 0 8px">'+note+'</p><div class="wrap">'+h+'</div><div class="btns"><button class="b-ok">Approuver</button><button class="b-chg">À changer</button></div><textarea placeholder="Ce qu\u2019il faut changer…" aria-label="Ce qu\u2019il faut changer"></textarea>';
+const ta=c.querySelector('textarea');c.querySelector('.b-ok').onclick=()=>{c.className='blk ok';st[id]={reponse:'approuvé'}};c.querySelector('.b-chg').onclick=()=>{c.className='blk chg';st[id]={reponse:'à changer',note:ta.value};ta.focus()};ta.oninput=()=>{if(st[id])st[id].note=ta.value};B.appendChild(c)});
+const sum=p=>Object.keys(qty).filter(k=>k.startsWith(p+'_')).reduce((a,k)=>a+qty[k],0);
+const row=(a,b,t)=>'<tr'+(t?' class="tot"':'')+'><td>'+a+'</td><td>'+b+'</td></tr>';
+const f=n=>(Math.round(n*2)/2).toString().replace('.',',');
+function totals(){const P={};['hn','hb','la','le','ww','we','ch','lo','tb'].forEach(p=>P[p]=sum(p));
+const emb=P.hn+P.hb,kid=P.le,big=P.la+P.ww+P.we+P.ch+P.lo+P.tb,dtf=big+kid,tot=emb+dtf,small=dtf,neck=tot,logos=neck+small+big+kid;
+document.getElementById('t_emb').textContent=emb+' pcs';document.getElementById('t_lap').textContent=(P.la+P.le)+' pcs';document.getElementById('t_cty').textContent=(P.ww+P.we)+' pcs';document.getElementById('t_trh').textContent=(P.ch+P.lo+P.tb)+' pcs';
+document.getElementById('logos').innerHTML=row('Étiquette de cou · 2×2 po',neck)+row('Petit logo avant · 3×3 po',small)+row('Gros logo dos · 12×16 po',big)+row('Dos enfant · 10×10 po',kid)+row('Total à commander',logos,1);
+document.getElementById('mat').innerHTML=row('Hoodies à broder',emb+' pcs')+row('Fil de broderie blanc · cônes 5 000 m','≈ '+Math.ceil(emb/250))+row('Fil de canette blanc','≈ '+Math.ceil(emb/150)+' cônes')+row('Pellon déchirable (stabilisateur)','≈ '+Math.ceil(emb*1.1)+' morceaux');
+const hE=emb/15,hD=dtf/50,hC=logos/267;
+document.getElementById('time').innerHTML=row('Broderie · 15 hoodies/h · Sébastien',f(hE)+' h')+row('Pressage DTF · environ 50/h · Ketya',f(hD)+' h')+row('Découpe des logos · 267/h',f(hC)+' h')+row('Total',f(hE+hD+hC)+' h',1);
+document.getElementById('sTot').textContent=tot;document.getElementById('sLog').textContent=logos;document.getElementById('sH').textContent=f(hE+hD+hC);
+window._t={tot,logos,neck,small,big,kid,emb,dtf,hE,hD,hC}}
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;const k=b.dataset.k;qty[k]=Math.max(0,qty[k]+ +b.dataset.d);document.getElementById('v_'+k).textContent=qty[k];totals()});
+totals();
+let photo=null;document.getElementById('camBtn').onclick=()=>document.getElementById('cam').click();
+document.getElementById('cam').onchange=async e=>{const fl=e.target.files[0];if(!fl)return;const p=document.getElementById('prev');p.src=URL.createObjectURL(fl);p.style.display='block';const i=document.getElementById('camInfo');i.textContent='Envoi de la photo…';
+try{const a=await claude.use('assets');if(!a)throw 0;const r=await a.upload(fl);photo=r.id;i.textContent='Photo prête.'}catch(_){i.textContent='La photo n\u2019est pas partie. Réessaie.'}};
+document.getElementById('send').onclick=async()=>{const m=document.getElementById('msg');m.textContent='Envoi…';
+try{const db=await claude.use('db');if(!db)throw 0;await db.doc('reponses/envoi-'+Date.now()).set({quand:new Date().toISOString(),blocs:st,quantites:qty,totaux:window._t,bleu:document.getElementById('qBleu').value,chouache:document.getElementById('qChou').value,couleurs:document.getElementById('qCoul').value,photo});m.textContent='Envoyé. Écris « c\u2019est envoyé » à Claude.'}catch(_){m.textContent='L\u2019envoi n\u2019a pas marché. Réessaie.'}};
+</script></body></html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO · Relevés pour la comptable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F6F1EE;--card:#FFFFFF;--ink:#0F0A0A;--mut:#6B5A5D;--line:#E3D6D8;--soft:#EFE6E7;--acc:#4A1620;--ok:#1F6B3A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--card:#1C1415;--ink:#F6F1F1;--mut:#B9A9AC;--line:#3A2C2E;--soft:#2A1E20;--acc:#C98A94;--ok:#6FCF8E}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--card:#1C1415;--ink:#F6F1F1;--mut:#B9A9AC;--line:#3A2C2E;--soft:#2A1E20;--acc:#C98A94;--ok:#6FCF8E}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Fira Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}
+header{background:#0F0A0A;color:#F6F1F1;padding:22px 18px 18px;border-bottom:4px solid #4A1620}
+header .k{font-size:12px;letter-spacing:3px;font-weight:700;color:#D9B8BC;margin:0}
+header h1{font-size:25px;font-weight:900;margin:6px 0;line-height:1.15}
+header p{margin:0;color:#D9C8CA;font-size:14px;line-height:1.45}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
+.prog .bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:#4A1620;transition:width .3s}
+.prog p{margin:6px 0 0;font-size:13px;color:var(--mut)}
+main{max-width:760px;margin:0 auto;padding:12px 14px 110px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+h2{font-size:18px;font-weight:900;margin:0 0 8px;color:var(--acc)}
+p,li{font-size:14.5px;line-height:1.55}
+ol,ul{padding-left:20px;margin:6px 0}
+code{background:var(--soft);padding:2px 6px;border-radius:6px;font-size:13px}
+.acct{border-top:1px solid var(--line);padding:12px 0}
+.acct:first-of-type{border-top:none}
+.acct h3{font-size:15.5px;margin:0 0 2px;display:flex;justify-content:space-between;gap:8px}
+.acct h3 span{font-size:12.5px;font-weight:500;color:var(--mut)}
+.who{font-size:12.5px;color:var(--mut);margin:0 0 8px}
+.months{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.m{display:flex;align-items:center;justify-content:center;height:40px;border:1px solid var(--line);border-radius:10px;font-size:13px;background:var(--soft);cursor:pointer;user-select:none}
+.m.on{background:#4A1620;color:#fff;border-color:#4A1620}
+.extra{display:flex;gap:8px;margin-top:8px}
+.extra .m{flex:1}
+.tip{background:var(--soft);border-left:4px solid #4A1620;border-radius:8px;padding:10px 12px;font-size:13.5px;margin:8px 0}
+.done{color:var(--ok);font-weight:700}
+.bar2{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar2 button{height:50px;border-radius:12px;font:inherit;font-size:16px;font-weight:700;border:none;cursor:pointer}
+#cam{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+#env{background:#4A1620;color:#fff}
+#help{white-space:pre-line}
+#status{font-size:13px;color:var(--mut);min-height:18px}
+</style>
+</head>
+<body>
+<header>
+<p class="k">ANRO APPAREL · COMPTABILITÉ 2025-2026</p>
+<h1>Relevés pour la comptable</h1>
+<p>On télécharge tout, on classe dans un Drive, puis on envoie le lien à RMC Comptabilité. Elle n'a jamais accès à nos comptes de banque.</p>
+</header>
+<div class="prog"><div class="bar"><i id="pb"></i></div><p id="pt">0 relevé sur 96</p></div>
+<main>
+
+<section>
+<h2>Étape 1 · Créer le Drive</h2>
+<ol>
+<li>Dans Google Drive, crée un dossier : <code>COMPTABILITÉ 2025-2026 · RMC</code></li>
+<li>Dedans, crée 8 sous-dossiers, un par compte :
+<ul>
+<li><code>01 Desjardins · Compte</code></li>
+<li><code>02 Desjardins · Marge de crédit</code></li>
+<li><code>03 Desjardins · Carte 2018</code></li>
+<li><code>04 RBC · Compte</code></li>
+<li><code>05 RBC · Marge de crédit</code></li>
+<li><code>06 RBC · Visa</code></li>
+<li><code>07 Visa de Julien</code></li>
+<li><code>08 Visa de Mel</code></li>
+</ul></li>
+</ol>
+<div class="tip">Nom de chaque fichier : <b>année-mois_compte</b>, par exemple <code>2025-10_RBC-Compte.pdf</code>. Ça les classe tout seuls dans l'ordre.</div>
+</section>
+
+<section>
+<h2>Étape 2 · Télécharger les relevés</h2>
+<p><b>Desjardins (AccèsD) :</b> sur un ordinateur, va dans <b>Relevés et documents</b>, choisis le compte, puis télécharge chaque mois en PDF.</p>
+<p><b>RBC (Banque en direct) :</b> va dans <b>Relevés</b> (ou relevés électroniques), choisis le compte, puis télécharge chaque mois en PDF.</p>
+<div class="tip">Les noms de menus peuvent varier un peu. Si tu bloques sur un écran, appuie sur 📷 Caméra en bas et prends l'écran en photo : l'outil te dit où cliquer.</div>
+<p><b>En bonus, les fichiers Excel ou CSV :</b> dans l'historique des transactions de chaque compte, cherche <b>Télécharger</b> ou <b>Exporter</b>, choisis la période du 1er octobre 2025 au 30 septembre 2026, puis le format CSV ou Excel.</p>
+<p>Coche chaque mois dès qu'il est dans le Drive :</p>
+<div id="accts"></div>
+</section>
+
+<section>
+<h2>Étape 3 · Partager avec la comptable</h2>
+<ol>
+<li>Vérifie que la barre du haut est à 96 sur 96.</li>
+<li>Dans Drive, fais un clic droit sur le dossier <code>COMPTABILITÉ 2025-2026 · RMC</code>, puis <b>Partager</b>.</li>
+<li>Ajoute <code>comptabilite@rmccomptabilite.com</code> avec le droit <b>Lecteur</b> seulement.</li>
+<li>Envoie-lui un petit courriel depuis julien@anroapparel.ca : « Voici le lien avec tous les relevés du 1er octobre 2025 au 30 septembre 2026. »</li>
+</ol>
+<p id="final"></p>
+</section>
+
+<section id="helpbox" hidden>
+<h2>Aide pour ton écran</h2>
+<p id="help"></p>
+</section>
+<p id="status"></p>
+<input type="file" id="file" accept="image/*" capture="environment" hidden>
+</main>
+<div class="bar2">
+<button id="cam" type="button">📷 Caméra</button>
+<button id="env" type="button">Envoyer à Claude</button>
+</div>
+<script>
+const A=[
+{id:'dj-compte',n:'01 Desjardins · Compte',w:'Dom ou Julien'},
+{id:'dj-marge',n:'02 Desjardins · Marge de crédit',w:'Dom ou Julien'},
+{id:'dj-2018',n:'03 Desjardins · Carte 2018',w:'Dom ou Julien'},
+{id:'rbc-compte',n:'04 RBC · Compte',w:'Dom ou Julien'},
+{id:'rbc-marge',n:'05 RBC · Marge de crédit',w:'Dom ou Julien'},
+{id:'rbc-visa',n:'06 RBC · Visa',w:'Dom ou Julien'},
+{id:'visa-julien',n:'07 Visa de Julien',w:'Julien seulement (carte personnelle)'},
+{id:'visa-mel',n:'08 Visa de Mel',w:'À demander à Mélanie (carte personnelle)'}];
+const MO=['Oct 25','Nov 25','Déc 25','Janv 26','Févr 26','Mars 26','Avr 26','Mai 26','Juin 26','Juil 26','Août 26','Sept 26'];
+const KEY='anro-releves-rmc';let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){S={}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const box=document.getElementById('accts');
+A.forEach(a=>{const d=document.createElement('div');d.className='acct';
+let h='<h3>'+a.n+'<span id="c-'+a.id+'"></span></h3><p class="who">'+a.w+'</p><div class="months">';
+MO.forEach((m,i)=>{h+='<div class="m" role="checkbox" tabindex="0" data-k="'+a.id+'|'+i+'">'+m+'</div>';});
+h+='</div><div class="extra"><div class="m" role="checkbox" tabindex="0" data-k="'+a.id+'|csv">Fichier CSV / Excel (bonus)</div></div>';
+d.innerHTML=h;box.appendChild(d);});
+function render(){let tot=0;
+document.querySelectorAll('.m').forEach(el=>{const on=!!S[el.dataset.k];el.classList.toggle('on',on);el.setAttribute('aria-checked',on);});
+A.forEach(a=>{let n=0;for(let i=0;i<12;i++)if(S[a.id+'|'+i])n++;tot+=n;const c=document.getElementById('c-'+a.id);c.textContent=n+'/12';c.className=n===12?'done':'';});
+document.getElementById('pb').style.width=(tot/96*100)+'%';
+document.getElementById('pt').textContent=tot+' relevé'+(tot>1?'s':'')+' sur 96'+(tot===96?' · tout est prêt ✓':'');
+document.getElementById('final').innerHTML=tot===96?'<span class="done">Tous les relevés sont dans le Drive. Tu peux partager le dossier.</span>':'';}
+function toggle(el){const k=el.dataset.k;S[k]=!S[k];save();render();}
+box.addEventListener('click',e=>{const el=e.target.closest('.m');if(el)toggle(el);});
+box.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('m')){e.preventDefault();toggle(e.target);}});
+render();
+const st=document.getElementById('status');
+let sampleP=null,dbP=null;
+if(window.claude&&window.claude.use){sampleP=window.claude.use("sample");dbP=window.claude.use("db");}
+document.getElementById('cam').onclick=async()=>{const s=sampleP?await sampleP:null;if(!s){st.textContent="L'aide par photo n'est pas disponible ici.";return;}document.getElementById('file').click();};
+document.getElementById('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const s=await sampleP;
+const hb=document.getElementById('helpbox'),hp=document.getElementById('help');hb.hidden=false;hp.textContent='Je regarde ton écran…';hb.scrollIntoView({behavior:'smooth'});
+try{const out=await s.json([{role:"user",content:"Cette photo montre l'écran d'une personne qui veut télécharger ses relevés bancaires mensuels en PDF (Desjardins AccèsD, RBC Banque en direct ou carte de crédit), ou exporter ses transactions en CSV, pour la période d'octobre 2025 à septembre 2026. Explique en français, en 3 à 5 étapes courtes et simples, en tutoyant, exactement où cliquer à partir de cet écran. Si l'écran n'est pas clair, dis quoi faire pour y arriver. Réponds seulement en JSON : {\"aide\":\"...\"}"}],{images:[f]});
+hp.textContent=(out&&out.aide)||"Je n'ai pas réussi à lire l'écran. Essaie une photo plus nette.";}
+catch(err){hp.textContent=err&&err.code==="not_granted"?"Autorisation refusée.":"L'aide n'a pas fonctionné. Réessaie.";}
+e.target.value="";};
+document.getElementById('env').onclick=async()=>{const db=dbP?await dbP:null;if(!db){st.textContent="L'envoi n'est pas disponible ici.";return;}
+const resume=A.map(a=>{let n=0;for(let i=0;i<12;i++)if(S[a.id+'|'+i])n++;return{compte:a.n,releves:n,csv:!!S[a.id+'|csv']};});
+st.textContent='Envoi…';try{await db.doc("releves/progression").set({resume,envoyeLe:new Date().toISOString()});st.textContent="Envoyé ✓ Écris « c'est envoyé » à Claude pour le suivi.";}catch(err){st.textContent="L'envoi n'a pas fonctionné. Réessaie.";}};
+</script>
+</body>
+</html>

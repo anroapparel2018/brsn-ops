@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réception Thickems 2665 · pantalons</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Fira+Sans+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F6F3F2;--paper:#fff;--ink:#0F0A0A;--mu:#6E5F61;--line:#E2D8D9;--foyer:#4A1620;--ok:#2E6B47;--chg:#9A5A00;--soft:#F3E9EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Fira Sans',system-ui,sans-serif}
+.hero{background:#0F0A0A;color:#fff;padding:22px 16px 18px}.hero p{margin:0;color:#D7A3AD}
+.hero h1{margin:4px 0 14px;font:900 30px/1.05 'Fira Sans Condensed',sans-serif}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:#2F0D14;border-radius:10px;padding:10px}
+.stats b{display:block;font:900 28px/1 'Fira Sans Condensed',sans-serif}.stats span{font-size:13px;color:#E9DCDE}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+h2{font:900 21px/1.2 'Fira Sans Condensed',sans-serif;margin:26px 0 4px}.sub{color:var(--mu);margin:0 0 10px;font-size:15px}
+.blk{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.blk.ok{border-left-color:var(--ok)}.blk.chg{border-left-color:var(--chg)}
+.blk h3{margin:0 0 8px;font-size:17px;display:flex;justify-content:space-between;gap:8px}.blk h3 small{color:var(--foyer);font-weight:700}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}th{color:var(--mu);font-weight:500}td:first-child,th:first-child{text-align:left}
+.q{display:inline-flex;align-items:center;gap:2px}.q button{width:24px;height:26px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;font-weight:700;cursor:pointer;padding:0}
+.q span{min-width:20px;font-weight:700}.att{display:block;font-size:11px;color:var(--foyer)}
+.ord{font-size:14px;margin:0;padding:0;list-style:none}.ord li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}.ord li:last-child{border:0}.ord b{min-width:52px;color:var(--foyer)}
+.btns{display:flex;gap:8px;margin-top:10px}.btns button,.big{font:inherit;font-weight:700;border-radius:10px;padding:11px;cursor:pointer;flex:1;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk.ok .b-ok{background:var(--ok);color:#fff;border-color:var(--ok)}.blk.chg .b-chg{background:var(--chg);color:#fff;border-color:var(--chg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--foyer);outline-offset:2px}
+textarea,input[type=text]{width:100%;margin-top:8px;font:inherit;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk textarea{display:none;min-height:56px}.blk.chg textarea{display:block}
+.big{display:block;width:100%;margin-top:12px;padding:15px;font-size:18px;background:#4A1620;color:#fff;border-color:#4A1620}.big.alt{background:var(--paper);color:var(--ink);font-size:16px}
+.note{color:var(--mu);font-size:14px}#prev{display:none;max-width:100%;border-radius:10px;margin-top:8px}
+</style>
+<style>.scan{background:var(--paper);border:2px solid var(--foyer);border-radius:14px;padding:14px;margin:12px 0;position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.scan input{font-size:20px;padding:14px;margin:0}.fb{margin:10px 0 0;padding:12px;border-radius:10px;font-weight:700;font-size:17px;background:var(--soft)}
+.fb.ok{background:#E6F2EA;color:#1F5133}.fb.bad{background:#FBE7E7;color:#8A1F1F}.fb.warn{background:#FDF1DD;color:#7A4600}
+@media (prefers-color-scheme:dark){.fb.ok{background:#173323;color:#9FD9B4}.fb.bad{background:#3A1717;color:#F2A7A7}.fb.warn{background:#3A2A10;color:#F2C98A}}
+.row2{display:flex;gap:8px;margin-top:10px}.row2 button{flex:1;font:inherit;font-weight:700;border-radius:10px;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.step:last-child{border:0}.step b.n{flex:0 0 32px;height:32px;border-radius:50%;background:#4A1620;color:#fff;display:flex;align-items:center;justify-content:center}
+.step p{margin:0}.step small{color:var(--mu);display:block}
+td.c{font-weight:700;font-size:13px;white-space:nowrap}td.full{color:var(--ok)}td.part{color:var(--chg)}td.over{color:#B3261E}
+#vid{display:none}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.tile{position:relative;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);padding:10px 6px 8px;text-align:center;cursor:pointer;user-select:none;-webkit-user-select:none}
+.tile .sz{display:block;font-weight:700;font-size:15px}.tile .ct{display:block;font:900 24px/1.1 'Fira Sans Condensed',sans-serif}.tile .ex{font-size:12px;color:var(--mu)}
+.tile.part{border-color:var(--chg)}.tile.full{border-color:var(--ok);background:#E6F2EA}.tile.over{border-color:#B3261E;background:#FBE7E7}
+@media (prefers-color-scheme:dark){.tile.full{background:#173323}.tile.over{background:#3A1717}}
+.tile .ok{display:none;position:absolute;top:4px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--ok);color:#fff;font-size:14px;line-height:22px}.tile.full .ok{display:block}
+.tile .mn{position:absolute;bottom:4px;left:4px;width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-weight:700;padding:0;line-height:24px}
+.tot{font-size:14px;color:var(--mu);margin:8px 0 0}</style></head><body>
+<header class="hero"><p>ANRO · réception Thickems · facture 2665 · automne 2026</p><h1>Réception des pantalons, case par case</h1>
+<div class="stats"><div><b id="sExp">0</b><span>attendus</span></div><div><b id="sGot">0</b><span>scannés</span></div><div><b id="sDef">0</b><span>défectueux</span></div></div></header>
+<main>
+<h2>Comment ça marche</h2><p class="sub">Pour Dom : on compte en touchant les cases, pantalon par pantalon. Le système compare tout seul avec la facture de Thickems.</p>
+<div class="blk">
+<div class="step"><b class="n">1</b><p>Prépare ton poste<small>Bacs vides identifiés par grandeur, une boîte à la fois sur la table, la tablette à côté.</small></p></div>
+<div class="step"><b class="n">2</b><p>Ouvre une boîte et prends un pantalon<small>Regarde vite : couture, couleur, logo, taille sur l'étiquette.</small></p></div>
+<div class="step"><b class="n">3</b><p>Touche la case du bon produit et de la bonne grandeur<small>Chaque touche = 1 pantalon. Le petit − enlève une erreur.</small></p></div>
+<div class="step"><b class="n">4</b><p>La case devient verte avec un ✓<small>Quand le compte atteint ce qui est sur la facture (ex. Small 22), c'est complet. Rouge = surplus.</small></p></div>
+<div class="step"><b class="n">5</b><p>Un défaut ? Touche « Défectueux »<small>Le dernier pantalon touché passe dans les défauts. Prends une photo avec 📷.</small></p></div>
+<div class="step"><b class="n">6</b><p>Place-le dans le bon bac, puis continue<small>À la fin, regarde les écarts plus bas, puis touche Envoyer.</small></p></div>
+</div>
+<div class="scan"><p class="fb" id="fb">Touche une case pour compter un pantalon.</p>
+<div class="row2"><button id="undo">↩ Annuler le dernier</button><button id="defect">⚠ Défectueux</button></div></div>
+<h2>Les pantalons</h2><p class="sub">Une case par grandeur : reçu sur attendu. Vert avec ✓ = complet.</p>
+<div id="tables"></div>
+<h2>Les écarts</h2><div class="blk"><ul class="ord" id="gaps"></ul></div>
+<h2>Une photo à me montrer ?</h2>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<button class="big alt" id="camBtn">📷 Caméra</button><p id="camInfo" class="note"></p><img id="prev" alt="Photo choisie">
+<button class="big" id="send">Envoyer</button><p id="msg" class="note" role="status"></p>
+</main>
+<script>
+const J=['S','M','L','XL','2XL','3XL','4XL'],D=['30','32','34','36','38','40','42','44','46','48','50','52'];
+const P=[
+['Jogger extensible','Noir','ANRO-JX-EXT-NR',J,[21,52,80,74,68,50,37]],['Jogger extensible','Caramel','ANRO-JX-EXT-CA',J,[11,26,42,42,37,26,17]],['Jogger extensible','Charcoal','ANRO-JX-EXT-CH',J,[12,22,46,41,36,24,15]],
+['Cargo jogger','Noir','ANRO-CJ-CARGO-NR',J,[22,52,80,76,64,50,38]],['Cargo jogger','Caramel','ANRO-CJ-CARGO-CA',J,[12,27,47,42,36,27,17]],['Cargo jogger','Charcoal','ANRO-CJ-CARGO-CH',J,[11,25,47,43,37,27,19]],
+['Jean délavé','Noir','ANRO-JN-DELAVE-NR',D,[5,9,22,22,22,20,18,13,16,9,7,8]],['Jean délavé','Indigo','ANRO-JN-DELAVE-IN',D,[5,8,11,16,16,12,12,11,8,7,6,7]]];
+const MAP={};P.forEach(([n,c,b,sz,q],i)=>sz.forEach((s,j)=>MAP[b+'-'+s]={i,j,label:n+' '+c+' '+s,exp:q[j]}));
+let got={},def={},log=[];try{const s=JSON.parse(localStorage.getItem('thk2665')||'{}');got=s.got||{};def=s.def||{};log=s.log||[]}catch(_){}
+const save=()=>{try{localStorage.setItem('thk2665',JSON.stringify({got,def,log}))}catch(_){}};
+const $=x=>document.getElementById(x);
+function render(){let exp=0,g=0,d=0;let h='';const gaps=[];
+P.forEach(([n,c,b,sz,q],pi)=>{let pg=0,pe=0;h+='<div class="blk"><h3>'+n+' · '+c+'<small id="pt'+pi+'"></small></h3><div class="tiles">'+sz.map((s,j)=>{const k=b+'-'+s,r=got[k]||0;exp+=q[j];g+=r;pg+=r;pe+=q[j];d+=def[k]||0;const cl=r===q[j]?'full':r>q[j]?'over':r>0?'part':'';if(r<q[j])gaps.push(n+' '+c+' '+s+' : il en manque '+(q[j]-r));if(r>q[j])gaps.push(n+' '+c+' '+s+' : '+(r-q[j])+' en surplus');
+return '<div class="tile '+cl+'" data-k="'+k+'" role="button" aria-label="'+n+' '+c+' '+s+', '+r+' sur '+q[j]+'"><span class="ok" aria-hidden="true">✓</span><span class="sz">'+s+'</span><span class="ct">'+r+'</span><span class="ex">sur '+q[j]+'</span><button class="mn" data-m="'+k+'" aria-label="Enlever 1">−</button></div>'}).join('')+'</div><p class="tot">'+pg+' / '+pe+' reçus</p></div>'});
+$('tables').innerHTML=h;$('sExp').textContent=exp;$('sGot').textContent=g;$('sDef').textContent=d;
+const dl=Object.entries(def).filter(([k,v])=>v>0).map(([k,v])=>MAP[k].label+' : '+v+' défectueux');
+$('gaps').innerHTML=(gaps.length||dl.length)?[...dl,...gaps].slice(0,80).map(t=>'<li>'+t+'</li>').join('')+(gaps.length>80?'<li>…</li>':''):'<li>Aucun écart pour l\u2019instant.</li>'}
+function fb(t,c){const e=$('fb');e.textContent=t;e.className='fb '+c;if(navigator.vibrate)navigator.vibrate(c==='ok'?40:[80,60,80])}
+function scan(raw){const code=String(raw||'').trim().toUpperCase();if(!code)return;const m=MAP[code];
+if(!m){fb('Code inconnu : '+code+'. Mets ce pantalon de côté.','bad');return}
+got[code]=(got[code]||0)+1;log.push(code);save();render();const r=got[code];
+fb((r>m.exp?'Surplus · ':'+1 · ')+m.label+' ('+r+'/'+m.exp+')',r>m.exp?'warn':'ok')}
+$('tables').addEventListener('click',e=>{const mn=e.target.closest('button[data-m]');if(mn){e.stopPropagation();const k=mn.dataset.m;if((got[k]||0)>0){got[k]--;const i=log.lastIndexOf(k);if(i>-1)log.splice(i,1);save();render();fb('Enlevé : '+MAP[k].label,'warn')}return}
+const t=e.target.closest('.tile');if(t)scan(t.dataset.k)});
+$('undo').onclick=()=>{const k=log.pop();if(!k){fb('Rien à annuler.','');return}got[k]=Math.max(0,(got[k]||0)-1);save();render();fb('Annulé : '+MAP[k].label,'warn')};
+$('defect').onclick=()=>{const k=log[log.length-1];if(!k){fb('Touche d\u2019abord le pantalon.','bad');return}def[k]=(def[k]||0)+1;save();render();fb('Défectueux : '+MAP[k].label+'. Prends une photo.','warn')};
+render();
+let photo=null;$('camBtn').onclick=()=>$('cam').click();
+$('cam').onchange=async e=>{const f=e.target.files[0];if(!f)return;const p=$('prev');p.src=URL.createObjectURL(f);p.style.display='block';const i=$('camInfo');i.textContent='Envoi de la photo…';
+try{const a=await claude.use('assets');if(!a)throw 0;const r=await a.upload(f);photo=r.id;i.textContent='Photo prête.'}catch(_){i.textContent='La photo n\u2019est pas partie. Réessaie.'}};
+$('send').onclick=async()=>{const m=$('msg');m.textContent='Envoi…';
+try{const db=await claude.use('db');if(!db)throw 0;await db.doc('reponses/envoi-'+Date.now()).set({quand:new Date().toISOString(),recu:got,defectueux:def,photo});m.textContent='Envoyé. Écris « c\u2019est envoyé » à Claude.'}catch(_){m.textContent='L\u2019envoi n\u2019a pas marché. Réessaie.'}};
+</script></body></html>

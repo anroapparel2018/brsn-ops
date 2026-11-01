@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faire la paie dans QuickBooks — ANRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--charbon:#0F0A0A;--coton:#FFFFFF;--foyer:#4A1620;--braise:#2F0D14;--bg:#F6F2F2;--ink:#0F0A0A;--muted:#6B5E60;--line:#E3D9DA;--card:#FFFFFF;--ok:#1F7A4D;--warn:#9A5B00;--tap:#4A1620;--qb:#2CA01C;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140C0D;--ink:#F4EEEE;--muted:#B9A9AB;--line:#3A2A2D;--card:#1E1416;--tap:#E07A8E}}
+:root[data-theme="dark"]{--bg:#140C0D;--ink:#F4EEEE;--muted:#B9A9AB;--line:#3A2A2D;--card:#1E1416;--tap:#E07A8E}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+header{background:var(--charbon);color:var(--coton);padding:22px 20px 26px;border-bottom:5px solid var(--foyer)}
+.brand{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.brand b{font-weight:800;font-size:22px;letter-spacing:.06em}
+.brand span{font-size:11px;letter-spacing:.2em;opacity:.75}
+h1{font-size:26px;line-height:1.15;margin:0 0 6px;font-weight:700}
+.sub{margin:0;opacity:.8;font-size:15px}
+main{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.progress{display:flex;gap:5px;margin:4px 0 16px}
+.progress i{flex:1;height:6px;border-radius:3px;background:var(--line);transition:background .3s}
+.progress i.on{background:var(--foyer)}
+.progress i.done{background:var(--ok)}
+:root[data-theme="dark"] .progress i.on,@media(prefers-color-scheme:dark){}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.step-n{font-size:13px;color:var(--muted);margin:0 0 4px}
+h2{font-size:22px;line-height:1.2;margin:0 0 10px}
+.do{margin:0 0 14px;font-size:16px}
+.phone{background:#EDE7E8;border-radius:22px;padding:12px;margin:0 0 14px}
+.screen{background:#fff;color:#1b1b1b;border-radius:14px;overflow:hidden;position:relative;min-height:250px;font-size:13px}
+.bar{background:#fff;border-bottom:1px solid #e6e6e6;padding:10px 12px;display:flex;align-items:center;gap:8px;font-weight:500}
+.dot{width:20px;height:20px;border-radius:50%;background:var(--qb);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-bottom:1px solid #f0f0f0}
+.row small{color:#777}
+.btn-qb{display:inline-block;background:var(--qb);color:#fff;border-radius:999px;padding:8px 16px;font-weight:500}
+.field{border:1px solid #cfcfcf;border-radius:6px;padding:3px 8px;min-width:46px;text-align:right}
+.target{position:relative;outline:3px solid var(--tap);outline-offset:3px;border-radius:8px}
+.target::after{content:"";position:absolute;right:-14px;bottom:-14px;width:26px;height:26px;border-radius:50%;background:rgba(74,22,32,.35);border:2px solid var(--foyer);animation:tap 1.4s ease-in-out infinite}
+@keyframes tap{0%{transform:scale(.6);opacity:0}30%{transform:scale(1);opacity:1}60%{transform:scale(.85)}100%{transform:scale(1.4);opacity:0}}
+@media (prefers-reduced-motion:reduce){.target::after{animation:none;opacity:1}}
+.tip{background:rgba(74,22,32,.07);border-left:4px solid var(--foyer);padding:10px 12px;margin:0 0 14px;font-size:14.5px}
+:root[data-theme="dark"] .tip{background:rgba(224,122,142,.1)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .tip{background:rgba(224,122,142,.1)}}
+.warn{border-left-color:var(--warn)}
+label.check{display:flex;gap:10px;align-items:center;font-weight:500;padding:12px;border:1px solid var(--line);border-radius:12px;cursor:pointer;margin-bottom:14px}
+label.check input{width:22px;height:22px;accent-color:var(--ok)}
+.nav{display:flex;gap:10px}
+.nav button{flex:1;font:inherit;font-weight:500;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.nav button.primary{background:var(--foyer);border-color:var(--foyer);color:#fff}
+button:focus-visible,label:focus-within{outline:3px solid var(--tap);outline-offset:2px}
+.cam{margin-top:18px}
+.cam label.camb{display:flex;justify-content:center;gap:8px;padding:14px;border:2px dashed var(--line);border-radius:12px;cursor:pointer;font-weight:500}
+.cam input{display:none}
+#preview img{width:100%;border-radius:12px;margin-top:10px;border:1px solid var(--line)}
+.done-card{text-align:center}
+.done-card h2{font-size:26px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px 16px 26px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>ANRO</b><span>APPAREL</span></div>
+  <h1>Faire la paie dans QuickBooks</h1>
+  <p class="sub">Paie du jeudi 8 octobre, étape par étape. On avance ensemble, une étape à la fois.</p>
+</header>
+<main>
+  <div class="progress" id="progress"></div>
+  <div id="stage"></div>
+  <div class="cam">
+    <label class="camb" for="cam">📷 Photo de l'écran pour ton coach</label>
+    <input id="cam" type="file" accept="image/*" capture="environment">
+    <div id="preview"></div>
+  </div>
+</main>
+<footer>9452-2893 Québec inc. · Guide interne ANRO</footer>
+<script>
+const S=[
+{t:"Ouvre la paie",d:"Dans QuickBooks, va dans le menu Paie, puis Employés. Appuie sur le bouton vert « Exécuter la paie ».",
+ s:`<div class="bar"><span class="dot">qb</span>Paie · Employés</div>
+ <div class="row"><span>Employés actifs</span><small>6</small></div>
+ <div class="row"><span>Prochaine paie</span><small>jeu. 8 oct.</small></div>
+ <div style="padding:18px 12px;text-align:center"><span class="btn-qb target">Exécuter la paie</span></div>`,
+ tip:"Si tu ne vois pas le menu Paie, ouvre QuickBooks sur un ordinateur : c'est plus simple que sur le téléphone."},
+{t:"Vérifie la période et la date",d:"Choisis le calendrier aux 2 semaines. Vérifie la période et la date de paie avant d'aller plus loin.",
+ s:`<div class="bar"><span class="dot">qb</span>Exécuter la paie</div>
+ <div class="row"><span>Calendrier</span><small>Aux 2 semaines</small></div>
+ <div class="row"><span>Période</span><small>dim. 20 sept. – sam. 3 oct.</small></div>
+ <div class="row"><span>Date de paie</span><b class="target" style="padding:2px 6px">jeu. 8 oct. 2026</b></div>`,
+ tip:"La date de paie doit être le jeudi 8 octobre. Si elle est différente, arrête-toi et prends une photo."},
+{t:"Vérifie les heures",d:"Pour chaque employé, regarde la case Heures. Elles viennent de QuickBooks Time. Corrige directement dans la case si un chiffre est faux.",
+ s:`<div class="bar"><span class="dot">qb</span>Heures de la période</div>
+ <div class="row"><span>Frédéric</span><span class="field target">—</span></div>
+ <div class="row"><span>Sébastien</span><span class="field">—</span></div>
+ <div class="row"><span>Ketya</span><span class="field">—</span></div>
+ <div class="row"><span>Amélie</span><span class="field">—</span></div>
+ <div class="row"><span>Iris</span><span class="field">50</span></div>
+ <div class="row"><span>Julien</span><span class="field">—</span></div>`,
+ tip:"Iris a 50 h fixes sur 2 semaines. Pour les autres, compare avec les punchs de QuickBooks Time."},
+{t:"Ajoute les extras",d:"Une commission, une prime ou une allocation à payer ? Touche le nom de l'employé, puis ajoute le montant dans la bonne ligne. Sinon, passe à l'étape suivante.",
+ s:`<div class="bar"><span class="dot">qb</span>Frédéric · Détails</div>
+ <div class="row"><span>Heures régulières</span><span class="field">—</span></div>
+ <div class="row"><span>Commission</span><span class="field target">0,00</span></div>
+ <div class="row"><span>Prime</span><span class="field">0,00</span></div>
+ <div class="row"><span>Allocation</span><span class="field">0,00</span></div>`,
+ tip:"Pas d'extra cette paie ? Aucun problème, on ne touche à rien."},
+{t:"Lis l'aperçu",d:"Appuie sur « Aperçu de la paie ». Regarde le total qui sortira du compte : salaires nets, retenues et coût de l'employeur.",
+ s:`<div class="bar"><span class="dot">qb</span>Aperçu de la paie</div>
+ <div class="row"><span>Paie nette (dépôts)</span><small>— $</small></div>
+ <div class="row"><span>Retenues et cotisations</span><small>— $</small></div>
+ <div class="row target" style="margin:6px;font-weight:700"><span>Coût total</span><span>— $</span></div>
+ <div class="row"><span>Compte bancaire</span><small>vérifie le compte</small></div>`,
+ tip:"Un montant te semble bizarre ? Ne soumets pas. Prends une photo de l'aperçu."},
+{t:"Soumets la paie",d:"Appuie sur « Soumettre la paie ». Lis bien la date de dépôt affichée à l'écran de confirmation.",
+ s:`<div class="bar"><span class="dot">qb</span>Confirmation</div>
+ <div style="padding:20px 12px;text-align:center">
+ <div style="font-size:30px">✓</div><b>Paie soumise</b>
+ <div class="target" style="margin:14px auto 0;max-width:220px;padding:8px">Dépôt prévu : jeu. 8 oct.</div></div>`,
+ tip:"Si la date de dépôt est plus tard que jeudi, avertis tout de suite : il faudra prévenir l'équipe ou payer autrement.",warn:1},
+{t:"Termine",d:"QuickBooks envoie les talons de paie aux employés. Les sous-traitants (Angelica, Rey, Natacha) ne sont pas dans cette paie : on les paie à part, sur facture.",
+ s:`<div class="bar"><span class="dot">qb</span>Paie terminée</div>
+ <div class="row"><span>Talons envoyés</span><small>6 employés</small></div>
+ <div class="row target" style="margin:6px"><span>Sous-traitants</span><small>sur facture, à part</small></div>
+ <div class="row"><span>Prochaine paie</span><small>jeu. 22 oct.</small></div>`,
+ tip:"Prochaine paie : jeudi 22 octobre, avec la nouvelle structure de punch."}
+];
+let i=0,done=[];
+try{done=JSON.parse(localStorage.getItem("paieDone")||"[]")}catch(e){done=[]}
+const P=document.getElementById("progress"),G=document.getElementById("stage");
+function save(){try{localStorage.setItem("paieDone",JSON.stringify(done))}catch(e){}}
+function render(){
+ P.innerHTML=S.map((_,k)=>`<i class="${done.includes(k)?"done":k===i?"on":""}"></i>`).join("")+`<i class="${i===S.length?"on":""}"></i>`;
+ if(i===S.length){G.innerHTML=`<div class="card done-card"><h2>C'est fait</h2><p class="do">La paie du 8 octobre est soumise. Garde une capture de la confirmation.</p><div class="nav"><button id="restart">Recommencer</button></div></div>`;
+  document.getElementById("restart").onclick=()=>{done=[];save();i=0;render()};return}
+ const x=S[i];
+ G.innerHTML=`<div class="card"><p class="step-n">Étape ${i+1} sur ${S.length}</p><h2>${x.t}</h2><p class="do">${x.d}</p>
+ <div class="phone"><div class="screen">${x.s}</div></div>
+ <p class="tip ${x.warn?"warn":""}">${x.tip}</p>
+ <label class="check"><input type="checkbox" id="ck" ${done.includes(i)?"checked":""}> C'est fait</label>
+ <div class="nav"><button id="prev">Précédent</button><button class="primary" id="next">${i===S.length-1?"Terminer":"Suivant"}</button></div></div>`;
+ document.getElementById("ck").onchange=e=>{done=done.filter(k=>k!==i);if(e.target.checked)done.push(i);save();render()};
+ document.getElementById("prev").onclick=()=>{if(i>0){i--;render();scrollTo(0,0)}};
+ document.getElementById("next").onclick=()=>{if(!done.includes(i)){done.push(i);save()}i++;render();scrollTo(0,0)};
+}
+document.getElementById("cam").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById("preview").innerHTML=`<img alt="Photo de l'écran" src="${r.result}">`};r.readAsDataURL(f)};
+render();
+</script>
+</body>
+</html>

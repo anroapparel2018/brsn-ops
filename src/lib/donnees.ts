@@ -98,6 +98,16 @@ export async function lireApprobationsEnAttente(): Promise<ApprobationsEnAttente
   return resultat;
 }
 
+export async function lireFiches(types: string[]) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("fiches")
+    .select("id, type, nom, sous_titre, details, echeance, donnees")
+    .in("type", types)
+    .order("nom");
+  return data ?? [];
+}
+
 const COLONNES_APPROBATION = "id, agent, titre, details, statut, commentaire, photo, cree_le, decide_le";
 
 export async function lireApprobations(agent?: AgentId) {

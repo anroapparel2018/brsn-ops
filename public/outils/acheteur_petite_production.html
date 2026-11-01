@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Petite production — commandes en attente + boutique</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Fira+Sans+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F6F3F2;--paper:#fff;--ink:#0F0A0A;--mu:#6E5F61;--line:#E2D8D9;--foyer:#4A1620;--ok:#2E6B47;--chg:#9A5A00;--soft:#F3E9EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Fira Sans',system-ui,sans-serif}
+.hero{background:#0F0A0A;color:#fff;padding:22px 16px 18px}.hero p{margin:0;color:#D7A3AD}
+.hero h1{margin:4px 0 14px;font:900 30px/1.05 'Fira Sans Condensed',sans-serif}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:#2F0D14;border-radius:10px;padding:10px}
+.stats b{display:block;font:900 28px/1 'Fira Sans Condensed',sans-serif}.stats span{font-size:13px;color:#E9DCDE}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+h2{font:900 21px/1.2 'Fira Sans Condensed',sans-serif;margin:26px 0 4px}.sub{color:var(--mu);margin:0 0 10px;font-size:15px}
+.blk{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.blk.ok{border-left-color:var(--ok)}.blk.chg{border-left-color:var(--chg)}
+.blk h3{margin:0 0 8px;font-size:17px;display:flex;justify-content:space-between;gap:8px}.blk h3 small{color:var(--foyer);font-weight:700}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}th{color:var(--mu);font-weight:500}td:first-child,th:first-child{text-align:left}
+.q{display:inline-flex;align-items:center;gap:2px}.q button{width:24px;height:26px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;font-weight:700;cursor:pointer;padding:0}
+.q span{min-width:20px;font-weight:700}.att{display:block;font-size:11px;color:var(--foyer)}
+.ord{font-size:14px;margin:0;padding:0;list-style:none}.ord li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}.ord li:last-child{border:0}.ord b{min-width:52px;color:var(--foyer)}
+.btns{display:flex;gap:8px;margin-top:10px}.btns button,.big{font:inherit;font-weight:700;border-radius:10px;padding:11px;cursor:pointer;flex:1;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk.ok .b-ok{background:var(--ok);color:#fff;border-color:var(--ok)}.blk.chg .b-chg{background:var(--chg);color:#fff;border-color:var(--chg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--foyer);outline-offset:2px}
+textarea,input[type=text]{width:100%;margin-top:8px;font:inherit;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk textarea{display:none;min-height:56px}.blk.chg textarea{display:block}
+.big{display:block;width:100%;margin-top:12px;padding:15px;font-size:18px;background:#4A1620;color:#fff;border-color:#4A1620}.big.alt{background:var(--paper);color:var(--ink);font-size:16px}
+.note{color:var(--mu);font-size:14px}#prev{display:none;max-width:100%;border-radius:10px;margin-top:8px}
+</style></head><body>
+<header class="hero"><p>ANRO · production à l'interne · 12 octobre 2026</p><h1>Petite production : commandes en attente + boutique</h1>
+<div class="stats"><div><b id="sTot">100</b><span>morceaux en tout</span></div><div><b id="sBro">91</b><span>broderies ≈ <i id="sH">6 h</i></span></div><div><b>31</b><span>pour les commandes en attente</span></div></div></header>
+<main>
+<p class="sub">Les chiffres en rouge sous chaque case sont réservés aux commandes en attente. Ajuste avec + et −, approuve chaque bloc, puis Envoyer. Le reste de la production part en sous-traitance.</p>
+<div id="blocks"></div>
+<h2>Les 23 commandes en attente</h2>
+<p class="sub">Ta liste « articles à vérifier », pour que Frédéric Paquette sache quoi emballer en premier.</p>
+<div class="blk"><ul class="ord" id="ords"></ul></div>
+<h2>À décider</h2>
+<div class="blk"><h3>Les hoodies unis brodés (burgundy, caramel, noir) : quel modèle ?</h3><input type="text" id="qHood" placeholder="Ex. hoodie régulier, Heavy 440, doublé 500…"></div>
+<div class="blk"><h3>Le 1/4 zip caramel montre 13 L et 13 XL en stock dans Shopify, mais 2 commandes attendent ces grandeurs. On vérifie l'étagère avant de commander ?</h3><input type="text" id="qCar" placeholder="Ta réponse"></div>
+<h2>Une photo à me montrer ?</h2>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<button class="big alt" id="camBtn">📷 Caméra</button><p id="camInfo" class="note"></p><img id="prev" alt="Photo choisie">
+<button class="big" id="send">Envoyer</button><p id="msg" class="note" role="status"></p>
+</main>
+<script>
+const SZ=['S','M','L','XL','2XL','3XL','4XL'];
+// [nom, {taille:[attente, boutique]}]
+const QZ=[['Vert forêt',{S:[0,1],M:[0,1],L:[0,3],XL:[0,4],'2XL':[4,7],'3XL':[2,5],'4XL':[0,2]}],
+['Noir',{S:[0,1],M:[0,2],L:[1,5],XL:[1,5],'2XL':[3,7],'3XL':[0,3],'4XL':[0,2]}],
+['Burgundy (« Marron » chez Canada Sportswear)',{S:[0,1],M:[0,2],L:[0,4],XL:[0,3],'2XL':[3,6],'3XL':[1,3],'4XL':[0,2]}],
+['Caramel',{S:[0,0],M:[0,0],L:[1,0],XL:[1,0],'2XL':[0,0],'3XL':[2,0],'4XL':[0,0]}]];
+const HO=[['Hoodie uni brodé Burgundy','2XL',1],['Hoodie uni brodé Caramel','3XL',1],['Hoodie uni brodé Noir','XL',1]];
+const GR=[['Hoodie Cactus','2XL',1],['Hoodie Panda','2XL',2],['Hoodie Loup','2XL',2],['T-shirt Loup','2XL',1],['Lapin Trash','S',1],['Hoodie enfant Renard','XS',1],['Longsleeve Charcoal','3XL',1]];
+const ORD=[['36414','1/4 zip caramel 3XL'],['36442','1/4 zip caramel XL'],['36448','1/4 zip vert forêt 3XL'],['36444','1/4 zip noir 2XL'],['36413','1/4 zip caramel 3XL'],['36416','1/4 zip vert forêt 3XL + 1/4 zip burgundy 3XL'],['36455','1/4 zip vert forêt 2XL + hoodie Cactus 2XL'],['36588','1/4 zip burgundy 2XL + 1/4 zip noir 2XL'],['36457','1/4 zip noir XL'],['36527','Hoodie Panda 2XL'],['36649','Lapin Trash S'],['36642','Hoodie burgundy 2XL'],['36424','Hoodie enfant Renard XS'],['36400','Longsleeve Charcoal 3XL + hoodie caramel 3XL'],['36584','1/4 zip burgundy 2XL'],['36590','Hoodie Loup 2XL'],['36589','1/4 zip vert forêt 2XL + hoodie Loup 2XL'],['36456','Hoodie Panda 2XL + t-shirt Loup 2XL'],['36465','1/4 zip vert forêt 2XL + 1/4 zip burgundy 2XL'],['36600','Hoodie noir XL'],['36650','1/4 zip noir 2XL + 1/4 zip vert forêt 2XL'],['36636','1/4 zip caramel L'],['36631','1/4 zip noir L']];
+document.getElementById('ords').innerHTML=ORD.map(o=>'<li><b>#'+o[0]+'</b>'+o[1]+'</li>').join('');
+const st={},qty={};const B=document.getElementById('blocks');
+function qcell(key,att,base){qty[key]=att+base;return '<span class="q"><button data-k="'+key+'" data-d="-1" aria-label="moins">−</button><span id="v_'+key+'">'+(att+base)+'</span><button data-k="'+key+'" data-d="1" aria-label="plus">+</button></span>'+(att?'<span class="att">'+att+' en attente</span>':'');}
+function block(id,title,inner,note){const c=document.createElement('div');c.className='blk';c.innerHTML='<h3>'+title+'<small id="t_'+id+'"></small></h3>'+(note?'<p class="note" style="margin:0 0 8px">'+note+'</p>':'')+'<div class="wrap">'+inner+'</div><div class="btns"><button class="b-ok">Approuver</button><button class="b-chg">À changer</button></div><textarea placeholder="Ce qu\u2019il faut changer…" aria-label="Ce qu\u2019il faut changer"></textarea>';
+ const ta=c.querySelector('textarea');c.querySelector('.b-ok').onclick=()=>{c.className='blk ok';st[id]={reponse:'approuvé'}};c.querySelector('.b-chg').onclick=()=>{c.className='blk chg';st[id]={reponse:'à changer',note:ta.value};ta.focus()};ta.oninput=()=>{if(st[id])st[id].note=ta.value};B.appendChild(c);}
+let qzh='<table><tr><th>Couleur</th>'+SZ.map(s=>'<th>'+s+'</th>').join('')+'</tr>';
+QZ.forEach(([c,m],i)=>{qzh+='<tr><td>'+c+'</td>'+SZ.map(s=>'<td>'+qcell('qz'+i+'_'+s,m[s][0],m[s][1])+'</td>').join('')+'</tr>';});qzh+='</table>';
+block('qz','1/4 zip brodé — blanks Canada Sportswear',qzh,'Boutique : environ un mois de ventes selon tes 60 derniers jours (174 vendus). Caramel : seulement les commandes en attente, il en reste en stock.');
+block('ho','Hoodies unis brodés',
+ '<table><tr><th>Produit</th><th>Taille</th><th>Qté</th></tr>'+HO.map((h,i)=>'<tr><td>'+h[0]+'</td><td>'+h[1]+'</td><td>'+qcell('ho'+i,h[2],0)+'</td></tr>').join('')+'</table>','Seulement les 3 commandes en attente.');
+block('gr','Graphiques DTF (Ketya)',
+ '<table><tr><th>Produit</th><th>Taille</th><th>Qté</th></tr>'+GR.map((h,i)=>'<tr><td>'+h[0]+'</td><td>'+h[1]+'</td><td>'+qcell('gr'+i,h[2],0)+'</td></tr>').join('')+'</table>','Seulement les commandes en attente. Moins de 15 minutes de presse.');
+function totals(){let qz=0,ho=0,gr=0;for(const k in qty){if(k.startsWith('qz'))qz+=qty[k];else if(k.startsWith('ho'))ho+=qty[k];else gr+=qty[k];}
+ document.getElementById('t_qz').textContent=qz+' morceaux';document.getElementById('t_ho').textContent=ho+' morceaux';document.getElementById('t_gr').textContent=gr+' morceaux';
+ const bro=qz+ho;document.getElementById('sTot').textContent=qz+ho+gr;document.getElementById('sBro').textContent=bro;document.getElementById('sH').textContent='≈ '+(Math.round(bro/15*2)/2).toString().replace('.',',')+' h';}
+document.addEventListener('click',e=>{const b=e.target.closest('button[data-k]');if(!b)return;const k=b.dataset.k;qty[k]=Math.max(0,qty[k]+ +b.dataset.d);document.getElementById('v_'+k).textContent=qty[k];totals();});
+totals();
+let photo=null;document.getElementById('camBtn').onclick=()=>document.getElementById('cam').click();
+document.getElementById('cam').onchange=async e=>{const f=e.target.files[0];if(!f)return;const p=document.getElementById('prev');p.src=URL.createObjectURL(f);p.style.display='block';const i=document.getElementById('camInfo');i.textContent='Envoi de la photo…';
+ try{const a=await claude.use('assets');if(!a)throw 0;const r=await a.upload(f);photo=r.id;i.textContent='Photo prête.';}catch(_){i.textContent='La photo n\u2019est pas partie. Réessaie.';}};
+document.getElementById('send').onclick=async()=>{const m=document.getElementById('msg');m.textContent='Envoi…';
+ try{const db=await claude.use('db');if(!db)throw 0;await db.doc('reponses/envoi-'+Date.now()).set({quand:new Date().toISOString(),blocs:st,quantites:qty,modeleHoodie:document.getElementById('qHood').value,caramel:document.getElementById('qCar').value,photo});m.textContent='Envoyé. Écris « c\u2019est envoyé » à Claude.';}catch(_){m.textContent='L\u2019envoi n\u2019a pas marché. Réessaie.';}};
+</script></body></html>

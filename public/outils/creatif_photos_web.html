@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO · Photos web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF; --ink:#0F0A0A; --soft:#6E6464; --line:#E6E0E0; --card:#F7F4F4;
+  --foyer:#4A1620; --braise:#2F0D14; --onaccent:#FFFFFF; --ok:#2E6B3A; --err:#A3262F;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F0A0A; --ink:#FFFFFF; --soft:#B5AAAA; --line:#2E2424; --card:#1A1213;
+    --foyer:#8A2A3B; --braise:#C9475C; --onaccent:#FFFFFF; --ok:#6FCF83; --err:#FF7A84;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F0A0A; --ink:#FFFFFF; --soft:#B5AAAA; --line:#2E2424; --card:#1A1213;
+  --foyer:#8A2A3B; --braise:#C9475C; --onaccent:#FFFFFF; --ok:#6FCF83; --err:#FF7A84;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 120px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.logo{width:44px;height:44px;border-radius:10px;background:var(--foyer);color:var(--onaccent);display:grid;place-items:center;font-weight:900;font-size:22px}
+h1{font-size:28px;font-weight:900;letter-spacing:-.02em;margin:0;line-height:1}
+.sub{color:var(--soft);font-size:14px;margin-top:3px}
+section{border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px;background:var(--bg)}
+section h2{font-size:18px;font-weight:700;margin:0 0 4px;display:flex;gap:10px;align-items:center}
+.n{width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);display:inline-grid;place-items:center;font-size:14px;font-weight:900;flex:none}
+.hint{color:var(--soft);font-size:14px;margin:0 0 12px}
+.btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--foyer);color:var(--onaccent);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px}
+.btn.alt{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:26px 14px;text-align:center;cursor:pointer;background:var(--card)}
+.drop.over{border-color:var(--braise)}
+.drop strong{display:block;font-size:18px;margin-bottom:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 14px;font:inherit;font-size:15px;cursor:pointer;text-align:left}
+.chip small{display:block;color:var(--soft);font-size:12px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:var(--bg);opacity:.75}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+label.f{display:block;font-size:14px;font-weight:600;margin:12px 0 6px}
+input[type=text],textarea{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.tile{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);position:relative}
+.tile img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--line)}
+.tile .meta{padding:8px 10px;font-size:12px;line-height:1.35}
+.tile .nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .sz{color:var(--soft)}
+.tile .sz b{color:var(--ok)}
+.tile .st{position:absolute;top:8px;right:8px;background:var(--bg);color:var(--ink);border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700}
+.tile .st.ok{background:var(--ok);color:#fff}
+.tile .st.err{background:var(--err);color:#fff}
+.tile .x{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:15px;cursor:pointer}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:12px 0 6px}
+.bar i{display:block;height:100%;width:0;background:var(--braise);transition:width .25s}
+.total{font-size:15px;margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--card)}
+.total b{font-weight:900}
+.msg{font-size:14px;margin-top:10px;padding:10px 12px;border-radius:10px;display:none}
+.msg.show{display:block}
+.msg.ok{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.msg.err{background:color-mix(in srgb,var(--err) 15%,transparent);color:var(--err)}
+.msg a{color:inherit;font-weight:700}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:center;z-index:5}
+.dock .btn{flex:1;max-width:240px}
+.camprev{max-width:100%;border-radius:10px;margin-top:10px;display:none}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">X</div>
+    <div>
+      <h1>Photos web</h1>
+      <div class="sub">Tes photos du photographe, légères et belles, prêtes pour Shopify et les pubs.</div>
+    </div>
+  </header>
+
+  <section>
+    <h2><span class="n">1</span>Choisis tes photos</h2>
+    <p class="hint">Prends-en autant que tu veux. Les originaux ne sont jamais touchés.</p>
+    <div class="drop" id="drop" tabindex="0" role="button">
+      <strong>📸 Choisir des photos</strong>
+      <span class="hint" style="margin:0">ou glisse-les ici (ordi)</span>
+    </div>
+    <input type="file" id="pick" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple class="hidden">
+    <div class="grid" id="grid"></div>
+    <div class="total hidden" id="total"></div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Format</h2>
+    <p class="hint">« Web et pubs » est le bon choix pour presque tout.</p>
+    <div class="chips" id="sizes">
+      <button class="chip" data-px="2048" aria-pressed="true">Web et pubs<small>2048 px · Shopify, Meta, TikTok</small></button>
+      <button class="chip" data-px="1440" aria-pressed="false">Réseaux sociaux<small>1440 px · publications Insta et Facebook</small></button>
+      <button class="chip" data-px="1080" aria-pressed="false">Ultra léger<small>1080 px · courriels, Klaviyo</small></button>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Envoie au Drive</h2>
+    <p class="hint">Colle le lien du dossier du shoot. L'outil crée dedans un dossier « Web et pubs » et y dépose tout.</p>
+    <label class="f" for="folder">Lien du dossier du shoot dans le Drive</label>
+    <input type="text" id="folder" placeholder="https://drive.google.com/drive/folders/…" autocomplete="off">
+    <label class="f" for="sub">Nom du nouveau dossier</label>
+    <input type="text" id="sub" value="Web et pubs">
+    <div style="height:14px"></div>
+    <button class="btn full" id="send" disabled>☁️ Envoyer au Drive</button>
+    <div class="bar hidden" id="bar"><i></i></div>
+    <div class="msg" id="drivemsg"></div>
+    <div style="height:10px"></div>
+    <button class="btn alt full" id="dl" disabled>⬇️ Ou télécharger sur cet appareil</button>
+    <div class="msg" id="dlmsg"></div>
+  </section>
+
+  <section>
+    <h2>📝 Une note pour Claude</h2>
+    <p class="hint">Un problème ou une idée ? Écris-le ou prends ton écran en photo, puis Envoyer.</p>
+    <textarea id="note" placeholder="Ex. : ça bloque à l'étape 3…"></textarea>
+    <img id="camprev" class="camprev" alt="Photo jointe">
+    <input type="file" id="cam" accept="image/*" capture="environment" class="hidden">
+  </section>
+</div>
+
+<div class="dock">
+  <button class="btn alt" id="camBtn">📷 Caméra</button>
+  <button class="btn" id="sendNote">Envoyer</button>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const items = []; // {id, file, name, origSize, blob, url, status}
+  let maxPx = 2048, busy = false, camBlob = null;
+  const QUALITY = 0.86;
+
+  const fmt = b => b >= 1048576 ? (b/1048576).toFixed(1).replace('.',',') + ' Mo' : Math.max(1,Math.round(b/1024)) + ' Ko';
+  const safeName = n => n.replace(/\.[^.]+$/,'').replace(/[^\w\-À-ÿ ]+/g,'').trim() || 'photo';
+
+  try{ const f = localStorage.getItem('anro_photos_folder'); if(f) $('#folder').value = f; }catch(e){}
+
+  // ---------- Choix des photos
+  const drop = $('#drop'), pick = $('#pick');
+  drop.addEventListener('click', () => pick.click());
+  drop.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick.click(); }});
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); addFiles(e.dataTransfer.files); });
+  pick.addEventListener('change', () => { addFiles(pick.files); pick.value=''; });
+
+  function addFiles(list){
+    for(const file of list){
+      if(!file.type.startsWith('image/') && !/\.(heic|heif)$/i.test(file.name)) continue;
+      items.push({id: Math.random().toString(36).slice(2), file, name: safeName(file.name), origSize: file.size, blob:null, url:null, status:'⏳'});
+    }
+    render(); processAll();
+  }
+
+  // ---------- Réduction (respecte l'orientation, réduction par paliers pour la netteté)
+  async function shrink(file){
+    let bmp;
+    try{ bmp = await createImageBitmap(file, {imageOrientation:'from-image'}); }
+    catch(e){
+      bmp = await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(new Error('format')); im.src=URL.createObjectURL(file); });
+    }
+    const w0 = bmp.width, h0 = bmp.height;
+    const scale = Math.min(1, maxPx / Math.max(w0,h0));
+    const W = Math.round(w0*scale), H = Math.round(h0*scale);
+    let cw = w0, ch = h0, src = bmp;
+    while(cw/2 >= W && ch/2 >= H){
+      const c = document.createElement('canvas'); c.width = Math.round(cw/2); c.height = Math.round(ch/2);
+      const x = c.getContext('2d'); x.imageSmoothingQuality='high'; x.drawImage(src,0,0,c.width,c.height);
+      src = c; cw = c.width; ch = c.height;
+    }
+    const out = document.createElement('canvas'); out.width = W; out.height = H;
+    const ctx = out.getContext('2d'); ctx.imageSmoothingQuality='high';
+    ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,W,H);
+    ctx.drawImage(src,0,0,W,H);
+    if(bmp.close) bmp.close();
+    return await new Promise((res,rej)=>out.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',QUALITY));
+  }
+
+  async function processAll(){
+    if(busy) return; busy = true; updateButtons();
+    for(const it of items){
+      if(it.blob || it.status==='❌') continue;
+      try{
+        it.blob = await shrink(it.file);
+        if(it.url) URL.revokeObjectURL(it.url);
+        it.url = URL.createObjectURL(it.blob);
+        it.status = 'Prête';
+      }catch(e){ it.status = '❌'; it.err = 'Format non lu'; }
+      render();
+    }
+    busy = false; updateButtons();
+  }
+
+  function render(){
+    const g = $('#grid'); g.innerHTML = '';
+    let o=0, n=0;
+    for(const it of items){
+      const t = document.createElement('div'); t.className='tile';
+      const img = document.createElement('img'); img.alt = it.name; img.loading='lazy';
+      if(it.url) img.src = it.url;
+      const st = document.createElement('span'); st.className='st' + (it.status==='✅ Drive'?' ok':it.status==='❌'?' err':''); st.textContent = it.status;
+      const x = document.createElement('button'); x.className='x'; x.textContent='✕'; x.title='Retirer'; x.setAttribute('aria-label','Retirer');
+      x.onclick = () => { const i = items.indexOf(it); if(i>-1){ if(it.url) URL.revokeObjectURL(it.url); items.splice(i,1); render(); updateButtons(); } };
+      const m = document.createElement('div'); m.className='meta';
+      const nm = document.createElement('div'); nm.className='nm'; nm.textContent = it.name + '.jpg';
+      const sz = document.createElement('div'); sz.className='sz';
+      sz.innerHTML = it.blob ? fmt(it.origSize) + ' → <b>' + fmt(it.blob.size) + '</b>' : (it.err || 'Réduction…');
+      m.append(nm, sz); t.append(img, st, x, m); g.append(t);
+      if(it.blob){ o += it.origSize; n += it.blob.size; }
+    }
+    const tot = $('#total');
+    if(items.length && n){
+      tot.classList.remove('hidden');
+      tot.innerHTML = '<b>' + items.length + '</b> photo' + (items.length>1?'s':'') + ' · ' + fmt(o) + ' → <b>' + fmt(n) + '</b> (' + Math.round((1-n/o)*100) + ' % plus léger)';
+    } else tot.classList.add('hidden');
+  }
+
+  function ready(){ return items.filter(i => i.blob); }
+  function updateButtons(){
+    const r = ready().length > 0 && !busy;
+    $('#send').disabled = !r; $('#dl').disabled = !r;
+  }
+
+  // ---------- Formats
+  $('#sizes').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if(!b || busy) return;
+    document.querySelectorAll('#sizes .chip').forEach(c => c.setAttribute('aria-pressed', c===b ? 'true':'false'));
+    const px = +b.dataset.px; if(px === maxPx) return;
+    maxPx = px;
+    items.forEach(i => { if(i.status!=='❌'){ i.blob=null; i.status='⏳'; } });
+    render(); processAll();
+  });
+
+  // ---------- Drive
+  function folderId(v){
+    v = (v||'').trim();
+    const m = v.match(/folders\/([\w-]{10,})/) || v.match(/[?&]id=([\w-]{10,})/);
+    if(m) return m[1];
+    if(/^[\w-]{20,}$/.test(v)) return v;
+    return null;
+  }
+  function blobToB64(b){
+    return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=()=>rej(r.error); r.readAsDataURL(b); });
+  }
+  function show(el, cls, html){ el.className = 'msg show ' + cls; el.innerHTML = html; }
+  function mcpErrText(e){
+    switch(e && e.code){
+      case 'server_not_connected': return 'Google Drive n\'est pas branché à Claude sur cet appareil. Branche-le dans les connecteurs de Claude, puis réessaie.';
+      case 'needs_reauth': return 'Ta connexion Google Drive est expirée. Reconnecte Google Drive dans les connecteurs de Claude, puis réessaie.';
+      case 'approval_required': return 'Il faut accepter l\'accès à Google Drive. Ouvre l\'outil dans Claude et accepte la demande.';
+      case 'blocked_by_policy': return 'L\'accès à Google Drive est bloqué pour cet outil.';
+      case 'tool_error': return 'Google Drive a refusé : vérifie que le lien est bien celui d\'un dossier où tu peux écrire.';
+      case 'server_unavailable': case 'upstream_error': return 'Google Drive ne répond pas pour le moment. Vérifie dans le dossier ce qui est arrivé, puis relance seulement ce qui manque.';
+      default: return 'Envoi impossible pour le moment' + (e && e.message ? ' (' + e.message + ')' : '') + '.';
+    }
+  }
+
+  $('#send').addEventListener('click', async () => {
+    const msg = $('#drivemsg');
+    const pid = folderId($('#folder').value);
+    if(!pid){ show(msg,'err','Colle le lien d\'un dossier Drive (il contient « /folders/ »).'); return; }
+    try{ localStorage.setItem('anro_photos_folder', $('#folder').value.trim()); }catch(e){}
+    const mcp = await claude.use('mcp');
+    if(!mcp){ show(msg,'err','Le branchement Drive n\'est pas disponible ici. Utilise plutôt « Télécharger sur cet appareil ».'); return; }
+    const todo = ready().filter(i => i.status !== '✅ Drive');
+    if(!todo.length){ show(msg,'ok','Tout est déjà dans le Drive. 👌'); return; }
+    busy = true; updateButtons();
+    const bar = $('#bar'), fill = bar.querySelector('i'); bar.classList.remove('hidden'); fill.style.width='0%';
+    show(msg,'', 'Création du dossier…');
+    let target;
+    try{
+      const r = await mcp.callTool('Google Drive','create_file',{title: ($('#sub').value.trim() || 'Web et pubs'), contentMimeType:'application/vnd.google-apps.folder', parentId: pid});
+      target = r && r.payload;
+      if(!target || !target.id) throw {code:'tool_error'};
+    }catch(e){ show(msg,'err', mcpErrText(e)); busy=false; updateButtons(); bar.classList.add('hidden'); return; }
+    let done = 0, fails = 0;
+    for(const it of todo){
+      it.status = '⬆️'; render();
+      show(msg,'', 'Envoi ' + (done+fails+1) + ' sur ' + todo.length + '…');
+      try{
+        const b64 = await blobToB64(it.blob);
+        await mcp.callTool('Google Drive','create_file',{title: it.name + '.jpg', base64Content: b64, contentMimeType:'image/jpeg', disableConversionToGoogleType:true, parentId: target.id});
+        it.status = '✅ Drive'; done++;
+      }catch(e){
+        it.status = '❌'; it.err = 'Pas envoyée'; fails++;
+        if(['server_not_connected','needs_reauth','approval_required','blocked_by_policy'].includes(e && e.code)){ show(msg,'err', mcpErrText(e)); render(); break; }
+      }
+      fill.style.width = Math.round((done+fails)/todo.length*100) + '%';
+      render();
+    }
+    busy = false; updateButtons();
+    const link = target.viewUrl ? ' <a href="' + target.viewUrl + '" target="_blank" rel="noopener">Ouvrir le dossier</a>' : '';
+    if(fails) show(msg,'err', done + ' envoyée' + (done>1?'s':'') + ', ' + fails + ' en erreur. Retire-les ou réessaie.' + link);
+    else show(msg,'ok', '✅ ' + done + ' photo' + (done>1?'s':'') + ' dans « ' + target.title + ' ».' + link);
+    logToDb({type:'envoi_drive', dossier: target.viewUrl || '', format: maxPx, photos: done, erreurs: fails});
+  });
+
+  // ---------- Téléchargement (un fichier à la fois, jamais de zip)
+  $('#dl').addEventListener('click', async () => {
+    const msg = $('#dlmsg');
+    const dl = await claude.use('downloads');
+    if(!dl){ show(msg,'err','Le téléchargement n\'est pas disponible ici. Utilise l\'envoi au Drive.'); return; }
+    let ok = 0;
+    for(const it of ready()){
+      try{ await dl.save({filename: it.name + '-web.jpg', data: it.blob}); ok++; }
+      catch(e){ if(e && e.code==='unavailable'){ show(msg,'err','Le téléchargement n\'est pas disponible ici.'); return; } }
+    }
+    show(msg,'ok', ok + ' photo' + (ok>1?'s':'') + ' enregistrée' + (ok>1?'s':'') + '.');
+  });
+
+  // ---------- Note, caméra, Envoyer à Claude
+  $('#camBtn').addEventListener('click', () => $('#cam').click());
+  $('#cam').addEventListener('change', async () => {
+    const f = $('#cam').files[0]; if(!f) return;
+    const old = maxPx; maxPx = 900;
+    try{ camBlob = await shrink(f); }catch(e){ camBlob = null; }
+    maxPx = old;
+    if(camBlob){ const p = $('#camprev'); p.src = URL.createObjectURL(camBlob); p.style.display='block'; }
+    $('#cam').value='';
+  });
+
+  async function logToDb(row){
+    try{
+      const db = await claude.use('db'); if(!db) return false;
+      const id = Date.now() + '-' + Math.random().toString(36).slice(2,7);
+      await db.doc('notes/' + id).set(Object.assign({quand: new Date().toISOString()}, row));
+      return true;
+    }catch(e){ return false; }
+  }
+
+  $('#sendNote').addEventListener('click', async () => {
+    const txt = $('#note').value.trim();
+    if(!txt && !camBlob){ $('#note').focus(); return; }
+    const b = $('#sendNote'); b.disabled = true; b.textContent = 'Envoi…';
+    let photo = '';
+    if(camBlob){ try{ photo = 'data:image/jpeg;base64,' + await blobToB64(camBlob); }catch(e){} }
+    const etat = items.map(i => i.name + ' : ' + i.status).join(' | ');
+    const ok = await logToDb({type:'note', texte: txt, photo, etat, format: maxPx});
+    b.disabled = false; b.textContent = ok ? '✅ Envoyé' : 'Réessayer';
+    if(ok){ $('#note').value=''; camBlob=null; $('#camprev').style.display='none'; setTimeout(()=>b.textContent='Envoyer', 2500); }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO LIVE — plan multicaméra à approuver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--paper:#F6F3F1;--ink:#0F0A0A;--muted:#5E5455;--line:#E2DAD8;--foyer:#4A1620;--braise:#2F0D14;--acc:#4A1620;--acc-s:#F1E3E6;--ok:#2F6B4F;--ok-s:#E1EFE6;--warn:#A8441F;--warn-s:#F8E5DC;--field:#FFFFFF;
+--f:"Fira Sans","Helvetica Neue",Arial,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1C1415;--ink:#FFFFFF;--muted:#B7ACAD;--line:#3A2C2E;--acc:#D98C9C;--acc-s:#3A1820;--ok:#7CC6A0;--ok-s:#17302A;--warn:#F0A07E;--warn-s:#3A2219;--field:#2F0D14}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1C1415;--ink:#FFFFFF;--muted:#B7ACAD;--line:#3A2C2E;--acc:#D98C9C;--acc-s:#3A1820;--ok:#7CC6A0;--ok-s:#17302A;--warn:#F0A07E;--warn-s:#3A2219;--field:#2F0D14}
+*,*::before,*::after{box-sizing:inherit}html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f)}
+.hero{background:var(--braise);color:#fff;padding:22px 16px 20px}
+.hero .in{max-width:680px;margin:0 auto}
+.brand{font-weight:900;letter-spacing:.3em;font-size:13px;opacity:.85}
+.hero h1{font:900 clamp(32px,9vw,52px)/.98 var(--f);margin:8px 0 8px;letter-spacing:-.02em;text-transform:uppercase}
+.hero p{margin:0;opacity:.85;max-width:52ch}
+.wrap{max-width:680px;margin:0 auto;padding:0 14px 120px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+.meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:5px}
+.total{display:flex;justify-content:space-between;align-items:baseline;font-weight:800;font-size:15px;margin-top:4px}
+.total b{font-size:20px}
+.blk{background:var(--paper);border:1.5px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
+.blk.ok{border-color:var(--ok)}.blk.chg{border-color:var(--warn)}
+.num{font-size:12px;font-weight:600;color:var(--acc);margin:0;letter-spacing:.08em;text-transform:uppercase}
+h2{font:800 22px/1.15 var(--f);margin:2px 0 8px}
+h3{font:700 16px var(--f);margin:14px 0 6px}
+p{margin:0 0 8px}
+.note{font-size:13.5px;color:var(--muted)}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:15px}.row b{text-align:right;white-space:nowrap}
+.row.tot{border-bottom:0;border-top:2px solid var(--ink);margin-top:2px}.row.tot span,.row.tot b{font-weight:800;font-size:17px}
+.zone{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0}
+.zone h4{margin:0 0 2px;font-size:16px;font-weight:800}
+.zone .why{font-size:13px;color:var(--muted);margin-bottom:6px}
+.stp{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:6px 0;font-size:14.5px}
+.ctl{display:flex;align-items:center;gap:6px}
+.ctl button{width:40px;height:40px;border-radius:10px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:800 20px var(--f);cursor:pointer}
+.ctl span{min-width:22px;text-align:center;font-weight:800}
+.types{display:grid;gap:8px;margin:8px 0}
+.type{background:var(--field);border:1px solid var(--line);border-radius:14px;padding:12px}
+.type b{display:block;font-size:15.5px}
+.type small{display:block;color:var(--muted);font-size:13px;line-height:1.4;margin-top:2px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;background:var(--acc-s);color:var(--acc);margin-top:6px}
+.opts{display:grid;gap:8px;margin:8px 0}
+.opt{font:500 15px var(--f);text-align:left;background:var(--field);border:1.5px solid var(--line);border-radius:14px;padding:11px 12px;cursor:pointer;color:var(--ink);min-height:48px}
+.opt small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.opt.sel{border-color:var(--acc);background:var(--acc-s)}
+.flow{list-style:none;margin:6px 0;padding:0;counter-reset:f}
+.flow li{counter-increment:f;position:relative;padding:8px 0 8px 40px;border-bottom:1px dashed var(--line);font-size:15px}
+.flow li::before{content:counter(f);position:absolute;left:0;top:8px;width:28px;height:28px;border-radius:50%;background:var(--foyer);color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px}
+.alert{background:var(--warn-s);border-left:4px solid var(--warn);border-radius:10px;padding:10px 12px;font-size:14.5px;margin:10px 0}
+.good{background:var(--ok-s);border-left:4px solid var(--ok);border-radius:10px;padding:10px 12px;font-size:14.5px;margin:10px 0}
+textarea{font:500 15.5px var(--f);width:100%;min-height:62px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--field);color:var(--ink);resize:vertical;margin-top:8px}
+.dec{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.dbtn{font:600 15.5px var(--f);min-height:50px;border-radius:13px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.dbtn.ok.on{background:var(--ok);border-color:var(--ok);color:#fff}.dbtn.chg.on{background:var(--warn);border-color:var(--warn);color:#fff}
+.sum{background:var(--paper);border:2px solid var(--ink);border-radius:18px;padding:16px;margin-top:18px}
+pre{white-space:pre-wrap;font:14px/1.5 var(--f);background:var(--field);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;max-height:340px;overflow:auto}
+.big{width:100%;font:800 16.5px var(--f);min-height:54px;border-radius:14px;border:0;background:var(--foyer);color:#fff;cursor:pointer;letter-spacing:.02em}
+.cam{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:9;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.cam button{font:800 15px var(--f);min-height:52px;padding:0 18px;border-radius:999px;border:0;background:var(--ink);color:var(--bg);box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer}
+.cam .msg{background:var(--ink);color:var(--bg);font-size:13px;padding:6px 10px;border-radius:10px;max-width:250px}
+.cam img{width:110px;border-radius:10px;border:2px solid var(--ink)}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in"><div class="brand">ANRO</div><h1>Le live qui tourne tout seul</h1><p>Plan du système multicaméra : boutique, entrepôt, bureau, studio. Ajuste les caméras par zone, choisis tes réponses, puis approuve bloc par bloc.</p></div></header>
+<div class="wrap">
+  <div class="top"><div class="bar"><i id="bar"></i></div><div class="meta"><span id="cnt"></span><span>Estimations au 6 oct. 2026</span></div>
+  <div class="total"><span id="tc"></span><b id="tt"></b></div></div>
+  <div id="blocks"></div>
+  <div class="sum"><h2>Résumé à copier</h2><pre id="out"></pre><button class="big" id="copy">Copier le résumé</button><p class="note" style="margin-top:8px">Colle-le dans le chat : je passe ensuite à la boutique et au coworking.</p></div>
+</div>
+<div class="cam"><div class="msg" id="cmsg" hidden></div><img id="cimg" alt="" hidden><button id="camBtn" type="button">📷 Caméra</button><button id="sendBtn" type="button" hidden>Envoyer</button><input id="camIn" type="file" accept="image/*" capture="environment" hidden></div>
+<script>
+(function(){
+const KEY="anro-live-setup-v1";
+const $=n=>new Intl.NumberFormat("fr-CA",{style:"currency",currency:"CAD",maximumFractionDigits:0}).format(Math.round(n||0));
+const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Types de caméras (prix estimés en dollars canadiens, achetés au Québec avec garantie canadienne)
+const T={
+ suit:{n:"Caméra qui te suit",m:"OBSBOT Tail Air (ou équivalent)",u:650,x:80,d:"Pivote et zoome toute seule sur la personne qui bouge. Branchée par un seul câble réseau (image + courant).",inst:true},
+ cell:{n:"Cellulaire que tu as déjà",m:"Application NDI + support + chargeur",u:0,x:120,d:"Plan large fixe. Reste branché et sur le Wi-Fi. Parfait pour commencer sans acheter.",inst:false},
+ web:{n:"Webcam intelligente",m:"OBSBOT Tiny 2 Lite (ou équivalent)",u:260,x:40,d:"Suit ton visage, branchée directement dans un ordi. Idéale à un bureau.",inst:false}
+};
+const ZONES=[
+ {id:"bout",n:"Boutique",w:"Les clients, les essayages, la caisse, tes univers",c:{suit:2,cell:1,web:0}},
+ {id:"ent",n:"Entrepôt e-com",w:"Emballage, racks, réception, fond blanc studio",c:{suit:2,cell:3,web:0}},
+ {id:"cow",n:"Coworking",w:"Le poste Shopify et l'équipe au travail",c:{suit:0,cell:0,web:1}},
+ {id:"bur",n:"Ton bureau",w:"Toi, les appels, les décisions",c:{suit:1,cell:0,web:1}},
+ {id:"stu",n:"Studio intelligent",w:"Lives propres ; ton ATEM Mini Pro sert ici",c:{suit:1,cell:1,web:0}},
+ {id:"cor",n:"Corridor",w:"Le monde qui attend, les arrivées",c:{suit:0,cell:1,web:0}}
+];
+let S={z:{},pc:"",net:"",inst:"",clip:"",name:"",dec:{},notes:{}};
+ZONES.forEach(z=>S.z[z.id]=Object.assign({},z.c));
+try{const o=JSON.parse(localStorage.getItem(KEY));if(o)S=Object.assign(S,o)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+function counts(){const c={suit:0,cell:0,web:0};ZONES.forEach(z=>{for(const k in c)c[k]+=S.z[z.id][k]||0});return c}
+function cost(){
+  const c=counts(),cams=c.suit*(T.suit.u+T.suit.x)+c.cell*T.cell.x+c.web*(T.web.u+T.web.x);
+  const drops=c.suit, cab=S.inst==="oncle"?drops*120:S.inst==="moi"?drops*45:drops*175;
+  const pc=S.pc==="acheter"||S.pc==="mac"?2200:0;
+  const items=[["Caméras et supports ("+(c.suit+c.cell+c.web)+" points de vue)",cams],["Commutateur réseau PoE 16 ports",380],["Point d'accès Wi-Fi pour l'entrepôt",220],["Câblage réseau ("+drops+" câbles"+(S.inst==="oncle"?", par ton oncle":S.inst==="moi"?", matériel seulement":", installateur")+")",cab],["Stream Deck (le bouton « Live »)",220],["Ordi serveur avec carte NVIDIA",pc],["Micros sans fil",0]];
+  const sub=items.reduce((a,b)=>a+b[1],0);return {items,sub,tax:sub*.14975,tot:sub*1.14975,c}
+}
+
+const B=[
+ {id:"concept",t:"Le concept",h:()=>`<p>Des caméras partout qui tournent en continu. Tu appuies sur un bouton, tu es en live sur toutes les plateformes. L'ordi change de caméra tout seul quand il y a de l'action. Chaque live devient des clips publiés sur de nouveaux comptes.</p>
+  <h3>Le nom du projet</h3><div class="opts">${[["ANRO Live","Simple, clair, la marque d'abord"],["Dans la vie d'ANRO","Le côté télésérie, les coulisses"],["ANRO 24/7","On est toujours là, toujours en action"],["Suis-nous","L'appel à l'action dans le nom"]].map(([v,d])=>`<button class="opt ${S.name===v?"sel":""}" data-k="name" data-v="${v}"><b>${v}</b><small>${d}</small></button>`).join("")}</div>
+  <p class="note">Ou appuie sur À changer et écris ton idée.</p>`,s:()=>S.name||"nom à choisir"},
+ {id:"types",t:"Les 3 sortes de caméras",h:()=>`<div class="types">${Object.values(T).map(t=>`<div class="type"><b>${t.n}</b><small>${t.m}</small><small>${t.d}</small><span class="pill">${t.u?$(t.u+t.x)+" chacune, support inclus":"≈ "+$(t.x)+" (support et chargeur)"}</span></div>`).join("")}</div>
+  <div class="good">Pas d'achat en Chine : on achète chez un détaillant au Québec (Gosselin Photo, Lozeau, Best Buy ou Bureau en Gros) avec la garantie canadienne. Les marques fabriquent en Asie, comme tout l'électronique, mais le service et le retour se font ici.</div>`,s:()=>"suiveuses, cellulaires, webcams"},
+ {id:"zones",t:"Les caméras par zone",h:()=>`<p>Ajuste avec + et −. Le total en haut bouge en direct.</p>${ZONES.map(z=>`<div class="zone"><h4>${z.n}</h4><div class="why">${z.w}</div>${Object.keys(T).map(k=>`<div class="stp"><span>${T[k].n}</span><span class="ctl"><button data-z="${z.id}" data-t="${k}" data-a="-1" aria-label="Moins">−</button><span>${S.z[z.id][k]||0}</span><button data-z="${z.id}" data-t="${k}" data-a="1" aria-label="Plus">+</button></span></div>`).join("")}</div>`).join("")}`,
+  s:()=>ZONES.map(z=>{const x=S.z[z.id];return z.n+" "+(x.suit||0)+"/"+(x.cell||0)+"/"+(x.web||0)}).join(" · ")+" (suiveuses/cells/webcams)"},
+ {id:"cerveau",t:"Le cerveau : un ordi qui fait tout",h:()=>`<ol class="flow"><li>Toutes les caméras arrivent dans un seul ordi, par le réseau (NDI).</li><li><b>OBS Studio</b> (gratuit) monte l'image ; le module <b>Advanced Scene Switcher</b> change de caméra tout seul selon le son et le mouvement.</li><li><b>Restream</b> envoie un seul signal vers TikTok, Instagram, Facebook, YouTube et Twitch en même temps.</li><li>Chaque live est enregistré pour les clips.</li></ol>
+  <h3>Ton ordi serveur, c'est quoi?</h3><div class="opts">${[["pc","Un PC Windows avec une carte NVIDIA récente","On l'utilise, rien à acheter"],["mac","Des Mac seulement","Possible, mais un PC NVIDIA gère mieux 10 caméras et plus"],["acheter","Je ne sais pas, achetons le bon","≈ 2 200 $ pour un PC dédié"]].map(([v,n,d])=>`<button class="opt ${S.pc===v?"sel":""}" data-k="pc" data-v="${v}"><b>${n}</b><small>${d}</small></button>`).join("")}</div>`,s:()=>({pc:"PC NVIDIA existant",mac:"Mac (PC à prévoir)",acheter:"PC à acheter"})[S.pc]||"à confirmer"},
+ {id:"reseau",t:"Réseau et installation",h:()=>`<p>Un câble réseau par caméra suiveuse, jusqu'à un commutateur PoE qui fournit aussi le courant. Les cellulaires passent par le Wi-Fi.</p>
+  <h3>Qui passe les câbles?</h3><div class="opts">${[["oncle","Mon oncle (sa compagnie de sécurité)","On combine avec le projet caméras de surveillance"],["pro","Un installateur","≈ 175 $ par câble"],["moi","Nous-mêmes","Matériel seulement"]].map(([v,n,d])=>`<button class="opt ${S.inst===v?"sel":""}" data-k="inst" data-v="${v}"><b>${n}</b><small>${d}</small></button>`).join("")}</div>
+  <h3>Ta vitesse Internet en envoi (upload)?</h3><div class="opts">${[["50","50 Mbit/s ou plus","Parfait"],["10","Entre 10 et 50 Mbit/s","Ça passe avec Restream"],["nsp","Je ne sais pas","Fais un test sur fast.com à la shop"]].map(([v,n,d])=>`<button class="opt ${S.net===v?"sel":""}" data-k="net" data-v="${v}"><b>${n}</b><small>${d}</small></button>`).join("")}</div>`,s:()=>"installation : "+(({oncle:"oncle",pro:"installateur",moi:"nous-mêmes"})[S.inst]||"à choisir")+", upload : "+(({"50":"50+","10":"10–50",nsp:"à tester"})[S.net]||"à confirmer")},
+ {id:"bouton",t:"Le bouton « Live »",h:()=>`<p>Un Stream Deck sur ton bureau. Un bouton démarre tout : les caméras, l'enregistrement et le live sur toutes les plateformes. Un autre arrête. D'autres boutons pour forcer une caméra (« Emballage », « Caisse », « Moi »).</p><p class="note">Tu peux aussi tout démarrer depuis l'ordi ou ton téléphone.</p>`,s:()=>"Stream Deck, un bouton"},
+ {id:"clips",t:"La machine à clips",h:()=>`<ol class="flow"><li>Le live terminé est envoyé à OpusClip (déjà branché à mon côté).</li><li>OpusClip sort les meilleurs moments selon le style qu'on lui enseigne.</li><li>Iris corrige les captions et approuve.</li><li>Metricool publie 3 à 4 fois par semaine sur les nouveaux comptes.</li></ol>
+  <h3>Qui fait les clips?</h3><div class="opts">${[["opus","OpusClip automatique","Rapide, on l'entraîne à notre style"],["monteur","Mon monteur à environ 20 $ le clip","Plus de contrôle, plus cher"],["deux","Les deux","OpusClip pour le volume, le monteur pour les meilleurs"]].map(([v,n,d])=>`<button class="opt ${S.clip===v?"sel":""}" data-k="clip" data-v="${v}"><b>${n}</b><small>${d}</small></button>`).join("")}</div>`,s:()=>({opus:"OpusClip",monteur:"monteur",deux:"OpusClip + monteur"})[S.clip]||"à choisir"},
+ {id:"comptes",t:"Les nouveaux comptes",h:()=>`<p>Nouveaux comptes TikTok, Instagram, Facebook, YouTube et Twitch au nom du projet.</p><div class="alert"><b>TikTok :</b> le live par ordi (clé de diffusion) n'est pas offert à tous les comptes neufs ; il faut souvent bâtir un minimum d'abonnés d'abord. On démarre sur YouTube, Twitch et Facebook, et on ajoute TikTok dès qu'il est débloqué.</div>`,s:()=>"5 plateformes, TikTok en 2e temps"},
+ {id:"vie",t:"Vie privée : obligatoire",h:()=>`<div class="alert"><b>Les étiquettes d'expédition.</b> En live pendant l'emballage, les noms et adresses des clients ne doivent jamais être lisibles. On place les caméras d'emballage en plan large ou en plongée, et on colle l'étiquette en dernier, hors caméra.</div>
+  <div class="alert"><b>Les clients.</b> Affiches claires à l'entrée et à la caisse : « Boutique filmée et diffusée en direct ». On demande la permission avant de mettre un client en vedette, surtout un enfant ; un parent doit accepter.</div>
+  <div class="good">Les employés sont déjà couverts : leurs contrats incluent la participation aux tournages et aux vidéos. Les écrans de caisse et de paiement restent hors champ.</div>`,s:()=>"règles de confidentialité"},
+ {id:"budget",t:"Le budget",h:()=>{const k=cost();return `${k.items.filter(i=>i[1]>0).map(([n,v])=>`<div class="row"><span>${n}</span><b>${$(v)}</b></div>`).join("")}<div class="row"><span>Taxes (TPS + TVQ)</span><b>${$(k.tax)}</b></div><div class="row tot"><span>Total d'achat</span><b>${$(k.tot)}</b></div>
+  <h3>Chaque mois</h3><div class="row"><span>Restream (multidiffusion)</span><b>≈ 70 $</b></div><div class="row"><span>OpusClip</span><b>ton forfait actuel</b></div>
+  <p class="note" style="margin-top:8px">Prix estimés, à confirmer en magasin. Les micros sans fil : tu les as déjà.</p>
+  ${k.tot>10000?`<div class="alert">Au-dessus de 10 000 $. Remplace quelques caméras suiveuses par des cellulaires pour redescendre.</div>`:`<div class="good">Sous 10 000 $, taxes incluses.</div>`}`},s:()=>$(cost().tot)+" taxes incluses, ≈ 70 $/mois"}
+];
+
+function head(){const k=cost();document.getElementById("tc").textContent=(k.c.suit+k.c.cell+k.c.web)+" caméras · "+k.c.suit+" qui suivent";document.getElementById("tt").textContent=$(k.tot)}
+function render(){
+  document.getElementById("blocks").innerHTML=B.map((b,i)=>{const d=S.dec[b.id];return `<section class="blk ${d||""}" id="b-${b.id}"><p class="num">Bloc ${i+1} sur ${B.length}</p><h2>${b.t}</h2><div class="in">${b.h()}</div>
+  <div class="dec"><button class="dbtn ok ${d==="ok"?"on":""}" data-d="ok" data-b="${b.id}">✓ Approuver</button><button class="dbtn chg ${d==="chg"?"on":""}" data-d="chg" data-b="${b.id}">✎ À changer</button></div>
+  ${d==="chg"?`<textarea data-note="${b.id}" placeholder="Qu'est-ce que je change?">${esc(S.notes[b.id]||"")}</textarea>`:""}</section>`}).join("");
+  summary();
+}
+function summary(){
+  head();const n=B.filter(b=>S.dec[b.id]).length;
+  document.getElementById("bar").style.width=(n/B.length*100)+"%";
+  document.getElementById("cnt").textContent=n+" bloc"+(n>1?"s":"")+" sur "+B.length+" décidé"+(n>1?"s":"");
+  document.getElementById("out").textContent="ANRO LIVE — DÉCISIONS\n"+B.map((b,i)=>{const d=S.dec[b.id];return (i+1)+". "+b.t+" : "+b.s()+" → "+(d==="ok"?"APPROUVÉ":d==="chg"?"À CHANGER : "+(S.notes[b.id]||"(préciser)"):"pas encore décidé")}).join("\n");
+  save();
+}
+function refresh(id){const el=document.querySelector("#b-"+id+" .in");if(el)el.innerHTML=B.find(b=>b.id===id).h();const bb=document.querySelector("#b-budget .in");if(bb)bb.innerHTML=B.find(b=>b.id==="budget").h();summary()}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.z){const z=S.z[t.dataset.z];z[t.dataset.t]=Math.max(0,Math.min(8,(z[t.dataset.t]||0)+ +t.dataset.a));refresh("zones");return}
+  if(t.dataset.k){S[t.dataset.k]=t.dataset.v;refresh(t.closest(".blk").id.slice(2));return}
+  if(t.dataset.d){const id=t.dataset.b;S.dec[id]=S.dec[id]===t.dataset.d?undefined:t.dataset.d;render();if(S.dec[id]==="chg"){const ta=document.querySelector(`[data-note="${id}"]`);if(ta)ta.focus()}else if(S.dec[id]==="ok"){const nx=document.querySelector(".blk:not(.ok):not(.chg)");if(nx)nx.scrollIntoView({behavior:"smooth",block:"start"})}return}
+  if(t.id==="copy"){const txt=document.getElementById("out").textContent;const ok=()=>{t.textContent="Copié ✓";setTimeout(()=>t.textContent="Copier le résumé",1500)};const fb=()=>{const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand("copy")}catch(_){}a.remove();ok()};try{navigator.clipboard.writeText(txt).then(ok,fb)}catch(_){fb()}}
+});
+document.addEventListener("input",e=>{if(e.target.dataset.note){S.notes[e.target.dataset.note]=e.target.value;summary()}});
+
+// Mode caméra : photo d'écran puis envoi par la feuille de partage
+let shot=null;const msg=document.getElementById("cmsg"),img=document.getElementById("cimg"),sb=document.getElementById("sendBtn");
+const say=m=>{msg.textContent=m;msg.hidden=false};
+document.getElementById("camBtn").addEventListener("click",()=>document.getElementById("camIn").click());
+document.getElementById("camIn").addEventListener("change",e=>{shot=e.target.files&&e.target.files[0];if(!shot)return;img.src=URL.createObjectURL(shot);img.hidden=false;sb.hidden=false;say("Photo prise. Appuie sur Envoyer, puis choisis Claude.")});
+sb.addEventListener("click",async()=>{if(!shot)return;try{if(navigator.canShare&&navigator.canShare({files:[shot]})){await navigator.share({files:[shot],title:"ANRO LIVE",text:"Je suis rendu ici, aide-moi."});say("Envoyé ✓");return}}catch(_){}say("Partage non offert ici : garde la photo et colle-la dans le chat.")});
+
+render();
+})();
+</script>
+</body>
+</html>

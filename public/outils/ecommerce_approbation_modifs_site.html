@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Approbation – Modifications du site ANRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,600;0,700;1,200&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0A0A;--surface:#2F0D14;--card:#1a1012;--accent:#4A1620;--text:#FFFFFF;--muted:rgba(255,255,255,.62);--line:rgba(255,255,255,.12);--ok:#2e7d4f;--chg:#b7791f;--no:#5b5b5b;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#FFFFFF;--surface:#f5eef0;--card:#ffffff;--accent:#4A1620;--text:#0F0A0A;--muted:rgba(15,10,10,.6);--line:rgba(15,10,10,.12);color-scheme:light}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--surface:#2F0D14;--card:#1a1012;--text:#FFFFFF;--muted:rgba(255,255,255,.62);--line:rgba(255,255,255,.12);color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:linear-gradient(90deg,#4A1620,#0F0A0A)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:linear-gradient(90deg,#4A1620,#0F0A0A);color:#fff;padding:12px 16px 10px}
+.brand{font-weight:700;letter-spacing:.02em;font-size:20px}
+.brand small{font-weight:200;font-style:italic;font-size:13px;opacity:.85;margin-left:6px}
+.prog{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:13px}
+.bar{flex:1;height:8px;background:rgba(255,255,255,.18);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#fff;transition:width .3s}
+.filters{display:flex;gap:6px;margin-top:10px;overflow-x:auto}
+.filters button{flex:none;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:20px;padding:5px 12px;font:inherit;font-size:13px}
+.filters button.on{background:#fff;color:#0F0A0A}
+main{max-width:720px;margin:0 auto;padding:12px 12px 140px}
+.intro{background:var(--surface);border-radius:14px;padding:14px;margin:6px 0 14px;font-size:14px}
+.intro b{font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+h2.sec{font-weight:600;font-size:17px;margin:22px 4px 8px;padding-left:10px;border-left:4px solid var(--accent)}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0;transition:border-color .2s}
+.item.ok{border-color:var(--ok)}.item.chg{border-color:var(--chg)}.item.no{border-color:var(--no);opacity:.75}
+.meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px}
+.num{font-size:12px;color:var(--muted)}
+.tag{font-size:11px;border-radius:10px;padding:2px 8px;font-weight:600;white-space:nowrap}
+.t-claude{background:#4A1620;color:#fff}.t-equipe{background:#3a3a3a;color:#fff}.t-decision{background:#b7791f;color:#0F0A0A}
+.note{font-weight:200;font-style:italic;color:var(--muted);font-size:14px;margin:0 0 6px}
+.act{margin:0;font-size:15px}
+.act b{font-weight:600}
+.ask{margin-top:8px}
+.ask label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+textarea{width:100%;min-height:60px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:15px;padding:8px}
+.btns{display:flex;gap:6px;margin-top:10px}
+.btns button{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px 4px;font:inherit;font-size:14px;font-weight:600;background:transparent;color:var(--text)}
+.btns .b-ok.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.btns .b-chg.on{background:var(--chg);border-color:var(--chg);color:#0F0A0A}
+.btns .b-no.on{background:var(--no);border-color:var(--no);color:#fff}
+.chgbox{display:none;margin-top:8px}.item.chg .chgbox{display:block}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--bg);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;max-width:100%}
+.bottom button{border:0;border-radius:12px;font:inherit;font-weight:600;font-size:16px;padding:14px}
+#cam{background:var(--surface);color:var(--text);flex:0 0 auto}
+#send{flex:1;background:#4A1620;color:#fff}
+#send:disabled{opacity:.5}
+#status{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.done{background:var(--ok);color:#fff;border-radius:14px;padding:16px;margin:14px 0;display:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.modal.open{display:flex}
+.sheet{background:var(--bg);color:var(--text);width:100%;max-width:720px;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet h3{margin:0 0 8px;font-weight:600}
+.sheet img{max-width:100%;border-radius:10px;margin:8px 0;display:block}
+.sheet .row{display:flex;gap:8px;margin-top:10px}
+.sheet .row button{flex:1;border:0;border-radius:12px;padding:13px;font:inherit;font-weight:600}
+.pick{background:var(--surface);color:var(--text)}.go{background:#4A1620;color:#fff}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">ANRO <small>Approbation – modifications du site</small></div>
+  <div class="prog"><div class="bar"><i id="barfill"></i></div><span id="count">0 / 0</span></div>
+  <div class="filters" id="filters">
+    <button data-f="all" class="on">Tout</button>
+    <button data-f="todo">Sans réponse</button>
+    <button data-f="decision">Décisions</button>
+    <button data-f="equipe">Équipe</button>
+    <button data-f="chg">À changer</button>
+  </div>
+</header>
+<main>
+  <div class="intro">
+    Salut Iris ! Chaque bloc = une de tes notes (en italique) et ce que je propose de faire. Pour chaque bloc, choisis :
+    <b>✅ Approuver</b>, <b>✏️ À changer</b> (écris ce que tu veux à la place) ou <b>✖️ Pas à faire</b> (c’était juste une question).
+    Tout s’enregistre tout seul. À la fin, appuie sur <b>Envoyer</b>.
+    <div class="legend"><span class="tag t-claude">Claude</span><span class="tag t-equipe">Équipe (photos)</span><span class="tag t-decision">Décision</span></div>
+    <div style="margin-top:8px;font-size:13px;color:var(--muted)">Rien ne sera publié sur le site avant le go final de Julien : tout est préparé en coulisse (thème non publié, brouillons).</div>
+  </div>
+  <div class="done" id="done">✅ Envoyé à Claude ! Tu peux encore modifier et renvoyer si besoin.</div>
+  <div id="list"></div>
+  <div id="status">Connexion…</div>
+</main>
+<div class="bottom">
+  <button id="cam" type="button">📷 Caméra</button>
+  <button id="send" type="button">Envoyer</button>
+</div>
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h3>📷 Envoyer une photo</h3>
+    <div style="font-size:14px;color:var(--muted)">Prends une photo de ton écran ou du produit, ajoute un mot et envoie.</div>
+    <input type="file" id="file" accept="image/*" capture="environment" class="hidden">
+    <img id="preview" class="hidden" alt="Aperçu de la photo">
+    <textarea id="camnote" placeholder="Ex. : sur cette page, le texte est coupé"></textarea>
+    <div class="row"><button class="pick" id="pick" type="button">Prendre / choisir</button><button class="go" id="camsend" type="button">Envoyer</button></div>
+    <div class="row"><button class="pick" id="camclose" type="button">Fermer</button></div>
+    <div id="camstatus" style="font-size:13px;margin-top:8px;color:var(--muted)"></div>
+  </div>
+</div>
+<script>
+const GABARIT="Gabarit commun pour toutes les fiches : 5 lignes fixes (composition, coupe, grammage ou matière, tailles offertes, entretien), la composition une seule fois, une seule fois le mot « Description », titres à la taille du texte, peu de gras, pas d’emojis, ton ANRO (tu, direct, chaleureux).";
+const U="Phrase unisexe : « Modèle unisexe : pour une coupe plus ajustée, on recommande aux femmes de prendre une taille en dessous. »";
+const D=[
+["1. Général",[
+["g0","Plusieurs notes sur les 5 lignes, le double « description », le texte trop gros, le gras qui fait IA.","<b>Appliquer un gabarit unique à toutes les fiches produits.</b> "+GABARIT,"claude"],
+["g1","Catégorie pantalons : que les joggings.","Ajouter cargos, jeans et tous les pantalons dans la collection Pantalons.","claude"],
+["g2","Adapter la charte graphique au site internet.","Appliquer le guide de marque dans le thème : Charbon, Coton, Foyer, Braise et Fira Sans partout (dans un thème non publié).","claude"],
+["g3","Enlever le blanc en dessous « conçu au Québec ».","Retirer l’espace vide sous la section « Conçu au Québec ».","claude"],
+["g4","Pourquoi on ne peut pas voir les avis de chaque produit ?","Vérifier l’appli d’avis et ajouter le bloc d’avis clients sur chaque page produit.","claude"],
+["g5","Réduction pas dans la catégorie soldes.","Faire de Soldes une collection automatique : tout produit avec un prix barré y tombe tout seul.","decision"],
+["g6","Mettre à jour le guide des tailles général ou l’enlever (casquettes, maillots de bain…).","Remplacer le guide général par un guide par type de produit (hauts S au 6XL, pantalons, casquettes, tuques, enfants), affiché seulement sur les bons produits. Retirer les maillots de bain.","claude","Mesures à utiliser (si tu les as) :"],
+["g7","Changer les photos des produits : surtout les casquettes.","Nouvelles photos à prendre par l’équipe ; je les remplace sur le site dès qu’elles sont dans le Drive.","equipe"],
+["g8","On voit les produits Dawamafia dans les t-shirts mais pas les produits Die-On.","Ajouter les t-shirts Die-On dans la collection T-shirts (comme Dawamafia).","claude"],
+["g9","Les photos doivent bien s’afficher sur ordi et sur téléphone.","Uniformiser le format des photos (même ratio, recadrage centré) et tester sur cellulaire d’abord.","claude"],
+["g10","Pour les coupes ajustées, mettre une majuscule.","Écrire « Ajusté », « Régulière », etc. avec la majuscule sur toutes les fiches.","claude"],
+["g11","Vérifier chaque composition de produit (erreur fréquente).","Je te prépare un tableau de toutes les compositions par modèle (tirées de Shopify et des fournisseurs) à valider avant de les corriger.","claude","Compositions que tu connais déjà (optionnel) :"],
+["g12","Mettre la composition une seule fois dans les 5 lignes.","Retirer les doublons de composition dans toutes les fiches.","claude"],
+["g13","Hoodies doublés n’apparaissent pas dans les hoodies.","Ajouter tous les hoodies doublés dans la collection Hoodies.","claude"],
+["g14","Mettre : Histoire ANRO, levée de fonds ?","Créer une page « Notre histoire » et une page « Levée de fonds » (santé mentale, Au Second Lieu), accessibles dans le menu.","decision"],
+["g15","Vraie catégorie best sellers ? Pas juste les Trashh ?","Créer une collection « Meilleures ventes » triée selon les vraies ventes Shopify (Trashh et autres), en gardant les blocs Trashh sur l’accueil.","decision"],
+["g16","Google My Maps.","Ajouter une carte Google du 2164, rue de la Province, Longueuil, sur les pages Point de vente et Nous joindre.","claude"],
+["g17","Possibilité d’écrire un mot dans les commandes.","Ajouter un champ « Un mot pour nous ? » au panier (note de commande).","decision"],
+["g18","Points de fidélité / statut client.","Gros projet à part (programme La Famille ANRO, appli à choisir). Je le mets dans les tâches au lieu de le faire ici.","decision"]
+]],
+["Bas de page",[
+["f1","Sur toutes les pages sauf l’accueil, les liens du bas de page ouvrent le pop-up 10 %.","<b>Priorité :</b> corriger le pop-up pour qu’il ne bloque plus les liens (bas de page, Nous joindre, page Manteaux sur cell, changement de modèle des hoodies doublés).","claude"],
+["f2","Conditions d’utilisation : vérifier que tout est à jour.","Relire et te proposer les corrections (dénomination 9452-2893 Québec inc., adresse du 2164, rue de la Province).","claude"],
+["f3","Point de vente : refaire des photos de la boutique actuelle.","Photos de la boutique à prendre par l’équipe ; je les place dès qu’elles sont dans le Drive.","equipe"],
+["f4","Point de vente : les horaires ne sont pas à jour.","Mettre les heures officielles : dimanche au mercredi et samedi 11 h–17 h, jeudi et vendredi 11 h–21 h, et l’adresse du 2164, rue de la Province.","claude"],
+["f5","Nos politiques : vérifier que tout est à jour.","Relire et te proposer les corrections (adresse, retours, vente finale sur les soldes).","claude"],
+["f6","FAQ : mauvais horaires (lundi au mercredi, 10 h à 14 h).","Remplacer par les heures officielles de la boutique dans toutes les réponses de la FAQ.","claude"],
+["f7","Nous joindre : ça ouvre l’inscription à l’infolettre.","Faire pointer « Nous joindre » vers une vraie page de contact.","claude"]
+]],
+["2. Page d’accueil et Nouveautés",[
+["h1","Échanger de place l’infolettre et « Ton prochain fit est ici ».","Inverser l’ordre des deux sections.","claude"],
+["h2","La gang Trashh : « Nos meilleures ventes » et pas « vendeurs ».","Changer le titre pour « Nos meilleures ventes ».","claude"],
+["h3","« Ton prochain fit est ici » : « Nouveautés » avec un s, et une image de nouveauté.","Corriger pour « Nouveautés » et mettre une photo de la collection automne.","claude"],
+["h4","Nouveautés : mettre la nouvelle collection en premier.","Trier la collection Nouveautés pour que la collection automne sorte en premier.","claude"]
+]],
+["3.1 Hoodies",[
+["hd1","Composition des hoodies Trashh pas la même partout.","Mettre la même composition sur les 5 hoodies Trashh.","claude","Composition exacte des hoodies Trashh :"],
+["hd2","Hoodies Trashh (Loup, Renard, Panda, Lapin, Teddy) : emojis pas adaptés, « OMGGG », « Trash / Trashh / Trashhhh », « Drop limitée », on voit le même modèle dans les autres modèles, écrit « t-shirt » alors que c’est un hoodie, « logo Original » alors que ce n’est pas le logo original.","Pour les 5 fiches : écrire partout « Trashh », retirer les emojis et le « OMGGG », intro simple du genre « Le Loup Trashh est là. Drop limité — hoodie noir. », remplacer « t-shirt » par « hoodie », enlever « logo Original », retirer le modèle lui-même des autres modèles et afficher les 4 autres.","claude"],
+["hd3","Hoodie Signature : en rupture, l’enlever.","Mettre le Hoodie Signature en brouillon.","claude"],
+["hd4","Hoodie Outlaw et Wild Heart : mettre les mêmes 5 phrases ; il manque Outlaw dans les autres modèles du Wild Heart.","Appliquer les 5 lignes du gabarit et relier Outlaw, Wild Heart et Cactus dans les autres modèles.","claude"],
+["hd5","Hoodie Cactus : « Hoodie brun fabriqué avec… imprimé « Ranchero Outlaw » ».","Réécrire la description pour qu’elle décrive le vrai Hoodie Cactus (couleur et imprimé exacts).","claude","C’est quoi qui cloche exactement ? (couleur, nom de l’imprimé…)"],
+["hd6","Hoodie ANRO Crew : « La nouvelle collection ANRO Graffiti ».","Retirer « La nouvelle collection ANRO Graffiti » et réécrire l’intro.","claude"],
+["hd7","Hoodie ANRO Crew : en rabais ?","Question pour Julien : est-ce que le ANRO Crew doit être en rabais ?","decision"],
+["hd8","Hoodies réguliers (Navy, gris, mauve) : on ne voit pas tous les autres modèles.","Relier toutes les couleurs de hoodies réguliers entre elles dans les autres modèles.","claude"],
+["hd9","Hoodie rose pâle : en rupture, l’enlever.","Mettre le hoodie rose pâle en brouillon.","claude"],
+["hd10","Hoodies doublés : guide des tailles, compositions différentes, tailles de police différentes.","Ajouter le guide des tailles, uniformiser la composition et la police sur les 7 hoodies doublés.","claude"],
+["hd11","Hoodies doublés cherry, navy et vert : écrit « brun ».","Corriger la couleur dans le texte des trois fiches.","claude"],
+["hd12","« Qualité supérieur », « Model ».","Corriger pour « qualité supérieure » et « Modèle ».","claude"]
+]],
+["3.2 T-shirts",[
+["t1","Suggestion : ranger les t-shirts par catégories dans la page T-shirts.","Afficher la page T-shirts en sections (Trashh, Couleurs, Premium, 280 GSM, Collabs…), en gardant les catégories dans le menu.","decision"],
+["t2","Enlever le derrière, ou rajouter le dos sur tous les produits.","Ajouter la photo du dos sur tous les t-shirts où on l’a ; les autres, photos à prendre par l’équipe.","decision","Ou tu préfères enlever le dos partout ?"],
+["t3","[U] sur les t-shirts.",U+" Ajoutée sur tous les t-shirts, manches longues et crewnecks.","claude"],
+["t4","Mettre le t-shirt caramel en brouillon ???","Question pour Julien : t-shirt caramel en brouillon ou on le garde ?","decision"],
+["t5","Il manque le guide des tailles sur presque tous les t-shirts.","Ajouter le guide des tailles des hauts sur tous les t-shirts.","claude"],
+["t6","T-shirts Trashh (Loup, Panda, Teddy, Renard, Lapin) : même modèle dans les autres modèles, OMGGG, « est de retour », « logo Original ».","Mêmes corrections que les hoodies Trashh : « Trashh » partout, sans emojis ni OMGGG, « Drop limité », sans « logo Original », autres modèles corrigés.","claude"],
+["t7","T-shirt Wild Heart et Cactus : il manque Outlaw et les autres modèles country, infos manquantes dans les 5 lignes, « description » deux fois.","Relier tous les modèles country, appliquer le gabarit des 5 lignes et retirer le double « Description ».","claude"],
+["t8","T-shirt ANRO Crew : « La nouvelle collection ANRO Graffiti » ; Flop Crew : enlever « nouvelle collection ».","Retirer ces mentions des deux fiches.","claude"],
+["t9","T-shirts de couleur : « garederobe ».","Corriger pour « garde-robe ».","claude"],
+["t10","T-shirts de couleur : dans les autres modèles il manque sand, rose pâle, mauve, héliconia, bleu pâle, vert forêt…","Relier toutes les couleurs de t-shirts entre elles pour que chaque fiche montre toutes les autres.","claude"],
+["t11","T-shirt héliconia : la 2e photo montre le blanc au lieu du gris.","Remplacer la 2e photo par la bonne (ou photo à prendre si on ne l’a pas).","claude"],
+["t12","Jerseys baseball blanc et gris : on voit le même dans les autres modèles, coupe manquante, titres trop gros, guide des tailles.","Retirer le modèle lui-même des autres modèles, ajouter la coupe, réduire les titres, ajouter le guide.","claude"],
+["t13","T-shirt Outlaw : l’enlever des autres modèles, [5L], guide, phrase coupe femme.","Corriger les autres modèles, appliquer le gabarit, ajouter le guide et la phrase unisexe.","claude"],
+["t14","T-shirts premium (noir, army, sangria, rust) : guide, [5L], composition dans les points, phrase femme.","Appliquer le gabarit, ajouter le guide et la phrase unisexe sur les 4.","claude"],
+["t15","T-shirts gaufrés (noir, bone) : [5L], « détails du produit » et « conseils d’entretien » trop grands.","Appliquer le gabarit et réduire les titres.","claude"]
+]],
+["3.3 T-shirts 280 GSM",[
+["s1","280 GSM gris : bon guide des tailles ? Drop shoulder ?","Mettre le bon guide (coupe drop shoulder si c’est le cas).","claude","C’est une coupe drop shoulder ? Bon guide ?"],
+["s2","280 GSM : il manque des modèles dans les autres modèles (crème, Army, Ivory, noir…).","Relier toutes les couleurs 280 GSM entre elles et ajouter la phrase unisexe.","claude"]
+]],
+["3.4 Autres hauts",[
+["o1","PRIORITÉ : mettre absolument en brouillon la page 1/4 sweat-shirt.","Mettre le 1/4 sweat-shirt en brouillon tout de suite (avec le go de Julien).","claude"],
+["o2","Crewneck : photo de crewneck en tête, « Ajusté » en majuscule, [U].","Changer la photo de la collection, corriger « Ajusté », ajouter la phrase unisexe.","claude"],
+["o3","Manteau : il manque les manteaux puffy.","Ajouter les puffy dans la collection Manteaux.","claude"],
+["o4","Chemises : [5L], phrase coupe mixte.","Appliquer le gabarit et la phrase unisexe.","claude"],
+["o5","Veste en jean : [5L], trop de gras, « caractéristique » trop gros.","Appliquer le gabarit, retirer le gras, réduire le titre.","claude"]
+]],
+["4. Pantalons",[
+["b1","Il manque une section pantalon et jeans ; renommer la section « bas ».","Menu : « Pantalons » avec Joggings, Cargos, Jeans. Le mot « Bas » reste pour les chaussettes, pour éviter la confusion.","decision","Autre nom préféré ?"],
+["b2","Jogging : [5L], la phrase est trop grosse.","Appliquer le gabarit et réduire le texte.","claude"]
+]],
+["5.1 Casquettes",[
+["c1","Les photos ne sont pas sur les mêmes fonds gris et blanc ; il manque des photos (dos, intérieur, baseball, suède beige).","Photos à refaire par l’équipe sur un seul fond ; je les place dès qu’elles sont dans le Drive.","equipe"],
+["c2","Mettre en brouillon : army extensible, Royal, Marine, courbée camouflage orange (épuisées).","Mettre ces 4 casquettes en brouillon.","claude"],
+["c3","Toutes les casquettes : [5L], guide des tailles, trop de texte.","Appliquer le gabarit (coupe, composition, ajustement : extensible ou ajustable), raccourcir les textes, retirer le guide des tailles général.","claude"],
+["c4","Snapback trucker : arrière en filet kaki, attention.","Indiquer clairement « arrière en filet kaki » dans les 5 lignes de chaque trucker.","claude"]
+]],
+["5.2 Lunettes",[
+["l1","Photo portée pour la présentation.","Photo portée à prendre par l’équipe (ou je la place si on l’a déjà).","equipe"],
+["l2","Trop d’emojis ; texte pas cohérent (« monture rose », « nos lunettes sont arrivées »).","Réécrire le texte, sans emojis, sans ces deux phrases.","claude"],
+["l3","Photos noir lustré et noir mat inversées.","Inverser les photos des deux variantes.","claude"]
+]],
+["5.3 Bas (chaussettes)",[
+["k1","Plus belle photo de présentation.","Photo à prendre par l’équipe.","equipe"],
+["k2","« Pack de 3 bas courts » ; coton au lieu du polyester et la taille dans les 5 lignes ; ne plus parler des bas longs.","Renommer « Pack de 3 bas courts », corriger la composition et la taille, retirer les bas longs du texte.","claude","Composition exacte et taille des bas :"]
+]],
+["5.4 Tuques",[
+["q1","Mettre à jour la photo de présentation (ancien bonnet).","Photo à prendre par l’équipe.","equipe"],
+["q2","Choisir soit tuques, soit beanie.","Utiliser « Tuques » partout (plus québécois, plus ANRO).","decision"],
+["q3","Pas 11 couleurs ; ne pas parler de l’hiver ; « Aussi disponible en bundles ! » ???; « Régulière » en majuscule.","Mettre le vrai nombre de couleurs, retirer l’hiver et les bundles (remplacés par les packs 3/6/12), corriger « Régulière ».","claude"]
+]],
+["5.5 Autres accessoires",[
+["a1","Accessoires / Autres pas cohérent : « Autres » montre tous les accessoires.","« Accessoires » = tout ; « Autres » = seulement ce qui n’est dans aucune sous-catégorie (portefeuille, porte-clés, lanière, gourde…).","claude"],
+["a2","Recadrer la photo de présentation.","Recadrer la photo de la collection.","claude"],
+["a3","Portefeuille : photo pas nette, description, dimensions et composition.","Nouvelle description avec dimensions et composition ; photo à reprendre par l’équipe.","claude","Dimensions et composition du portefeuille :"],
+["a4","Porte-clés : dimensions et composition, ce n’est pas minimaliste.","Ajouter dimensions et composition, retirer « minimaliste ».","claude","Dimensions et composition du porte-clés :"],
+["a5","Lanière porte-clés ANRO : composition et taille.","Ajouter la composition et la longueur de la lanière.","claude","Composition et longueur :"],
+["a6","Bracelet santé mentale : refaire la forme du texte, parler plus de l’association.","Remettre le texte en forme sans changer le fond, et ajouter un paragraphe sur Au Second Lieu.","claude"]
+]],
+["5.6 Bijoux",[
+["j1","Intro : enlever « minimalistes » et « - ».","Retirer ces deux éléments.","claude"],
+["j2","Titre de la description trop gros.","Réduire le titre sur toutes les fiches bijoux.","claude"],
+["j3","Chaînes 7 mm or et argent : écrit 5 mm.","Corriger pour 7 mm.","claude"],
+["j4","Chaînes signes astrologiques : photos catastrophiques, pas intemporelles, ce n’est pas du stainless (elles rouillent).","Mettre en brouillon jusqu’à nouvelles photos et confirmation du vrai matériau.","decision"]
+]],
+["5.7 à 5.9 Carte cadeau, Enfants, Gourde",[
+["x1","Carte cadeau personnalisable (montant au choix).","Ajouter l’option de montant libre (peut demander une appli).","decision"],
+["x2","Photos de la carte cadeau trop IA.","Refaire le visuel de la carte cadeau aux couleurs ANRO avec le logo officiel.","claude"],
+["x3","Enfants : recadrer la photo ; bon guide de taille ?","Recadrer et mettre le guide enfants (XS au XL).","claude","Mesures enfants si tu les as :"],
+["x4","Gourde : trop de texte, trop d’emojis.","Nouvelle description courte, sans emojis.","claude"]
+]],
+["7. Collaborations",[
+["co1","Dawamafia : quelques lignes pour présenter l’artiste, recentrer la photo.","Écrire une courte présentation de Dawa Mafia et recentrer la photo.","claude"],
+["co2","T-shirts Dawamafia (×3) : Cactus dans les autres modèles, [5L], guide, trop de gras, « pis une collab… » = rien à faire là.","Relier les 3 t-shirts Dawamafia entre eux, appliquer le gabarit, ajouter le guide, retirer le gras et cette phrase.","claude"],
+["co3","Die-On : texte de présentation à changer.","Nouveau texte de présentation au ton ANRO (court, direct). Je te le montre avant de l’appliquer.","claude"],
+["co4","Die-On hoodie et t-shirts : guide, [5L], double description, « matériaux de qualité », phrase coupe mixte.","Appliquer le gabarit, ajouter le guide, retirer « matériaux de qualité », ajouter la phrase unisexe.","claude"],
+["co5","Die-On accessoires : lanière, casquette (taille), tuques (extensible, retirer titre et « fièrement »).","Appliquer le gabarit, retirer le titre répété et « fièrement », ajouter taille et ajustement.","claude"],
+["co6","Tuque noir Die-On : épuisée, brouillon.","Mettre la tuque noir Die-On en brouillon.","claude"],
+["co7","Doug Saint-Louis : photo et texte de l’artiste ; casquette ajustable, retirer le gras, guide.","Écrire la présentation, corriger la fiche casquette. Photo de l’artiste à fournir.","claude","Lien ou photo de Doug Saint-Louis :"],
+["co8","Au parloir : changer la photo, moins de texte ; t-shirt : guide, enlever les emojis.","Raccourcir le texte, retirer les emojis, ajouter le guide. Nouvelle photo à fournir.","claude"]
+]],
+["8. Soldes",[
+["so1","Texte de la page Soldes à changer.","Nouveau texte court au ton ANRO, sans pluie d’emojis, en gardant la mention vente finale (ni échange ni remboursement).","claude"],
+["so2","Les chemises apparaissent toujours dans les soldes (marquées liquidation).","Retirer les chemises de la collection Soldes et enlever la mention liquidation.","claude"]
+]]
+];
+
+const ITEMS=[];D.forEach(([s,arr])=>arr.forEach(r=>ITEMS.push({sec:s,id:r[0],note:r[1],act:r[2],who:r[3],ask:r[4]||""})));
+let state={};let filter="all";let db=null,assets=null,saveT=null,sent=false;
+const WHO={claude:["t-claude","Claude"],equipe:["t-equipe","Équipe"],decision:["t-decision","Décision"]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function render(){
+  const L=document.getElementById("list");L.innerHTML="";let cur="",n=0;
+  ITEMS.forEach(it=>{
+    const st=state[it.id]||{};n++;
+    const show=filter==="all"||(filter==="todo"&&!st.s)||(filter==="decision"&&it.who==="decision")||(filter==="equipe"&&it.who==="equipe")||(filter==="chg"&&st.s==="chg");
+    if(!show)return;
+    if(it.sec!==cur){cur=it.sec;const h=document.createElement("h2");h.className="sec";h.textContent=cur;L.appendChild(h);}
+    const d=document.createElement("div");d.className="item"+(st.s?" "+st.s:"");d.dataset.id=it.id;
+    d.innerHTML=`<div class="meta"><span class="num">#${n}</span><span class="tag ${WHO[it.who][0]}">${WHO[it.who][1]}</span></div>
+<p class="note">${esc(it.note)}</p><p class="act">${it.act}</p>
+${it.ask?`<div class="ask"><label>${esc(it.ask)}</label><textarea data-k="a">${esc(st.a||"")}</textarea></div>`:""}
+<div class="btns"><button class="b-ok${st.s==="ok"?" on":""}" data-s="ok">✅ Approuver</button><button class="b-chg${st.s==="chg"?" on":""}" data-s="chg">✏️ À changer</button><button class="b-no${st.s==="no"?" on":""}" data-s="no">✖️ Pas à faire</button></div>
+<div class="chgbox"><textarea data-k="c" placeholder="Qu’est-ce que tu veux à la place ?">${esc(st.c||"")}</textarea></div>`;
+    L.appendChild(d);
+  });
+  progress();
+}
+function progress(){const done=ITEMS.filter(i=>state[i.id]&&state[i.id].s).length;document.getElementById("count").textContent=done+" / "+ITEMS.length;document.getElementById("barfill").style.width=(done/ITEMS.length*100)+"%";}
+document.getElementById("list").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-s]");if(!b)return;const id=b.closest(".item").dataset.id;
+  state[id]=state[id]||{};state[id].s=state[id].s===b.dataset.s?"":b.dataset.s;
+  const item=b.closest(".item");item.className="item"+(state[id].s?" "+state[id].s:"");
+  item.querySelectorAll(".btns button").forEach(x=>x.classList.toggle("on",x.dataset.s===state[id].s));
+  if(state[id].s==="chg"){const t=item.querySelector('textarea[data-k="c"]');if(t)t.focus();}
+  progress();queueSave();
+});
+document.getElementById("list").addEventListener("input",e=>{
+  const t=e.target.closest("textarea");if(!t)return;const id=t.closest(".item").dataset.id;
+  state[id]=state[id]||{};state[id][t.dataset.k]=t.value;queueSave();
+});
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;filter=b.dataset.f;document.querySelectorAll("#filters button").forEach(x=>x.classList.toggle("on",x===b));render();});
+function setStatus(t){document.getElementById("status").textContent=t;}
+function queueSave(){clearTimeout(saveT);setStatus("Enregistrement…");saveT=setTimeout(save,700);}
+async function save(extra){
+  if(!db){setStatus("⚠️ Pas connecté : ouvre ce lien dans Claude pour enregistrer.");return false;}
+  try{await db.doc("approbation/reponses").set(Object.assign({reponses:state,maj:new Date().toISOString(),envoye:sent},extra||{}));setStatus("✔ Enregistré");return true;}
+  catch(err){setStatus("⚠️ Pas enregistré ("+(err&&err.code||"erreur")+")");return false;}
+}
+document.getElementById("send").addEventListener("click",async()=>{
+  const left=ITEMS.filter(i=>!(state[i.id]&&state[i.id].s)).length;
+  if(left&&!confirm(left+" bloc(s) sans réponse. Envoyer quand même ?"))return;
+  const b=document.getElementById("send");b.disabled=true;b.textContent="Envoi…";
+  sent=true;const ok=await save({envoye:true,envoyeLe:new Date().toISOString()});
+  b.disabled=false;b.textContent="Envoyer";
+  if(ok){document.getElementById("done").style.display="block";window.scrollTo({top:0,behavior:"smooth"});}else{sent=false;alert("L’envoi n’a pas marché. Vérifie ta connexion et réessaie.");}
+});
+// Caméra
+const modal=document.getElementById("modal"),file=document.getElementById("file"),prev=document.getElementById("preview");let blob=null;
+document.getElementById("cam").onclick=()=>{modal.classList.add("open");document.getElementById("camstatus").textContent=assets?"":"La photo s’enverra si tu es connectée dans Claude.";};
+document.getElementById("camclose").onclick=()=>modal.classList.remove("open");
+document.getElementById("pick").onclick=()=>file.click();
+file.onchange=()=>{blob=file.files[0]||null;if(blob){prev.src=URL.createObjectURL(blob);prev.classList.remove("hidden");}};
+document.getElementById("camsend").onclick=async()=>{
+  const s=document.getElementById("camstatus");if(!blob){s.textContent="Prends d’abord une photo.";return;}
+  if(!assets||!db){s.textContent="⚠️ Impossible d’envoyer la photo ici. Ouvre le lien dans Claude.";return;}
+  s.textContent="Envoi de la photo…";
+  try{const r=await assets.upload(blob);const id=String(Date.now());
+    await db.doc("photos/"+id).set({asset:r.id,note:document.getElementById("camnote").value,le:new Date().toISOString()});
+    s.textContent="✔ Photo envoyée à Claude.";blob=null;file.value="";prev.classList.add("hidden");document.getElementById("camnote").value="";
+  }catch(err){s.textContent="⚠️ Pas envoyée ("+(err&&err.code||"erreur")+").";}
+};
+render();
+(async()=>{
+  try{db=window.claude?await window.claude.use("db"):null;}catch(e){db=null;}
+  try{assets=window.claude?await window.claude.use("assets"):null;}catch(e){assets=null;}
+  if(!db){setStatus("⚠️ Pas connecté : ouvre ce lien dans Claude pour enregistrer.");return;}
+  try{const snap=await db.doc("approbation/reponses").get();const v=snap&&(typeof snap.data==="function"?snap.data():snap.data);
+    if(v&&v.reponses){state=JSON.parse(JSON.stringify(v.reponses));sent=!!v.envoye;if(sent)document.getElementById("done").style.display="block";render();}
+    setStatus("✔ Connecté – tout s’enregistre tout seul");
+  }catch(e){setStatus("✔ Connecté");}
+})();
+</script>
+</body>
+</html>

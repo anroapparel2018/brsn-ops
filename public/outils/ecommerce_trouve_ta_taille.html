@@ -1,0 +1,110 @@
+<!DOCTYPE html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO · Trouve ta taille</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Fira+Sans+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F6F3F2;--paper:#fff;--ink:#0F0A0A;--mu:#6E5F61;--line:#E2D8D9;--foyer:#4A1620;--soft:#F3E9EA;--fig:#E9DCDE;--gar:#0F0A0A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--soft:#2A1C1F;--fig:#4A3A3D;--gar:#D7A3AD}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--soft:#2A1C1F;--fig:#4A3A3D;--gar:#D7A3AD}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Fira Sans',system-ui,sans-serif}
+.hero{background:#0F0A0A;color:#fff;padding:22px 16px 18px}.hero p{margin:0;color:#D7A3AD}
+.hero h1{margin:4px 0 6px;font:900 32px/1.05 'Fira Sans Condensed',sans-serif}.hero .s{color:#E9DCDE;font-size:15px}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+h2{font:900 21px/1.2 'Fira Sans Condensed',sans-serif;margin:24px 0 6px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:640px){.grid{grid-template-columns:200px 1fr}}
+.av{display:flex;justify-content:center;align-items:flex-end;background:var(--soft);border-radius:12px;min-height:300px;padding:10px}
+.row{margin:10px 0}.row label{display:flex;justify-content:space-between;font-weight:700;font-size:15px}.row label span{color:var(--foyer)}
+input[type=range]{width:100%;accent-color:#4A1620;height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.seg button{flex:1;min-width:90px;font:inherit;font-size:14px;font-weight:700;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px 6px;cursor:pointer}
+.seg button.on{background:#0F0A0A;color:#fff;border-color:#0F0A0A}
+:root[data-theme="dark"] .seg button.on{background:#D7A3AD;color:#0F0A0A;border-color:#D7A3AD}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button.on{background:#D7A3AD;color:#0F0A0A;border-color:#D7A3AD}}
+.unit{font-size:13px;font-weight:500;background:none;border:1px solid var(--line);color:var(--mu);border-radius:20px;padding:2px 9px;cursor:pointer;font-family:inherit}
+.res{background:#0F0A0A;color:#fff;border-radius:14px;padding:16px;margin-top:12px}
+.res .big{font:900 56px/1 'Fira Sans Condensed',sans-serif;color:#fff}.res .k{color:#D7A3AD;font-size:14px;margin:0}
+.res .why{font-size:15px;color:#E9DCDE;margin:8px 0 0}
+.bar{display:flex;gap:4px;margin-top:12px}.bar span{flex:1;text-align:center;padding:6px 0;border-radius:6px;background:#2F0D14;font-weight:700;font-size:13px;color:#E9DCDE}.bar span.on{background:#fff;color:#0F0A0A}
+.note{color:var(--mu);font-size:14px}
+.bigbtn{display:block;width:100%;margin-top:12px;padding:15px;font:inherit;font-weight:700;font-size:18px;border-radius:10px;cursor:pointer;background:#4A1620;color:#fff;border:1px solid #4A1620}.bigbtn.alt{background:var(--paper);color:var(--ink);border-color:var(--line);font-size:16px}
+textarea{width:100%;margin-top:8px;font:inherit;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:60px}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--foyer);outline-offset:2px}
+#prev{display:none;max-width:100%;border-radius:10px;margin-top:8px}
+</style></head><body>
+<header class="hero"><p>ANRO · concept pour anroapparel.ca</p><h1>Trouve ta taille</h1><div class="s">Ta grandeur, ton poids, ton style : on te dit quoi prendre. 15 secondes, pas de ruban à mesurer.</div></header>
+<main>
+<h2>1. Le produit</h2>
+<div class="seg" id="prod"></div>
+<h2>2. Toi</h2>
+<div class="card"><div class="grid">
+<div class="av" id="av" aria-hidden="true"></div>
+<div>
+<div class="row"><label for="h">Grandeur <span id="hv"></span></label><input type="range" id="h" min="60" max="80" value="70" step="1"><button class="unit" id="hu">Voir en cm</button></div>
+<div class="row"><label for="w">Poids <span id="wv"></span></label><input type="range" id="w" min="110" max="420" value="190" step="5"><button class="unit" id="wu">Voir en kg</button></div>
+<div class="row"><label>Ton ventre</label><div class="seg" id="belly"></div></div>
+<div class="row"><label>Tu aimes porter ça</label><div class="seg" id="fit"></div></div>
+</div></div>
+<div class="res" role="status" aria-live="polite"><p class="k" id="rk">Ta taille</p><div class="big" id="rs">M</div><div class="bar" id="rb"></div><p class="why" id="rw"></p></div>
+<p class="note">Estimation basée sur les mesures réelles de nos vêtements. Entre deux tailles, on te le dit.</p>
+</div>
+<h2>Ton avis sur le concept</h2>
+<div class="card"><textarea id="fb" placeholder="Ce que tu aimes, ce que tu changerais…" aria-label="Ton avis"></textarea>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<button class="bigbtn alt" id="camBtn">📷 Caméra</button><p id="camInfo" class="note"></p><img id="prev" alt="Photo choisie">
+<button class="bigbtn" id="send">Envoyer</button><p id="msg" class="note" role="status"></p></div>
+</main>
+<script>
+const SZ=['S','M','L','XL','2XL','3XL','4XL'];
+const TOP={hoodie:{n:'Hoodie',chest:[20,22,24,26,28,30,32],len:[27.5,28.75,30,31,32.25,33.5,34.5]},
+tshirt:{n:'T-shirt',chest:[18,20,22,24,26,28,30],len:[28.5,29.5,30.5,31.5,32.5,33.5,34.5]},
+premium:{n:'T-shirt premium',chest:[21.5,22.75,24,25.25,26.5,28.5,30.5],len:[28.5,29.75,31,32.25,33.5,34.5,35.5]},
+chemise:{n:'Chemise épaisse',chest:[22.5,24,25.5,27,28.5,30.5,32.5],len:[26.5,28,29.5,31,32.5,33.5,34.5]}};
+const BOT={cargo:{n:'Cargo'},jean:{n:'Jean'}};
+const PRODS=[['hoodie','Hoodie'],['tshirt','T-shirt'],['premium','T-shirt premium'],['chemise','Chemise'],['cargo','Cargo'],['jean','Jean']];
+let S={prod:'hoodie',belly:'moyen',fit:'regulier',cm:false,kg:false};
+function seg(id,opts,key){const el=document.getElementById(id);el.innerHTML=opts.map(o=>'<button data-v="'+o[0]+'">'+o[1]+'</button>').join('');
+ el.onclick=e=>{const b=e.target.closest('button[data-v]');if(!b)return;S[key]=b.dataset.v;upd()};}
+seg('prod',PRODS,'prod');seg('belly',[['plat','Plat'],['moyen','Moyen'],['rond','Rond']],'belly');seg('fit',[['ajuste','Ajusté'],['regulier','Régulier'],['ample','Ample']],'fit');
+const H=document.getElementById('h'),Wt=document.getElementById('w');
+document.getElementById('hu').onclick=e=>{S.cm=!S.cm;e.target.textContent=S.cm?'Voir en pieds':'Voir en cm';upd()};
+document.getElementById('wu').onclick=e=>{S.kg=!S.kg;e.target.textContent=S.kg?'Voir en livres':'Voir en kg';upd()};
+H.oninput=Wt.oninput=upd;
+function body(h,w){const b={plat:-1.5,moyen:0,rond:3}[S.belly];
+ return {chest:24+0.094*w-0.15*(h-70)+b*0.6, waist:8+0.155*w-0.2*(h-70)+b};}
+function avatar(h,w,c){const sc=0.78+(h-60)/20*0.22, wide=Math.max(0.75,Math.min(1.9,(w/ (h*2.6))));
+ const bel={plat:0,moyen:6,rond:16}[S.belly];const W=200,Hh=300,cx=100,top=Hh-280*sc;
+ const sh=38*wide+18, hip=30*wide+14, wa=26*wide+12+bel*0.5; const y=v=>top+v*sc;
+ const isTop=!!TOP[S.prod];
+ const torso='M'+(cx-sh)+','+y(62)+' Q'+(cx-sh-6)+','+y(95)+' '+(cx-wa-bel*0.3)+','+y(130)+' L'+(cx-hip)+','+y(150)+' L'+(cx+hip)+','+y(150)+' L'+(cx+wa+bel*0.3)+','+y(130)+' Q'+(cx+sh+6)+','+y(95)+' '+(cx+sh)+','+y(62)+' Z';
+ const arms='M'+(cx-sh)+','+y(64)+' L'+(cx-sh-14*wide)+','+y(150)+' M'+(cx+sh)+','+y(64)+' L'+(cx+sh+14*wide)+','+y(150);
+ const legs='M'+(cx-hip+4)+','+y(150)+' L'+(cx-hip*0.55)+','+y(275)+' L'+(cx-6)+','+y(275)+' L'+(cx-3)+','+y(165)+' L'+(cx+3)+','+y(165)+' L'+(cx+6)+','+y(275)+' L'+(cx+hip*0.55)+','+y(275)+' L'+(cx+hip-4)+','+y(150)+' Z';
+ const fig='var(--fig)',gar='var(--gar)';
+ return '<svg viewBox="0 0 200 300" width="190" height="285"><circle cx="100" cy="'+y(34)+'" r="'+(20*sc+2)+'" fill="'+fig+'"/>'+
+ '<path d="'+legs+'" fill="'+(isTop?fig:gar)+'"/><path d="'+arms+'" stroke="'+(isTop&&S.prod!=='tshirt'&&S.prod!=='premium'?gar:fig)+'" stroke-width="'+(16*wide)+'" stroke-linecap="round" fill="none"/>'+
+ '<path d="'+torso+'" fill="'+(isTop?gar:fig)+'"/>'+(isTop?'<text x="100" y="'+y(105)+'" text-anchor="middle" font-family="Fira Sans Condensed" font-weight="900" font-size="15" fill="var(--bg)">ANRO</text>':'')+'</svg>';}
+function upd(){const h=+H.value,w=+Wt.value;
+ document.getElementById('hv').textContent=S.cm?Math.round(h*2.54)+' cm':Math.floor(h/12)+"'"+(h%12)+'"';
+ document.getElementById('wv').textContent=S.kg?Math.round(w*0.4536)+' kg':w+' lb';
+ ['prod','belly','fit'].forEach(id=>[...document.getElementById(id).children].forEach(b=>b.classList.toggle('on',b.dataset.v===S[id==='prod'?'prod':id])));
+ const b=body(h,w);let size,idx,why,labels=SZ;
+ if(TOP[S.prod]){const t=TOP[S.prod];const ease={ajuste:2,regulier:4,ample:7}[S.fit];const need=b.chest+ease;
+  idx=t.chest.findIndex(c=>c*2>=need);let over=false;if(idx<0){idx=6;over=true}
+  const between=idx>0&&(t.chest[idx]*2-need)>3.5;
+  if(h>=75&&idx<6&&t.len[idx]<31.5)idx++;
+  size=SZ[idx];why='Ton tour de poitrine estimé : environ '+Math.round(b.chest)+' po. Le '+size+' fait '+t.chest[idx]*2+' po de tour et '+t.len[idx].toString().replace('.5',' 1/2').replace('.25',' 1/4').replace('.75',' 3/4')+' po de long.'+(over?' C\u2019est notre plus grande taille : elle sera ajustée sur toi.':'')+(between?' Tu es entre deux : prends le '+SZ[idx-1]+' si tu veux plus ajusté.':'')+(h>=75?' Tu es grand : on a choisi une taille qui garde la longueur.':'');}
+ else if(S.prod==='cargo'){const R=[31,34,37,40,43,46,49];let wa=b.waist+(S.fit==='ample'?2:0);idx=R.findIndex((r,i)=>wa<r+3);if(idx<0)idx=6;
+  size=SZ[idx];why='Ton tour de taille estimé : environ '+Math.round(b.waist)+' po. Le cargo '+size+' va de '+R[idx]+' à '+(R[idx]+2)+' po, avec une taille élastique.'+(h>=74?' Entrejambe de 30 po : ça tombe à la cheville, coupe jogger.':'');}
+ else{labels=['30','32','34','36','38','40','42','44','46','48','50','52'];let wa=b.waist+(S.fit==='ample'?1.5:S.fit==='ajuste'?-0.5:0);let n=Math.max(30,Math.min(52,Math.floor(wa/2)*2));idx=labels.indexOf(String(n));
+  size=String(n);why='Ton tour de taille estimé : environ '+Math.round(b.waist)+' po. Le jean '+n+' va pour '+n+' à '+(n+1)+' po.'+(wa>53.9?' C\u2019est notre plus grande taille.':'')+(h>=74?' Entrejambe de 30 po : coupe un peu courte pour ta grandeur.':'');}
+ document.getElementById('rk').textContent='Ta taille en '+(TOP[S.prod]||BOT[S.prod]).n.toLowerCase();
+ document.getElementById('rs').textContent=size;document.getElementById('rw').textContent=why;
+ document.getElementById('rb').innerHTML=labels.map((l,i)=>'<span class="'+(i===idx?'on':'')+'">'+l+'</span>').join('');
+ document.getElementById('av').innerHTML=avatar(h,w);}
+upd();
+let photo=null;document.getElementById('camBtn').onclick=()=>document.getElementById('cam').click();
+document.getElementById('cam').onchange=async e=>{const f=e.target.files[0];if(!f)return;const p=document.getElementById('prev');p.src=URL.createObjectURL(f);p.style.display='block';const i=document.getElementById('camInfo');i.textContent='Envoi de la photo…';
+ try{const a=await claude.use('assets');if(!a)throw 0;const r=await a.upload(f);photo=r.id;i.textContent='Photo prête.';}catch(_){i.textContent='La photo n\u2019est pas partie. Réessaie.';}};
+document.getElementById('send').onclick=async()=>{const m=document.getElementById('msg');m.textContent='Envoi…';
+ try{const db=await claude.use('db');if(!db)throw 0;await db.doc('reponses/envoi-'+Date.now()).set({quand:new Date().toISOString(),avis:document.getElementById('fb').value,essai:{...S,grandeur:+H.value,poids:+Wt.value,taille:document.getElementById('rs').textContent},photo});m.textContent='Envoyé. Écris « c\u2019est envoyé » à Claude.';}catch(_){m.textContent='L\u2019envoi n\u2019a pas marché. Réessaie.';}};
+</script></body></html>

@@ -1,0 +1,1811 @@
+<!doctype html><html><head>
+<script src="/outils/pont.js"></script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Calendrier éditorial — ANRO Apparel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #37352F;
+    --paper: #FFFFFF;
+    --paper-2: #F7F6F3;
+    --line: #E9E7E2;
+    --muted: #9B968A;
+    --accent: #C6431E;
+    --accent-ink: #ffffff;
+    --white: #ffffff;
+    --radius: 10px;
+    --radius-sm: 7px;
+    --radius-pill: 999px;
+    --shadow-sm: 0 1px 2px rgba(30,25,15,0.05), 0 1px 1px rgba(30,25,15,0.04);
+    --shadow-md: 0 4px 10px rgba(30,25,15,0.08), 0 1.5px 4px rgba(30,25,15,0.05);
+    --shadow-lg: 0 18px 40px rgba(20,16,10,0.16), 0 4px 12px rgba(20,16,10,0.08);
+
+    --cat-promo: #C6431E;      --cat-promo-bg: #FBEAE3;
+    --cat-tournage: #2E6DA8;   --cat-tournage-bg: #E5EFFA;
+    --cat-contenu: #7C4FB0;    --cat-contenu-bg: #F0E9FA;
+    --cat-rs: #B83A73;         --cat-rs-bg: #FBE7F0;
+    --cat-lancement: #3C8360;  --cat-lancement-bg: #E3F1E9;
+    --cat-idee: #85806F;       --cat-idee-bg: #F0EDE4;
+    --cat-meeting: #B07A12;    --cat-meeting-bg: #FBF1DC;
+    --cat-suivi: #1F8A8A;      --cat-suivi-bg: #DFF3F2;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #EDEAE1;
+      --paper: #191714;
+      --paper-2: #211E19;
+      --line: #34302A;
+      --muted: #928C7B;
+      --white: #221F1A;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 10px rgba(0,0,0,0.35);
+      --shadow-lg: 0 18px 40px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #EDEAE1; --paper: #191714; --paper-2: #211E19; --line: #34302A;
+    --muted: #928C7B; --white: #221F1A;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3); --shadow-md: 0 4px 10px rgba(0,0,0,0.35);
+    --shadow-lg: 0 18px 40px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper-2);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 70px; }
+
+  /* ---------- Header ---------- */
+  header.top {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 16px; margin-bottom: 22px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .brand .mark-dot {
+    width: 30px; height: 30px; border-radius: 9px; background: var(--accent);
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex: none;
+    box-shadow: var(--shadow-sm);
+  }
+  .brand .titles { display: flex; flex-direction: column; gap: 1px; }
+  .brand .mark {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 19px;
+    letter-spacing: 0.2px;
+    font-weight: 400;
+  }
+  .brand .sub { color: var(--muted); font-size: 12.5px; }
+
+  .nav {
+    display: flex; align-items: center; gap: 4px; background: var(--paper);
+    border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 4px;
+    box-shadow: var(--shadow-sm); width: fit-content; max-width: 100%;
+  }
+  .nav button {
+    width: 30px; height: 30px; border-radius: var(--radius-pill); border: none;
+    background: transparent; color: var(--ink); font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .12s ease;
+  }
+  .nav button:hover { background: var(--paper-2); }
+  .nav .month-label { font-weight: 600; font-size: 13.5px; min-width: 150px; text-align: center; text-transform: capitalize; padding: 0 4px; }
+  .nav .today-btn {
+    width: auto; padding: 0 13px; font-size: 12px; font-weight: 600; height: 30px; color: var(--muted);
+  }
+  .nav .today-btn:hover { color: var(--ink); }
+
+  .actions { display: flex; gap: 8px; }
+  .btn-primary {
+    background: var(--accent); color: var(--accent-ink); border: none; border-radius: var(--radius-pill);
+    font-weight: 600; padding: 10px 18px; cursor: pointer; font-size: 13px;
+    font-family: inherit; box-shadow: var(--shadow-sm);
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  }
+  .btn-primary:hover { filter: brightness(1.06); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  button:focus-visible, .day:focus-visible, .cat-choice:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- Company tabs ---------- */
+  .company-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .company-tab {
+    display: flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: var(--radius-pill);
+    border: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 12.5px;
+    font-weight: 600; font-family: inherit; cursor: pointer; transition: all .12s ease;
+  }
+  .company-tab:hover { color: var(--ink); border-color: var(--muted); }
+  .company-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tab-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dot); flex: none; }
+
+  /* ---------- Legend ---------- */
+  .legend {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 18px;
+    padding: 10px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink);
+    background: var(--paper-2); padding: 5px 11px 5px 8px; border-radius: var(--radius-pill);
+  }
+  .legend-swatch { width: 8px; height: 8px; flex: none; border-radius: 50%; }
+  .legend-note { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* ---------- Calendar grid ---------- */
+  .drag-hint { font-size: 12.5px; color: var(--muted); margin: 14px 2px 14px; }
+  .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 8px; padding: 0 2px; }
+  .weekdays div {
+    text-align: center; font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.4px; text-transform: uppercase;
+  }
+  .grid {
+    display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;
+    user-select: none; -webkit-user-select: none;
+    animation: gridFade .22s ease;
+  }
+  @keyframes gridFade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .grid { animation: none; } }
+
+  .day {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    min-height: 98px; padding: 8px 8px 9px; cursor: pointer; position: relative;
+    display: flex; flex-direction: column; gap: 5px; touch-action: pan-y;
+    box-shadow: var(--shadow-sm); min-width: 0;
+    transition: box-shadow .14s ease, transform .14s ease, border-color .14s ease;
+  }
+  .day:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); border-color: var(--muted); }
+  .day.out { opacity: 0.42; }
+  .day.has-cat { border-top: 3px solid var(--cat-color, var(--accent)); padding-top: 6px; }
+  .day.selecting { box-shadow: 0 0 0 2px var(--accent), var(--shadow-md); }
+
+  .day .num-row { display: flex; align-items: center; justify-content: flex-start; gap: 6px; min-width: 0; }
+  .day .attach-flag { font-size: 10.5px; font-weight: 600; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .day .num {
+    font-size: 12.5px; font-weight: 600; color: var(--muted);
+    width: 21px; height: 21px; display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+  }
+  .day.today .num { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+
+  .day .ev {
+    display: flex; align-items: center; gap: 4px; min-width: 0;
+    font-size: 11px; font-weight: 600; line-height: 1.25;
+    padding: 3px 6px; border-radius: var(--radius-sm); cursor: pointer;
+    background: var(--ev-bg, var(--paper-2)); color: var(--ev-color, var(--ink));
+    border-left: 3px solid var(--ev-color, var(--line));
+    transition: box-shadow .12s ease;
+  }
+  .day .ev:hover { box-shadow: 0 0 0 1px var(--ev-color, var(--muted)) inset; }
+  .day .ev .ev-time { flex: none; font-variant-numeric: tabular-nums; opacity: .75; font-weight: 600; }
+  .day .ev .ev-txt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .day .ev .ev-ico { flex: none; font-size: 9.5px; line-height: 1; }
+  .day .ev .ev-dot { flex: none; width: 6px; height: 6px; border-radius: 50%; }
+  .day .add-hint {
+    margin-left: auto; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; line-height: 1; color: var(--muted); opacity: 0; transition: opacity .12s ease, background .12s ease;
+  }
+  .day:hover .add-hint { opacity: 1; background: var(--paper-2); }
+  @media (hover: none) { .day .add-hint { opacity: .6; } }
+  .day .timerange {
+    font-size: 10.5px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .day .note-preview { font-size: 10.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .day .shoot-flag { position: absolute; top: 8px; right: 9px; font-size: 12px; }
+
+  /* ---------- Modal ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(25,20,14,0.42); backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px;
+    opacity: 0; pointer-events: none; transition: opacity .15s ease;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px; width: 100%; max-width: 420px;
+    max-height: 90vh; overflow-y: auto; padding: 22px; box-shadow: var(--shadow-lg);
+    transform: scale(.97) translateY(6px); transition: transform .16s ease;
+  }
+  .overlay.show .modal { transform: scale(1) translateY(0); }
+  .modal h2 { font-size: 17px; margin: 0 0 2px; font-family: "Archivo Black", sans-serif; font-weight: 400; letter-spacing: 0.1px; }
+  .modal .modal-sub { color: var(--muted); font-size: 12.5px; margin-bottom: 18px; }
+  .field { margin-bottom: 15px; }
+  .field label { display: block; font-size: 11.5px; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.2px; color: var(--muted); }
+  .field input[type=text], .field input[type=date], .field input[type=time], .field textarea, .field select {
+    width: 100%; padding: 10px 11px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2);
+    color: var(--ink); font-family: inherit; font-size: 13.5px; transition: border-color .12s ease, background .12s ease;
+  }
+  .field input:focus, .field textarea:focus {
+    outline: none; border-color: var(--accent); background: var(--paper);
+  }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .time-row label { margin-bottom: 6px; }
+  .field-hint { font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+  .cat-choices { display: flex; flex-wrap: wrap; gap: 7px; }
+  .cat-choice {
+    display: flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--line);
+    border-radius: var(--radius-pill); cursor: pointer; font-size: 12.5px; background: var(--paper-2);
+    transition: border-color .12s ease, background .12s ease, box-shadow .12s ease;
+  }
+  .cat-choice input { margin: 0; display: none; }
+  .cat-choice.selected { border-color: var(--cc, var(--ink)); background: var(--ccbg, var(--paper)); font-weight: 600; box-shadow: 0 0 0 1px var(--cc, var(--ink)) inset; }
+  .cat-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .checkline { display: flex; align-items: center; gap: 9px; }
+  .checkline input { width: 17px; height: 17px; accent-color: var(--accent); }
+  .modal-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; gap: 8px; }
+  .btn-ghost {
+    background: transparent; border: none; color: var(--muted); font-size: 12.5px; cursor: pointer;
+    padding: 6px 0; font-family: inherit; transition: color .12s ease;
+  }
+  .btn-ghost:hover { color: var(--accent); }
+  .btn-row { display: flex; gap: 8px; }
+  .btn-secondary {
+    background: var(--paper); border: 1px solid var(--line); color: var(--ink); border-radius: var(--radius-pill);
+    padding: 10px 16px; cursor: pointer; font-size: 13px; font-family: inherit; transition: background .12s ease;
+  }
+  .btn-secondary:hover { background: var(--paper-2); }
+
+  /* ---------- Pièces jointes ---------- */
+  .attach-list { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .attach-list:empty { display: none; }
+  .attach-item {
+    display: flex; align-items: center; gap: 9px; padding: 6px 6px 6px 8px; min-width: 0;
+    border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--paper-2);
+  }
+  .attach-item.uploading { opacity: 0.6; }
+  .attach-item .a-ico { width: 28px; height: 28px; flex: none; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .attach-item .a-thumb { width: 28px; height: 28px; object-fit: cover; border-radius: 5px; border: 1px solid var(--line); background: var(--paper); }
+  .attach-item .a-name {
+    flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--ink); text-decoration: none; font-size: 12.5px; font-weight: 600;
+  }
+  .attach-item a.a-name:hover { color: var(--accent); text-decoration: underline; }
+  .attach-item .a-size { font-size: 11px; color: var(--muted); flex: none; font-variant-numeric: tabular-nums; }
+  .attach-item .a-rm {
+    border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: inherit;
+    font-size: 17px; line-height: 1; width: 26px; height: 26px; border-radius: 50%; flex: none;
+    transition: color .12s ease, background .12s ease;
+  }
+  .attach-item .a-rm:hover { color: var(--accent); background: var(--paper); }
+  .btn-attach { margin-top: 8px; padding: 8px 14px; font-size: 12.5px; font-weight: 600; }
+
+  /* ---------- Multi-calendrier ---------- */
+  .co-choices { display: flex; flex-wrap: wrap; gap: 7px; }
+  .co-choice {
+    display: flex; align-items: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--line);
+    border-radius: var(--radius-pill); cursor: pointer; font-size: 12.5px; background: var(--paper-2);
+    color: var(--ink); font-family: inherit; transition: border-color .12s ease, background .12s ease;
+  }
+  .co-choice:hover { border-color: var(--muted); }
+  .co-choice.on { border-color: var(--ink); background: var(--paper); font-weight: 600; box-shadow: 0 0 0 1px var(--ink) inset; }
+  .co-choice .co-check { width: 14px; height: 14px; border-radius: 4px; border: 1.5px solid var(--muted); flex: none;
+    display: flex; align-items: center; justify-content: center; font-size: 10px; line-height: 1; color: var(--paper); }
+  .co-choice.on .co-check { background: var(--ink); border-color: var(--ink); }
+  .also-flag { display: flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 600; color: var(--muted);
+    white-space: nowrap; overflow: hidden; }
+  .also-flag .also-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .also-flag .also-txt { overflow: hidden; text-overflow: ellipsis; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 12px); z-index: 60;
+    background: var(--ink); color: var(--paper); font-size: 13px; font-weight: 600;
+    padding: 10px 16px; border-radius: var(--radius-pill); box-shadow: var(--shadow-lg);
+    max-width: calc(100% - 32px); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.error { background: #B4432E; color: #fff; }
+  .ghost-col { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .day .repeat-flag { font-size: 10.5px; color: var(--muted); line-height: 1; }
+  .field select { appearance: auto; }
+  .field select:disabled, .field input:disabled { opacity: 0.55; }
+
+  .rangehint { font-size: 12px; color: var(--muted); margin-top: -7px; margin-bottom: 15px; }
+
+  /* ---------- Export Google Agenda ---------- */
+  .btn-secondary[hidden] { display: none; }
+  .btn-secondary:disabled, .btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; filter: none; }
+  .seg { display: flex; gap: 4px; padding: 3px; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius-pill); width: fit-content; max-width: 100%; }
+  .seg button {
+    border: none; background: transparent; color: var(--muted); font-family: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 7px 13px; border-radius: var(--radius-pill); cursor: pointer; transition: background .12s ease, color .12s ease;
+  }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .export-summary { font-size: 12.5px; color: var(--ink); background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 9px 12px; margin-bottom: 4px; min-height: 38px; }
+  .export-steps { font-size: 12px; color: var(--muted); margin: 10px 0 0; padding-left: 18px; }
+  .export-steps li { margin-bottom: 2px; }
+
+  .banner {
+    display: none; background: var(--cat-idee-bg); color: var(--ink); border: 1px solid var(--line);
+    border-radius: var(--radius-sm); padding: 9px 13px; font-size: 12.5px; margin-bottom: 16px;
+  }
+  .banner.show { display: block; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 18px 16px 50px; }
+    .day { min-height: 66px; padding: 6px; gap: 3px; }
+    .day.has-cat { padding-top: 4px; }
+    .day .ev { font-size: 9.5px; padding: 2px 4px; gap: 3px; }
+    .day .ev .ev-time, .day .ev .ev-dot { display: none; }
+    .day .note-preview { display: none; }
+    .also-flag .also-txt { display: none; }
+    .day .timerange { font-size: 9px; }
+    .nav .month-label { min-width: 108px; font-size: 12.5px; }
+    .brand .mark { font-size: 15px; }
+    .weekdays div { font-size: 9.5px; }
+    .grid { gap: 5px; }
+    .weekdays { gap: 5px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="mark-dot">🗓️</div>
+      <div class="titles">
+        <div class="mark">Calendrier éditorial</div>
+        <div class="sub">ANRO Apparel — drops, tournages &amp; publicités</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-secondary" id="openExportBtn" type="button" hidden>Exporter vers Google Agenda</button>
+      <button class="btn-primary" id="openRangeBtn">+ Bloc de campagne</button>
+    </div>
+  </header>
+
+  <div class="company-tabs" id="companyTabs"></div>
+
+  <div class="banner" id="offlineBanner">Mode lecture seule : ouvre cette page dans claude.ai connecté pour sauvegarder les changements.</div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="nav">
+    <button id="prevBtn" aria-label="Mois précédent">‹</button>
+    <div class="month-label" id="monthLabel"></div>
+    <button id="nextBtn" aria-label="Mois suivant">›</button>
+    <button class="today-btn" id="todayBtn">Aujourd'hui</button>
+  </div>
+
+  <div class="drag-hint">Clique sur un jour pour ajouter une tâche (autant que tu veux par jour), ou sur une tâche pour la modifier. Clique-glisse sur plusieurs jours (ordi), ou appuie 1 seconde puis glisse le doigt (mobile) pour créer un bloc de campagne.</div>
+
+  <div class="weekdays">
+    <div>Lun</div><div>Mar</div><div>Mer</div><div>Jeu</div><div>Ven</div><div>Sam</div><div>Dim</div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<!-- Modal jour unique -->
+<div class="overlay" id="dayOverlay">
+  <div class="modal">
+    <h2 id="dayTitle">Jour</h2>
+    <div class="modal-sub" id="daySub"></div>
+
+    <div class="field">
+      <label for="dayDate">Date</label>
+      <input type="date" id="dayDate">
+      <div class="field-hint" id="dateHint">Mauvais jour ? Choisis la bonne date, la tâche sera déplacée à l'enregistrement.</div>
+    </div>
+
+    <div class="field">
+      <label>Catégorie</label>
+      <div class="cat-choices" id="dayCatChoices"></div>
+    </div>
+
+    <div class="field">
+      <label for="dayLabel">Nom du drop / campagne</label>
+      <input type="text" id="dayLabel" placeholder="Ex. Restock hoodie 500gsm">
+    </div>
+
+    <div class="field">
+      <label>Aussi dans un autre calendrier</label>
+      <div class="co-choices" id="dayAlsoChoices"></div>
+      <div class="field-hint" id="alsoHint">Coche une ou plusieurs entreprises : la tâche sera ajoutée aux deux calendriers. Décocher la retire de l'autre calendrier.</div>
+    </div>
+
+    <div class="field">
+      <div class="checkline">
+        <input type="checkbox" id="dayNoTime" checked>
+        <label style="margin:0; text-transform:none; font-weight:600; font-size:13px; color:var(--ink);" for="dayNoTime">Sans horaire</label>
+      </div>
+      <div id="timeFields" hidden>
+        <div class="time-row" style="margin-top:12px;">
+          <div>
+            <label for="dayStart">Début</label>
+            <input type="time" id="dayStart">
+          </div>
+          <div>
+            <label for="dayEnd">Fin</label>
+            <input type="time" id="dayEnd">
+          </div>
+        </div>
+      </div>
+      <div class="field-hint" id="timeHint">Décoche « Sans horaire » pour ajouter une plage. Ex. 9 h à 12 h pour un tournage.</div>
+    </div>
+
+    <div class="field">
+      <label for="dayRepeat">Répétition</label>
+      <div class="seg" id="seriesScope" hidden style="margin-bottom:10px;">
+        <button type="button" data-s="one" aria-pressed="true">Ce jour seulement</button>
+        <button type="button" data-s="following" aria-pressed="false">Ce jour et les suivants</button>
+      </div>
+      <select id="dayRepeat">
+        <option value="">Ne se répète pas</option>
+        <option value="daily">Chaque jour</option>
+        <option value="weekdays">Chaque jour de semaine (lun. au ven.)</option>
+        <option value="weekly">Chaque semaine</option>
+        <option value="biweekly">Aux 2 semaines</option>
+        <option value="monthly">Chaque mois</option>
+      </select>
+      <div id="repeatUntilWrap" hidden style="margin-top:10px;">
+        <label for="dayRepeatUntil">Jusqu'au</label>
+        <input type="date" id="dayRepeatUntil">
+      </div>
+      <div class="field-hint" id="repeatHint"></div>
+    </div>
+
+    <div class="field">
+      <div class="checkline">
+        <input type="checkbox" id="dayShoot">
+        <label style="margin:0; text-transform:none; font-weight:600; font-size:13px; color:var(--ink);" for="dayShoot">Tournage prévu ce jour</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="dayNote">Notes</label>
+      <textarea id="dayNote" placeholder="Détails de tournage, contenu à préparer, idées..."></textarea>
+      <div class="attach-list" id="attachList"></div>
+      <input type="file" id="attachInput" multiple hidden accept="image/*,video/mp4,video/webm,application/pdf,.pdf,.csv,.md,.json,.txt">
+      <button type="button" class="btn-secondary btn-attach" id="attachBtn" hidden>📎 Ajouter un document</button>
+      <div class="field-hint" id="attachHint" hidden></div>
+    </div>
+
+    <div class="modal-actions">
+      <div class="ghost-col">
+        <button class="btn-ghost" id="addAnotherBtn" hidden>+ Autre tâche ce jour</button>
+        <button class="btn-ghost" id="clearDayBtn">Effacer cette tâche</button>
+        <button class="btn-ghost" id="clearSeriesBtn" hidden>Effacer toute la série</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" id="cancelDayBtn">Annuler</button>
+        <button class="btn-primary" id="saveDayBtn">Enregistrer</button>
+      </div>
+    </div>
+    <div id="dayStatus" style="font-size:12px; margin-top:10px; text-align:right;"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Modal bloc de campagne (plage de dates) -->
+<div class="overlay" id="rangeOverlay">
+  <div class="modal">
+    <h2>Bloc de campagne</h2>
+    <div class="modal-sub">Colore plusieurs jours d'un coup — utile pour une promo comme le Black Friday.</div>
+
+    <div class="field">
+      <label for="rangeStart">Du</label>
+      <input type="date" id="rangeStart">
+    </div>
+    <div class="field">
+      <label for="rangeEnd">Au</label>
+      <input type="date" id="rangeEnd">
+    </div>
+
+    <div class="field">
+      <label>Catégorie</label>
+      <div class="cat-choices" id="rangeCatChoices"></div>
+    </div>
+
+    <div class="field">
+      <label for="rangeLabel">Nom du bloc</label>
+      <input type="text" id="rangeLabel" placeholder="Ex. Black Friday / Boxing Week">
+    </div>
+    <div class="field">
+      <label>Aussi dans un autre calendrier</label>
+      <div class="co-choices" id="rangeAlsoChoices"></div>
+    </div>
+    <div class="rangehint">Ajoute une tâche sur chaque jour de la plage, en plus de ce qui est déjà prévu. Tu pourras effacer tout le bloc d'un coup (« Effacer toute la série »). Si tu coches un autre calendrier, la même plage y est ajoutée aussi.</div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelRangeGhost">Annuler</button>
+      <div class="btn-row">
+        <button class="btn-primary" id="applyRangeBtn">Appliquer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal export Google Agenda -->
+<div class="overlay" id="exportOverlay">
+  <div class="modal" role="dialog" aria-labelledby="exportTitle">
+    <h2 id="exportTitle">Exporter vers Google Agenda</h2>
+    <div class="modal-sub">Télécharge un fichier CSV que Google Agenda sait importer.</div>
+
+    <div class="field">
+      <label>Calendriers à exporter</label>
+      <div class="co-choices" id="exportCompanies"></div>
+    </div>
+
+    <div class="field">
+      <label>Période</label>
+      <div class="seg" id="exportPeriod">
+        <button type="button" data-p="upcoming" aria-pressed="true">À partir d'aujourd'hui</button>
+        <button type="button" data-p="all" aria-pressed="false">Tout</button>
+      </div>
+    </div>
+
+    <div class="export-summary" id="exportSummary" aria-live="polite">Calcul en cours…</div>
+    <ol class="export-steps">
+      <li>Dans Google Agenda (ordinateur) : roue dentée, puis « Paramètres ».</li>
+      <li>« Importer et exporter », puis « Importer ».</li>
+      <li>Choisis le fichier CSV téléchargé et le calendrier de destination.</li>
+    </ol>
+    <div class="field-hint" style="margin-top:8px;">Google Agenda ne détecte pas les doublons avec ce format. Si tu réimportes plus tard, garde « À partir d'aujourd'hui » et supprime d'abord les anciens événements, ou importe dans un calendrier à part.</div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="exportCancel" type="button">Fermer</button>
+      <div class="btn-row">
+        <button class="btn-primary" id="exportGo" type="button" disabled>Télécharger le fichier</button>
+      </div>
+    </div>
+    <div id="exportStatus" style="font-size:12px; margin-top:10px; text-align:right;" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const CATS = [
+    { id: 'promo',     label: 'Promo / vente',        color: 'var(--cat-promo)',     bg: 'var(--cat-promo-bg)' },
+    { id: 'tournage',  label: 'Tournage',              color: 'var(--cat-tournage)',  bg: 'var(--cat-tournage-bg)' },
+    { id: 'contenu',   label: 'Contenu à préparer',    color: 'var(--cat-contenu)',   bg: 'var(--cat-contenu-bg)' },
+    { id: 'rs',        label: 'Contenu RS',            color: 'var(--cat-rs)',        bg: 'var(--cat-rs-bg)' },
+    { id: 'lancement', label: 'Lancement publicité',   color: 'var(--cat-lancement)', bg: 'var(--cat-lancement-bg)' },
+    { id: 'idee',      label: 'Idée / à discuter',     color: 'var(--cat-idee)',      bg: 'var(--cat-idee-bg)' },
+    { id: 'meeting',   label: 'Meeting',               color: 'var(--cat-meeting)',   bg: 'var(--cat-meeting-bg)' },
+    { id: 'suivi',     label: 'Suivi / analyse',       color: 'var(--cat-suivi)',     bg: 'var(--cat-suivi-bg)' },
+  ];
+  const catById = Object.fromEntries(CATS.map(c => [c.id, c]));
+  const COMPANIES = [
+    { id: 'anro',   label: 'ANRO Apparel',  short: 'ANRO',   dot: '#C6431E' },
+    { id: 'nora',   label: 'Nora Apparel',  short: 'Nora',   dot: '#2E6DA8' },
+    { id: 'nobl',   label: 'Nobl & Co',     short: 'Nobl',   dot: '#3C8360' },
+    { id: 'studio', label: 'Le Stud.io',    short: 'Stud.io', dot: '#7C4FB0' },
+  ];
+  let currentCompany = 'anro';
+  try {
+    const saved = localStorage.getItem('editorial_cal_company');
+    if (saved && COMPANIES.some(c => c.id === saved)) currentCompany = saved;
+  } catch (e) {}
+
+  function entriesPath(){ return `days/${currentCompany}/entries`; }
+  function colPath(cid){ return `days/${cid}/entries`; }
+  const coById = Object.fromEntries(COMPANIES.map(c => [c.id, c]));
+
+  // Lit une entrée d'un autre calendrier (null si absente).
+  async function readEntry(cid, key){
+    const snap = await db.collection(colPath(cid)).doc(key).get();
+    return snap.exists ? snap.data() : null;
+  }
+  const hasContent = e => !!(e && (e.label || e.category || e.note || e.shoot || e.startTime || e.endTime || (e.attachments && e.attachments.length)));
+  const newEventId = key => key + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  const sortEvents = list => list.sort((a, b) =>
+    ((a.startTime || '') ? 1 : 0) - ((b.startTime || '') ? 1 : 0)
+    || (a.startTime || '').localeCompare(b.startTime || '')
+    || (a.label || '').localeCompare(b.label || ''));
+  // Une copie est « liée » si elle pointe vers le calendrier d'origine.
+  const isLinkedTo = (e, cid) => !!(e && Array.isArray(e.alsoIn) && e.alsoIn.includes(cid));
+
+  // Pastilles « aussi dans… » (multi-sélection, exclut le calendrier actif)
+  function buildCoChoices(container, selectedSet, onChange){
+    container.innerHTML = '';
+    COMPANIES.filter(c => c.id !== currentCompany).forEach(c => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      const on = selectedSet.has(c.id);
+      b.className = 'co-choice' + (on ? ' on' : '');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.innerHTML = `<span class="co-check">${on ? '✓' : ''}</span><span class="tab-dot" style="--dot:${c.dot}"></span>${c.label}`;
+      b.addEventListener('click', () => {
+        if (selectedSet.has(c.id)) selectedSet.delete(c.id); else selectedSet.add(c.id);
+        buildCoChoices(container, selectedSet, onChange);
+        if (onChange) onChange();
+      });
+      container.appendChild(b);
+    });
+  }
+
+  function renderTabs(){
+    const el = document.getElementById('companyTabs');
+    if (!el) return;
+    el.innerHTML = '';
+    COMPANIES.forEach(c => {
+      const b = document.createElement('button');
+      b.className = 'company-tab' + (c.id === currentCompany ? ' active' : '');
+      b.style.setProperty('--dot', c.dot);
+      b.innerHTML = `<span class="tab-dot"></span>${c.label}`;
+      b.addEventListener('click', () => {
+        if (c.id === currentCompany) return;
+        currentCompany = c.id;
+        try { localStorage.setItem('editorial_cal_company', currentCompany); } catch (e) {}
+        renderTabs();
+        document.querySelector('.brand .sub').textContent = c.label + ' — drops, tournages & publicités';
+        subscribeMonth();
+      });
+      el.appendChild(b);
+    });
+    const active = COMPANIES.find(c => c.id === currentCompany);
+    if (active) document.querySelector('.brand .sub').textContent = active.label + ' — drops, tournages & publicités';
+  }
+
+  const MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+  const pad = n => String(n).padStart(2,'0');
+  const toKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const sameDay = (a,b) => toKey(a) === toKey(b);
+
+  // "09:00" -> "9 h", "14:30" -> "14 h 30"
+  function fmtTime(t){
+    if (!t) return '';
+    const [h, m] = t.split(':');
+    const hh = String(parseInt(h, 10));
+    return m && m !== '00' ? `${hh} h ${m}` : `${hh} h`;
+  }
+  function fmtRange(start, end){
+    if (start && end) return `${fmtTime(start)} – ${fmtTime(end)}`;
+    if (start) return `dès ${fmtTime(start)}`;
+    if (end) return `jusqu'à ${fmtTime(end)}`;
+    return '';
+  }
+
+  // ---------- Récurrence ----------
+  const JOURS = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  const REPEAT_MAX = 60; // occurrences max. par série
+  const REPEAT_DEFAULT_MONTHS = { daily: 1, weekdays: 1, weekly: 3, biweekly: 6, monthly: 12 };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const newSeriesId = () => 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  function keyToDateR(key){ const [y,m,d] = key.split('-').map(Number); return new Date(y, m - 1, d); }
+  function repeatText(freq, key){
+    const d = keyToDateR(key);
+    switch (freq) {
+      case 'daily': return 'Chaque jour';
+      case 'weekdays': return 'Chaque jour de semaine (lun. au ven.)';
+      case 'weekly': return `Chaque semaine (le ${JOURS[d.getDay()]})`;
+      case 'biweekly': return `Aux 2 semaines (le ${JOURS[d.getDay()]})`;
+      case 'monthly': return `Chaque mois (le ${d.getDate()})`;
+      default: return 'Ne se répète pas';
+    }
+  }
+  function fmtLongDate(key){ const d = keyToDateR(key); return d.getDate() + ' ' + MOIS[d.getMonth()] + ' ' + d.getFullYear(); }
+  // Dates de la série, de startKey jusqu'à untilKey inclus (max. REPEAT_MAX).
+  function seriesDates(startKey, freq, untilKey){
+    const out = [];
+    const start = keyToDateR(startKey);
+    if (freq === 'monthly') {
+      const day = start.getDate();
+      for (let i = 0; i < 600 && out.length < REPEAT_MAX; i++) {
+        const d = new Date(start.getFullYear(), start.getMonth() + i, day);
+        if (toKey(d) > untilKey) break;
+        if (d.getDate() === day) out.push(toKey(d)); // mois sans ce jour (ex. 31) : sauté
+      }
+    } else {
+      const step = freq === 'weekly' ? 7 : freq === 'biweekly' ? 14 : 1;
+      const d = new Date(start);
+      while (toKey(d) <= untilKey && out.length < REPEAT_MAX) {
+        const wd = d.getDay();
+        if (freq !== 'weekdays' || (wd >= 1 && wd <= 5)) out.push(toKey(d));
+        d.setDate(d.getDate() + step);
+      }
+    }
+    if (!out.includes(startKey)) out.unshift(startKey);
+    return out;
+  }
+  function addMonthsKey(key, n){ const d = keyToDateR(key); d.setMonth(d.getMonth() + n); return toKey(d); }
+  // Réessaie les appels à la base quand elle demande de ralentir.
+  async function withRetry(fn){
+    for (let i = 0; ; i++) {
+      try { return await fn(); }
+      catch (e) {
+        const code = e && e.code;
+        if (i < 4 && (code === 'resource_exhausted' || code === 'unavailable')) { await sleep(700 * (i + 1) + Math.random() * 400); continue; }
+        throw e;
+      }
+    }
+  }
+
+  // ---------- Pièces jointes ----------
+  const ATTACH_TYPES = { png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', gif:'image/gif', webp:'image/webp', svg:'image/svg+xml',
+    mp4:'video/mp4', webm:'video/webm', pdf:'application/pdf', csv:'text/csv', md:'text/markdown', json:'application/json', txt:'text/plain' };
+  const ATTACH_MAX = 20 * 1024 * 1024;
+  const ATTACH_MAX_SVG = 2 * 1024 * 1024;
+  let assets = null;
+  let dayAttach = [];        // [{id, name, type, size}]
+  let pendingNew = new Set(); // ids téléversés dans ce modal et pas encore enregistrés
+  let uploading = [];         // noms en cours de téléversement
+  let modalSession = 0;
+
+  function attachType(file){
+    const ext = (file.name.split('.').pop() || '').toLowerCase();
+    return ATTACH_TYPES[ext] || null;
+  }
+  function fmtSize(n){
+    if (!n) return '';
+    if (n < 1024) return n + ' o';
+    if (n < 1024 * 1024) return Math.round(n / 1024) + ' Ko';
+    return (n / 1024 / 1024).toFixed(1).replace('.', ',') + ' Mo';
+  }
+  function attachIcon(type){
+    if (type === 'application/pdf') return '📄';
+    if (type && type.startsWith('video/')) return '🎞️';
+    if (type === 'text/csv') return '📊';
+    return '📎';
+  }
+  function setAttachHint(msg, isError){
+    const el = document.getElementById('attachHint');
+    el.textContent = msg || '';
+    el.hidden = !msg;
+    el.style.color = isError ? '#B4432E' : '';
+  }
+  function renderAttach(){
+    const list = document.getElementById('attachList');
+    list.innerHTML = '';
+    dayAttach.forEach((a, idx) => {
+      const row = document.createElement('div');
+      row.className = 'attach-item';
+      if (a.type && a.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.className = 'a-thumb';
+        img.src = '/_blob/' + a.id;
+        img.alt = '';
+        row.appendChild(img);
+      } else {
+        const ic = document.createElement('span');
+        ic.className = 'a-ico';
+        ic.textContent = attachIcon(a.type);
+        row.appendChild(ic);
+      }
+      const link = document.createElement('a');
+      link.className = 'a-name';
+      link.href = '/_blob/' + a.id;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.textContent = a.name || 'Document';
+      link.title = a.name || '';
+      row.appendChild(link);
+      const sz = document.createElement('span');
+      sz.className = 'a-size';
+      sz.textContent = fmtSize(a.size);
+      row.appendChild(sz);
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'a-rm';
+      rm.setAttribute('aria-label', 'Retirer ' + (a.name || 'le document'));
+      rm.textContent = '×';
+      rm.addEventListener('click', () => removeAttach(idx));
+      row.appendChild(rm);
+      list.appendChild(row);
+    });
+    uploading.forEach(name => {
+      const row = document.createElement('div');
+      row.className = 'attach-item uploading';
+      row.innerHTML = '<span class="a-ico">⏳</span><span class="a-name"></span><span class="a-size">envoi…</span>';
+      row.querySelector('.a-name').textContent = name;
+      list.appendChild(row);
+    });
+  }
+  function removeAttach(idx){
+    const a = dayAttach[idx];
+    if (!a) return;
+    dayAttach.splice(idx, 1);
+    // Un fichier ajouté dans ce modal et jamais enregistré peut être supprimé tout de suite.
+    // Un fichier déjà enregistré reste dans le stockage (d'autres calendriers peuvent le partager).
+    if (pendingNew.has(a.id)) {
+      pendingNew.delete(a.id);
+      if (assets) assets.delete(a.id).catch(() => {});
+    }
+    renderAttach();
+  }
+  function discardPending(){
+    if (assets) pendingNew.forEach(id => { assets.delete(id).catch(() => {}); });
+    pendingNew = new Set();
+  }
+  function uploadErrorText(name, e){
+    const code = e && e.code;
+    if (code === 'too_large') return `« ${name} » est trop lourd (max. 20 Mo).`;
+    if (code === 'quota_or_state') return "L'espace de stockage de la page est plein. Retire d'anciens documents.";
+    if (code === 'rate_limited') return 'Trop d\'envois d\'un coup. Attends quelques secondes et réessaie.';
+    if (code === 'unsupported_type') return `« ${name} » : format non accepté.`;
+    if (code === 'not_granted' || code === 'capability_disabled' || code === 'capability_removed') return "L'ajout de documents n'est pas disponible dans cette vue.";
+    return `« ${name} » n'a pas pu être envoyé. Réessaie.`;
+  }
+  const attachInput = document.getElementById('attachInput');
+  const attachBtn = document.getElementById('attachBtn');
+  attachBtn.addEventListener('click', () => attachInput.click());
+  attachInput.addEventListener('change', async () => {
+    const files = Array.from(attachInput.files || []);
+    attachInput.value = '';
+    setAttachHint('');
+    if (!assets || !files.length) return;
+    const session = modalSession;
+    for (const f of files) {
+      const type = attachType(f);
+      if (!type) {
+        setAttachHint(`« ${f.name} » : format non accepté. Word, Excel ou PowerPoint : exporte-le d'abord en PDF. Formats OK : PDF, images, vidéos MP4/WebM, CSV, TXT.`, true);
+        continue;
+      }
+      if (f.size > (type === 'image/svg+xml' ? ATTACH_MAX_SVG : ATTACH_MAX)) {
+        setAttachHint(`« ${f.name} » est trop lourd (max. ${type === 'image/svg+xml' ? '2' : '20'} Mo).`, true);
+        continue;
+      }
+      uploading.push(f.name);
+      renderAttach();
+      try {
+        const res = await assets.upload(f, { type });
+        if (session !== modalSession) {
+          assets.delete(res.id).catch(() => {}); // le modal a été fermé entre-temps
+        } else {
+          dayAttach.push({ id: res.id, name: f.name, type, size: res.sizeBytes || f.size });
+          pendingNew.add(res.id);
+        }
+      } catch (e) {
+        console.error('upload failed', e);
+        if (session === modalSession) setAttachHint(uploadErrorText(f.name, e), true);
+      } finally {
+        if (session === modalSession) {
+          const k = uploading.indexOf(f.name);
+          if (k >= 0) uploading.splice(k, 1);
+          renderAttach();
+        }
+      }
+    }
+  });
+
+  let db = null;
+  let cursor = new Date(); cursor.setDate(1);
+  let dayData = {}; // date -> [{id, date, category, label, note, shoot, startTime, endTime, ...}]
+  let unsub = null;
+  let activeDayKey = null;
+  let activeEventId = null; // null = nouvelle tâche
+  function findEvent(key, id){ return (dayData[key] || []).find(e => e.id === id) || null; }
+  function removeLocal(key, id){
+    if (!dayData[key]) return;
+    dayData[key] = dayData[key].filter(e => e.id !== id);
+    if (!dayData[key].length) delete dayData[key];
+  }
+  function putLocal(ev){
+    removeLocal(ev.date, ev.id);
+    (dayData[ev.date] = dayData[ev.date] || []).push(ev);
+    sortEvents(dayData[ev.date]);
+  }
+
+  // ---------- Legend ----------
+  const legendEl = document.getElementById('legend');
+  CATS.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<span class="legend-swatch" style="background:${c.color}"></span>${c.label}`;
+    legendEl.appendChild(item);
+  });
+  const legendNote = document.createElement('div');
+  legendNote.className = 'legend-note';
+  legendNote.textContent = '📹 = tournage · 🔁 = récurrent · 📎 = document';
+  legendEl.appendChild(legendNote);
+
+  function buildCatChoices(container, selectedId, onPick){
+    container.innerHTML = '';
+    CATS.forEach(c => {
+      const wrap = document.createElement('label');
+      wrap.className = 'cat-choice' + (c.id === selectedId ? ' selected' : '');
+      wrap.style.setProperty('--cc', c.color);
+      wrap.style.setProperty('--ccbg', c.bg);
+      wrap.innerHTML = `<span class="cat-dot" style="background:${c.color}"></span>${c.label}`;
+      wrap.addEventListener('click', () => onPick(c.id));
+      container.appendChild(wrap);
+    });
+  }
+
+  // ---------- Grid rendering ----------
+  const gridEl = document.getElementById('grid');
+  const monthLabelEl = document.getElementById('monthLabel');
+
+  function gridBounds(){
+    const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    const startOffset = (first.getDay() + 6) % 7; // Monday = 0
+    const start = new Date(first); start.setDate(first.getDate() - startOffset);
+    const cells = [];
+    for (let i = 0; i < 42; i++){
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      cells.push(d);
+    }
+    return cells;
+  }
+
+  function render(){
+    monthLabelEl.textContent = `${MOIS[cursor.getMonth()]} ${cursor.getFullYear()}`;
+    const cells = gridBounds();
+    const today = new Date();
+    gridEl.innerHTML = '';
+    cells.forEach(d => {
+      const key = toKey(d);
+      const list = dayData[key] || [];
+      const cell = document.createElement('div');
+      const first = list.find(e => e.category && catById[e.category]);
+      const cat = first ? catById[first.category] : null;
+      cell.className = 'day'
+        + (d.getMonth() !== cursor.getMonth() ? ' out' : '')
+        + (sameDay(d, today) ? ' today' : '')
+        + (cat ? ' has-cat' : '');
+      cell.dataset.key = key;
+      if (cat) cell.style.setProperty('--cat-color', cat.color);
+      const numRow = document.createElement('div');
+      numRow.className = 'num-row';
+      const num = document.createElement('div');
+      num.className = 'num';
+      num.textContent = d.getDate();
+      numRow.appendChild(num);
+      const add = document.createElement('div');
+      add.className = 'add-hint';
+      add.title = 'Ajouter une tâche';
+      add.textContent = '+';
+      numRow.appendChild(add);
+      cell.appendChild(numRow);
+
+      list.forEach(ev => {
+        const c = ev.category ? catById[ev.category] : null;
+        const chip = document.createElement('div');
+        chip.className = 'ev';
+        chip.dataset.id = ev.id;
+        if (c) { chip.style.setProperty('--ev-color', c.color); chip.style.setProperty('--ev-bg', c.bg); }
+        if (ev.startTime) {
+          const t = document.createElement('span');
+          t.className = 'ev-time';
+          t.textContent = fmtTime(ev.startTime);
+          chip.appendChild(t);
+        }
+        const txt = document.createElement('span');
+        txt.className = 'ev-txt';
+        txt.textContent = ev.label || (c ? c.label : (ev.note || 'Sans titre'));
+        chip.appendChild(txt);
+        const icons = (ev.shoot ? '📹' : '') + (ev.seriesId ? '🔁' : '') + (Array.isArray(ev.attachments) && ev.attachments.length ? '📎' : '');
+        if (icons) {
+          const ic = document.createElement('span');
+          ic.className = 'ev-ico';
+          ic.textContent = icons;
+          chip.appendChild(ic);
+        }
+        const also = (ev.alsoIn || []).map(id => coById[id]).filter(Boolean);
+        also.forEach(co => {
+          const dot = document.createElement('span');
+          dot.className = 'ev-dot';
+          dot.style.background = co.dot;
+          chip.appendChild(dot);
+        });
+        const tip = [ev.label || (c ? c.label : 'Sans titre')];
+        if (c) tip.push('Catégorie : ' + c.label);
+        const rt = fmtRange(ev.startTime, ev.endTime);
+        if (rt) tip.push('Heure : ' + rt);
+        if (also.length) tip.push('Aussi dans : ' + also.map(x => x.label).join(', '));
+        if (ev.shoot) tip.push('Tournage prévu');
+        if (ev.note) tip.push(ev.note);
+        chip.title = tip.join('\n');
+        cell.appendChild(chip);
+      });
+      cell.addEventListener('pointerdown', (e) => startSelection(e, key));
+      gridEl.appendChild(cell);
+    });
+  }
+
+  // ---------- DB sync ----------
+  function monthQueryBounds(){
+    const cells = gridBounds();
+    return { from: toKey(cells[0]), to: toKey(cells[cells.length-1]) };
+  }
+
+  function subscribeMonth(){
+    if (!db) { render(); return; }
+    if (unsub) { unsub(); unsub = null; }
+    const { from, to } = monthQueryBounds();
+    dayData = {};
+    const q = db.collection(entriesPath()).where('date','>=',from).where('date','<=',to);
+    unsub = q.onSnapshot(snap => {
+      dayData = {};
+      snap.docs.forEach(doc => {
+        const e = doc.data();
+        if (!e || !e.date || !hasContent(e)) return;
+        (dayData[e.date] = dayData[e.date] || []).push(Object.assign({}, e, { id: doc.id }));
+      });
+      Object.values(dayData).forEach(sortEvents);
+      render();
+    }, err => {
+      console.error('db snapshot error', err);
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    cursor.setMonth(cursor.getMonth() - 1); subscribeMonth();
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    cursor.setMonth(cursor.getMonth() + 1); subscribeMonth();
+  });
+  document.getElementById('todayBtn').addEventListener('click', () => {
+    cursor = new Date(); cursor.setDate(1); subscribeMonth();
+  });
+
+  // ---------- Day modal ----------
+  const dayOverlay = document.getElementById('dayOverlay');
+  const dayTitle = document.getElementById('dayTitle');
+  const daySub = document.getElementById('daySub');
+  const dayLabelInput = document.getElementById('dayLabel');
+  const dayNoteInput = document.getElementById('dayNote');
+  const dayShootInput = document.getElementById('dayShoot');
+  const dayDateInput = document.getElementById('dayDate');
+  const dateHint = document.getElementById('dateHint');
+  const DATE_HINT_DEFAULT = "Mauvais jour ? Choisis la bonne date, la tâche sera déplacée à l'enregistrement.";
+
+  function resetDateHint(){
+    dateHint.textContent = DATE_HINT_DEFAULT;
+    dateHint.style.color = '';
+  }
+  dayDateInput.addEventListener('input', () => { resetDateHint(); resetAlsoHint(); });
+  const dayStartInput = document.getElementById('dayStart');
+  const dayEndInput = document.getElementById('dayEnd');
+  const timeHint = document.getElementById('timeHint');
+  const TIME_HINT_DEFAULT = 'Décoche « Sans horaire » pour ajouter une plage. Ex. 9 h à 12 h pour un tournage.';
+  const dayNoTimeInput = document.getElementById('dayNoTime');
+  const timeFields = document.getElementById('timeFields');
+  function syncTimeFields(){
+    timeFields.hidden = dayNoTimeInput.checked;
+    timeHint.textContent = dayNoTimeInput.checked ? TIME_HINT_DEFAULT : 'Plage horaire facultative. Ex. 9 h à 12 h pour un tournage.';
+    timeHint.style.color = '';
+  }
+  dayNoTimeInput.addEventListener('change', syncTimeFields);
+  const dayCatChoices = document.getElementById('dayCatChoices');
+  let dayCatSelected = null;
+  let dayAlso = new Set();
+  const alsoHint = document.getElementById('alsoHint');
+  const dayAlsoChoices = document.getElementById('dayAlsoChoices');
+  const ALSO_HINT_DEFAULT = alsoHint.textContent;
+  function resetAlsoHint(){ alsoHint.textContent = ALSO_HINT_DEFAULT; alsoHint.style.color = ''; }
+
+  function pickDayCat(id){
+    dayCatSelected = (dayCatSelected === id) ? null : id;
+    buildCatChoices(dayCatChoices, dayCatSelected, pickDayCat);
+  }
+
+  // ---------- Répétition (modal) ----------
+  const dayRepeatSel = document.getElementById('dayRepeat');
+  const dayRepeatUntil = document.getElementById('dayRepeatUntil');
+  const repeatUntilWrap = document.getElementById('repeatUntilWrap');
+  const repeatHint = document.getElementById('repeatHint');
+  const seriesScopeEl = document.getElementById('seriesScope');
+  const clearSeriesBtn = document.getElementById('clearSeriesBtn');
+  let seriesScope = 'one';
+  let untilAuto = true;   // la date de fin a été remplie automatiquement
+  let activeSeries = null; // {id, repeat} si le jour ouvert fait partie d'une série
+
+  function repeatBaseKey(){ return dayDateInput.value || activeDayKey; }
+  function refreshRepeatLabels(){
+    const key = repeatBaseKey();
+    if (!key) return;
+    Array.from(dayRepeatSel.options).forEach(o => { o.textContent = repeatText(o.value, key); });
+  }
+  function setRepeatHint(msg, isError){
+    repeatHint.textContent = msg || '';
+    repeatHint.style.color = isError ? '#B4432E' : '';
+  }
+  function syncRepeatUI(){
+    const locked = !!activeSeries && seriesScope === 'one';
+    dayRepeatSel.disabled = locked;
+    dayRepeatUntil.disabled = locked;
+    const freq = dayRepeatSel.value;
+    repeatUntilWrap.hidden = !freq;
+    if (freq && (untilAuto || !dayRepeatUntil.value)) {
+      dayRepeatUntil.value = addMonthsKey(repeatBaseKey(), REPEAT_DEFAULT_MONTHS[freq] || 3);
+      untilAuto = true;
+    }
+    if (locked) {
+      const r = activeSeries.repeat;
+      setRepeatHint('Cette tâche fait partie d\'une série' + (r ? ` : ${repeatText(r.freq, activeDayKey).toLowerCase().replace(/[()]/g, '')}, jusqu'au ${fmtLongDate(r.until)}` : '') + '. Choisis « Ce jour et les suivants » pour modifier toute la suite.');
+    } else if (freq) {
+      const dates = seriesDates(repeatBaseKey(), freq, dayRepeatUntil.value || repeatBaseKey());
+      let msg = `${dates.length} occurrence${dates.length > 1 ? 's' : ''} seront créées dans ce calendrier.`;
+      if (dates.length >= REPEAT_MAX) msg = `Limité à ${REPEAT_MAX} occurrences : la série s'arrêtera le ${fmtLongDate(dates[dates.length - 1])}.`;
+      if (activeSeries) msg += ' Les occurrences suivantes de la série seront remplacées.';
+      setRepeatHint(msg);
+    } else if (activeSeries && seriesScope === 'following') {
+      setRepeatHint('Les occurrences suivantes seront retirées ; ce jour restera une tâche unique.');
+    } else {
+      setRepeatHint('');
+    }
+  }
+  function setSeriesScope(s){
+    seriesScope = s;
+    seriesScopeEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === s ? 'true' : 'false'));
+    syncRepeatUI();
+  }
+  seriesScopeEl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => setSeriesScope(b.dataset.s)));
+  dayRepeatSel.addEventListener('change', () => { untilAuto = true; syncRepeatUI(); });
+  dayRepeatUntil.addEventListener('input', () => { untilAuto = false; syncRepeatUI(); });
+  dayDateInput.addEventListener('input', () => { refreshRepeatLabels(); syncRepeatUI(); });
+
+  function setupRepeatForOpen(key, info){
+    activeSeries = info.seriesId ? { id: info.seriesId, repeat: info.repeat || null } : null;
+    seriesScopeEl.hidden = !activeSeries;
+    clearSeriesBtn.hidden = !activeSeries;
+    clearSeriesArmed = false;
+    clearSeriesBtn.textContent = 'Effacer toute la série';
+    clearSeriesBtn.style.color = '';
+    seriesScope = 'one';
+    seriesScopeEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === 'one' ? 'true' : 'false'));
+    const r = activeSeries && activeSeries.repeat;
+    dayRepeatSel.value = r && r.freq ? r.freq : '';
+    dayRepeatUntil.value = r && r.until ? r.until : '';
+    untilAuto = !(r && r.until);
+    refreshRepeatLabels();
+    syncRepeatUI();
+  }
+
+  // Supprime les occurrences d'une série à partir d'une date, dans ce calendrier et dans les autres.
+  async function deleteSeriesFrom(sid, fromKey, inclusive){
+    for (const c of COMPANIES) {
+      const snap = await withRetry(() => db.collection(colPath(c.id)).where('seriesId', '==', sid).limit(1000).get());
+      for (const doc of snap.docs) {
+        const e = doc.data();
+        if (!e || !e.date) continue;
+        if (inclusive ? e.date < fromKey : e.date <= fromKey) continue;
+        // Dans un autre calendrier, on ne retire que les copies liées à celui-ci.
+        if (c.id !== currentCompany && !isLinkedTo(e, currentCompany)) continue;
+        await withRetry(() => db.collection(colPath(c.id)).doc(doc.id).delete());
+      }
+    }
+  }
+
+  function openDayModal(key, dateObj, eventId){
+    activeDayKey = key;
+    const found = eventId ? findEvent(key, eventId) : null;
+    activeEventId = found ? found.id : null;
+    document.getElementById('dayStatus').textContent = '';
+    timeHint.textContent = TIME_HINT_DEFAULT;
+    timeHint.style.color = '';
+    resetDateHint();
+    dayDateInput.value = key;
+    const info = found || {};
+    dayCatSelected = info.category || null;
+    dayTitle.textContent = (found ? '' : 'Nouvelle tâche — ') + dateObj.getDate() + ' ' + MOIS[dateObj.getMonth()];
+    const nb = (dayData[key] || []).length;
+    daySubExtra = nb ? ` · ${nb} tâche${nb > 1 ? 's' : ''} ce jour` : '';
+    document.getElementById('clearDayBtn').hidden = !found;
+    document.getElementById('addAnotherBtn').hidden = !found;
+    daySub.textContent = dateObj.toLocaleDateString('fr-CA', { weekday: 'long', year: 'numeric' }) + daySubExtra;
+    dayLabelInput.value = info.label || '';
+    dayStartInput.value = info.startTime || '';
+    dayEndInput.value = info.endTime || '';
+    dayNoTimeInput.checked = !(info.startTime || info.endTime);
+    syncTimeFields();
+    dayNoteInput.value = info.note || '';
+    modalSession++;
+    pendingNew = new Set();
+    uploading = [];
+    dayAttach = (info.attachments || []).filter(a => a && a.id).map(a => Object.assign({}, a));
+    setAttachHint('');
+    attachBtn.hidden = !assets;
+    renderAttach();
+    dayShootInput.checked = !!info.shoot;
+    buildCatChoices(dayCatChoices, dayCatSelected, pickDayCat);
+    dayAlso = new Set((info.alsoIn || []).filter(id => id !== currentCompany && coById[id]));
+    resetAlsoHint();
+    buildCoChoices(dayAlsoChoices, dayAlso, resetAlsoHint);
+    setupRepeatForOpen(key, info);
+    dayOverlay.classList.add('show');
+  }
+  let daySubExtra = '';
+  function closeDayModal(){ dayOverlay.classList.remove('show'); activeDayKey = null; activeEventId = null; modalSession++; }
+  document.getElementById('addAnotherBtn').addEventListener('click', () => {
+    const key = activeDayKey;
+    if (!key) return;
+    discardPending();
+    openDayModal(key, keyToDate(key), null);
+  });
+  function cancelDayModal(){ discardPending(); closeDayModal(); }
+
+  document.getElementById('cancelDayBtn').addEventListener('click', cancelDayModal);
+  dayOverlay.addEventListener('click', e => { if (e.target === dayOverlay) cancelDayModal(); });
+
+  const saveDayBtn = document.getElementById('saveDayBtn');
+  let savingDay = false;
+  let toastTimer = null;
+  function showToast(msg, isError){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.toggle('error', !!isError);
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 5000);
+  }
+
+  saveDayBtn.addEventListener('click', async () => {
+    if (!activeDayKey || savingDay) return;
+    if (uploading.length) {
+      const st = document.getElementById('dayStatus');
+      st.style.color = '#B4432E';
+      st.textContent = 'Un document est encore en cours d\'envoi. Attends une seconde.';
+      return;
+    }
+    const noTime = dayNoTimeInput.checked;
+    const startTime = noTime ? '' : (dayStartInput.value || '');
+    const endTime = noTime ? '' : (dayEndInput.value || '');
+    if (startTime && endTime && endTime <= startTime) {
+      timeHint.textContent = "L'heure de fin doit être après l'heure de début.";
+      timeHint.style.color = '#B4432E';
+      dayEndInput.focus();
+      return;
+    }
+    const oldKey = activeDayKey;
+    const newKey = dayDateInput.value || oldKey;
+    const moving = newKey !== oldKey;
+    const statusEl = document.getElementById('dayStatus');
+
+    // Répétition : s'applique à une nouvelle tâche, ou à « ce jour et les suivants » d'une série.
+    const freq = dayRepeatSel.value;
+    const keepSeries = !!activeSeries && seriesScope === 'one';
+    const editFollowing = !!activeSeries && seriesScope === 'following';
+    const makeSeries = !keepSeries && !!freq;
+    const untilKey = dayRepeatUntil.value;
+    if (makeSeries && (!untilKey || untilKey < newKey)) {
+      setRepeatHint("La date de fin de la répétition doit être le jour de la tâche ou après.", true);
+      dayRepeatUntil.focus();
+      return;
+    }
+
+    const others = COMPANIES.map(c => c.id).filter(id => id !== currentCompany && dayAlso.has(id));
+    const group = [currentCompany, ...others];
+    const prevInfo = activeEventId ? findEvent(oldKey, activeEventId) : null;
+    const prevAlso = ((prevInfo && prevInfo.alsoIn) || []).filter(id => id !== currentCompany && coById[id]);
+    const id = activeEventId || newEventId(newKey);
+
+    const body = {
+      date: newKey,
+      category: dayCatSelected,
+      label: dayLabelInput.value.trim(),
+      note: dayNoteInput.value.trim(),
+      attachments: dayAttach.map(a => ({ id: a.id, name: a.name, type: a.type, size: a.size })),
+      shoot: dayShootInput.checked,
+      startTime,
+      endTime,
+      alsoIn: others,
+    };
+    if (!hasContent(body)) {
+      statusEl.style.color = '#B4432E';
+      statusEl.textContent = 'Ajoute au moins un nom ou une catégorie.';
+      dayLabelInput.focus();
+      return;
+    }
+    const sid = makeSeries ? newSeriesId() : null;
+    if (keepSeries) { body.seriesId = activeSeries.id; body.repeat = activeSeries.repeat || null; }
+    else if (makeSeries) { body.seriesId = sid; body.repeat = { freq, until: untilKey }; }
+
+    // Mise à jour optimiste
+    removeLocal(oldKey, id);
+    putLocal(Object.assign({}, body, { id }));
+    render();
+    if (!db) {
+      statusEl.style.color = '#B4432E';
+      statusEl.textContent = "Non sauvegardé — la connexion à la base n'est pas active dans cette vue.";
+      return;
+    }
+    savingDay = true;
+    saveDayBtn.disabled = true;
+    try {
+      const col = db.collection(entriesPath());
+      await withRetry(() => col.doc(id).set(body));
+
+      // Copies liées dans les autres calendriers (même identifiant)
+      for (const cid of others) {
+        const copy = Object.assign({}, body, { alsoIn: group.filter(x => x !== cid) });
+        await withRetry(() => db.collection(colPath(cid)).doc(id).set(copy));
+      }
+      // Calendriers décochés : on retire la copie liée
+      for (const cid of prevAlso) {
+        if (others.includes(cid)) continue;
+        const old = await readEntry(cid, id);
+        if (isLinkedTo(old, currentCompany)) await withRetry(() => db.collection(colPath(cid)).doc(id).delete());
+      }
+      pendingNew = new Set(); // les nouveaux fichiers sont maintenant enregistrés
+
+      // « Ce jour et les suivants » : on retire la suite de l'ancienne série.
+      if (editFollowing) {
+        statusEl.style.color = '';
+        statusEl.textContent = 'Mise à jour de la série…';
+        await deleteSeriesFrom(activeSeries.id, oldKey, false);
+      }
+
+      // Création des occurrences suivantes (s'ajoutent aux tâches déjà prévues)
+      let created = 0;
+      if (makeSeries) {
+        const dates = seriesDates(newKey, freq, untilKey).filter(k => k !== newKey);
+        for (const k of dates) {
+          const occId = sid + '_' + k;
+          const occ = Object.assign({}, body, { date: k });
+          await withRetry(() => col.doc(occId).set(occ));
+          for (const cid of others) {
+            const copy = Object.assign({}, occ, { alsoIn: group.filter(x => x !== cid) });
+            await withRetry(() => db.collection(colPath(cid)).doc(occId).set(copy));
+          }
+          created++;
+          statusEl.style.color = '';
+          statusEl.textContent = `Création de la série… ${created}/${dates.length}`;
+        }
+      }
+      closeDayModal();
+      if (makeSeries) {
+        const total = created + 1;
+        showToast(`Série créée : ${total} occurrence${total > 1 ? 's' : ''}.`);
+      } else if (editFollowing) {
+        showToast('Série mise à jour.');
+      }
+      if (moving) {
+        // Si la nouvelle date est dans un autre mois, on suit la tâche.
+        const nd = keyToDate(newKey);
+        if (nd.getMonth() !== cursor.getMonth() || nd.getFullYear() !== cursor.getFullYear()) {
+          cursor = new Date(nd.getFullYear(), nd.getMonth(), 1);
+          subscribeMonth();
+        }
+      }
+    } catch (e) {
+      console.error('save failed', e);
+      statusEl.style.color = '#B4432E';
+      statusEl.textContent = "Erreur de sauvegarde : " + (e && e.code ? e.code : 'inconnue') + ". Réessaie.";
+    } finally {
+      savingDay = false;
+      saveDayBtn.disabled = false;
+    }
+  });
+
+  // Effacer toute la série (deux clics pour confirmer)
+  let clearSeriesArmed = false;
+  clearSeriesBtn.addEventListener('click', async () => {
+    if (!activeDayKey || !activeSeries) return;
+    if (!clearSeriesArmed) {
+      clearSeriesArmed = true;
+      clearSeriesBtn.textContent = 'Clique encore pour effacer toute la série';
+      clearSeriesBtn.style.color = '#B4432E';
+      return;
+    }
+    const sid = activeSeries.id;
+    discardPending();
+    closeDayModal();
+    Object.keys(dayData).forEach(k => {
+      dayData[k] = dayData[k].filter(e => e.seriesId !== sid);
+      if (!dayData[k].length) delete dayData[k];
+    });
+    render();
+    if (!db) return;
+    let n = 0;
+    try {
+      const snap = await withRetry(() => db.collection(entriesPath()).where('seriesId', '==', sid).limit(1000).get());
+      for (const doc of snap.docs) {
+        const e = doc.data() || {};
+        await withRetry(() => db.collection(entriesPath()).doc(doc.id).delete());
+        n++;
+        // Les copies dans les autres calendriers restent, mais ne pointent plus vers celui-ci.
+        for (const cid of (e.alsoIn || []).filter(id => coById[id] && id !== currentCompany)) {
+          try {
+            const o = await withRetry(() => readEntry(cid, doc.id));
+            if (isLinkedTo(o, currentCompany)) {
+              await withRetry(() => db.collection(colPath(cid)).doc(doc.id).update({ alsoIn: o.alsoIn.filter(x => x !== currentCompany) }));
+            }
+          } catch (err) { console.error('unlink failed', err); }
+        }
+      }
+      showToast(`Série effacée : ${n} occurrence${n > 1 ? 's' : ''} retirée${n > 1 ? 's' : ''}.`);
+    } catch (e) {
+      console.error('series delete failed', e);
+      showToast("La série n'a pas pu être effacée au complet. Réessaie.", true);
+    }
+  });
+
+  document.getElementById('clearDayBtn').addEventListener('click', async () => {
+    if (!activeDayKey || !activeEventId) return;
+    const key = activeDayKey;
+    const id = activeEventId;
+    const ev = findEvent(key, id);
+    const linked = ((ev && ev.alsoIn) || []).filter(x => coById[x]);
+    removeLocal(key, id);
+    render();
+    discardPending();
+    closeDayModal();
+    if (db) {
+      try { await db.collection(entriesPath()).doc(id).delete(); }
+      catch (e) { console.error('delete failed', e); }
+      // Les copies dans les autres calendriers restent, mais ne pointent plus vers celui-ci.
+      for (const cid of linked) {
+        try {
+          const e = await readEntry(cid, id);
+          if (isLinkedTo(e, currentCompany)) {
+            await db.collection(colPath(cid)).doc(id).update({ alsoIn: e.alsoIn.filter(x => x !== currentCompany) });
+          }
+        } catch (err) { console.error('unlink failed', err); }
+      }
+    }
+  });
+
+  // ---------- Range modal ----------
+  const rangeOverlay = document.getElementById('rangeOverlay');
+  const rangeCatChoices = document.getElementById('rangeCatChoices');
+  let rangeCatSelected = 'promo';
+  function pickRangeCat(id){
+    rangeCatSelected = id;
+    buildCatChoices(rangeCatChoices, rangeCatSelected, pickRangeCat);
+  }
+  buildCatChoices(rangeCatChoices, rangeCatSelected, pickRangeCat);
+  let rangeAlso = new Set();
+  const rangeAlsoChoices = document.getElementById('rangeAlsoChoices');
+  function showRangeModal(){
+    rangeAlso = new Set();
+    buildCoChoices(rangeAlsoChoices, rangeAlso);
+    rangeOverlay.classList.add('show');
+  }
+
+  document.getElementById('openRangeBtn').addEventListener('click', showRangeModal);
+  document.getElementById('cancelRangeGhost').addEventListener('click', () => rangeOverlay.classList.remove('show'));
+  rangeOverlay.addEventListener('click', e => { if (e.target === rangeOverlay) rangeOverlay.classList.remove('show'); });
+
+  document.getElementById('applyRangeBtn').addEventListener('click', async () => {
+    const startVal = document.getElementById('rangeStart').value;
+    const endVal = document.getElementById('rangeEnd').value;
+    const label = document.getElementById('rangeLabel').value.trim();
+    if (!startVal || !endVal) return;
+    const start = new Date(startVal + 'T00:00:00');
+    const end = new Date(endVal + 'T00:00:00');
+    if (end < start) return;
+
+    const keys = [];
+    const d = new Date(start);
+    while (d <= end) { keys.push(toKey(d)); d.setDate(d.getDate() + 1); }
+
+    rangeOverlay.classList.remove('show');
+
+    if (!db) {
+      alert("Non sauvegardé : la connexion à la base n'est pas active dans cette vue. Ouvre le lien direct de la page pour sauvegarder.");
+      return;
+    }
+
+    let failed = 0;
+    const others = COMPANIES.map(c => c.id).filter(id => id !== currentCompany && rangeAlso.has(id));
+    const group = [currentCompany, ...others];
+    const sid = newSeriesId();
+    for (const key of keys) {
+      const id = sid + '_' + key;
+      const body = {
+        date: key,
+        category: rangeCatSelected,
+        label,
+        note: '',
+        attachments: [],
+        shoot: false,
+        startTime: '',
+        endTime: '',
+        alsoIn: others,
+        seriesId: sid,
+        repeat: { freq: 'daily', until: endVal },
+      };
+      putLocal(Object.assign({}, body, { id }));
+      try { await withRetry(() => db.collection(entriesPath()).doc(id).set(body)); }
+      catch (e) { console.error('range save failed', e); failed++; }
+      for (const cid of others) {
+        try {
+          const copy = Object.assign({}, body, { alsoIn: group.filter(x => x !== cid) });
+          await withRetry(() => db.collection(colPath(cid)).doc(id).set(copy));
+        } catch (e) { console.error('range copy failed', e); failed++; }
+      }
+    }
+    render();
+    if (failed > 0) alert(failed + " jour(s) sur " + keys.length + " n'ont pas pu être sauvegardés. Réessaie.");
+  });
+
+  // ---------- Sélection multi-jours (clique-glisse souris / appui long au doigt) ----------
+  let selStart = null, selEnd = null, selecting = false, selMoved = false, selEventId = null;
+  const chipIdAt = el => { const chip = el && el.closest ? el.closest('.ev') : null; return chip ? chip.dataset.id : null; };
+  let touchTimer = null, touchStartX = 0, touchStartY = 0, touchArmed = false, touchCancelled = false;
+  const LONG_PRESS_MS = 260;
+  const MOVE_TOLERANCE = 10;
+
+  function keyToDate(key){
+    const [y,m,day] = key.split('-').map(Number);
+    return new Date(y, m - 1, day);
+  }
+
+  function updateSelectionHighlight(){
+    if (!selecting) return;
+    const lo = selStart <= selEnd ? selStart : selEnd;
+    const hi = selStart <= selEnd ? selEnd : selStart;
+    document.querySelectorAll('.day').forEach(el => {
+      const k = el.dataset.key;
+      el.classList.toggle('selecting', k >= lo && k <= hi);
+    });
+  }
+  function clearSelectionHighlight(){
+    document.querySelectorAll('.day.selecting').forEach(el => el.classList.remove('selecting'));
+  }
+
+  function beginSelecting(key){
+    selecting = true; selMoved = false;
+    selStart = key; selEnd = key;
+    updateSelectionHighlight();
+  }
+
+  function finishSelecting(){
+    selecting = false;
+    if (selMoved && selStart !== selEnd) {
+      const lo = selStart <= selEnd ? selStart : selEnd;
+      const hi = selStart <= selEnd ? selEnd : selStart;
+      openRangeModal(lo, hi);
+    } else {
+      openDayModal(selStart, keyToDate(selStart), selEventId);
+    }
+    clearSelectionHighlight();
+  }
+
+  function startSelection(e, key){
+    selEventId = chipIdAt(e.target);
+    if (e.pointerType === 'mouse') {
+      e.preventDefault();
+      beginSelecting(key);
+      return;
+    }
+    // Doigt : on n'arme la sélection qu'après un appui bref sans mouvement,
+    // pour laisser le défilement naturel de la page fonctionner sinon.
+    touchArmed = false; touchCancelled = false;
+    touchStartX = e.clientX; touchStartY = e.clientY;
+    clearTimeout(touchTimer);
+    touchTimer = setTimeout(() => {
+      if (touchCancelled) return;
+      touchArmed = true;
+      beginSelecting(key);
+    }, LONG_PRESS_MS);
+  }
+
+  document.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' && !touchArmed && touchTimer) {
+      const dx = Math.abs(e.clientX - touchStartX), dy = Math.abs(e.clientY - touchStartY);
+      if (dx > MOVE_TOLERANCE || dy > MOVE_TOLERANCE) {
+        // C'est un défilement, pas une sélection : on annule et on laisse la page scroller.
+        touchCancelled = true;
+        clearTimeout(touchTimer);
+      }
+      return;
+    }
+    if (!selecting) return;
+    if (e.pointerType !== 'mouse') e.preventDefault();
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const cell = el && el.closest ? el.closest('.day') : null;
+    if (cell && cell.dataset.key && cell.dataset.key !== selEnd) {
+      selEnd = cell.dataset.key;
+      selMoved = true;
+      updateSelectionHighlight();
+    }
+  }, { passive: false });
+
+  document.addEventListener('pointerup', (e) => {
+    if (e.pointerType !== 'mouse') {
+      clearTimeout(touchTimer);
+      if (!touchArmed && !touchCancelled) {
+        // Appui bref sans avoir déclenché la sélection : un vrai petit tap → ouvre le jour.
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const cell = el && el.closest ? el.closest('.day') : null;
+        if (cell && cell.dataset.key) openDayModal(cell.dataset.key, keyToDate(cell.dataset.key), chipIdAt(el));
+      }
+      touchArmed = false; touchCancelled = false;
+    }
+    if (!selecting) return;
+    finishSelecting();
+  });
+
+  function openRangeModal(startKey, endKey){
+    document.getElementById('rangeStart').value = startKey;
+    document.getElementById('rangeEnd').value = endKey;
+    showRangeModal();
+  }
+
+  // ---------- Export vers Google Agenda (CSV d'import) ----------
+  let downloads = null;
+  const exportOverlay = document.getElementById('exportOverlay');
+  const exportSummary = document.getElementById('exportSummary');
+  const exportGo = document.getElementById('exportGo');
+  const exportStatus = document.getElementById('exportStatus');
+  const exportCompaniesEl = document.getElementById('exportCompanies');
+  const exportPeriodEl = document.getElementById('exportPeriod');
+  let exportCompanies = new Set();
+  let exportPeriod = 'upcoming';
+  let exportEvents = [];
+  let exportSeq = 0;
+
+  function addDaysKey(key, n){
+    const d = keyToDate(key); d.setDate(d.getDate() + n); return toKey(d);
+  }
+  const dateUS = key => { const [y, m, d] = key.split('-'); return `${m}/${d}/${y}`; };
+  function time12(mins){
+    const m = Math.max(0, Math.min(mins, 23 * 60 + 59));
+    const h = Math.floor(m / 60), mm = pad(m % 60);
+    return `${(h % 12) || 12}:${mm} ${h >= 12 ? 'PM' : 'AM'}`;
+  }
+  const toMins = t => { const [h, m] = t.split(':').map(Number); return h * 60 + (m || 0); };
+  const csvCell = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+
+  function buildExportCompanies(){
+    exportCompaniesEl.innerHTML = '';
+    COMPANIES.forEach(c => {
+      const on = exportCompanies.has(c.id);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'co-choice' + (on ? ' on' : '');
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.innerHTML = `<span class="co-check">${on ? '✓' : ''}</span><span class="tab-dot" style="--dot:${c.dot}"></span>${c.label}`;
+      b.addEventListener('click', () => {
+        if (on && exportCompanies.size === 1) return; // au moins un calendrier
+        if (on) exportCompanies.delete(c.id); else exportCompanies.add(c.id);
+        buildExportCompanies();
+        refreshExport();
+      });
+      exportCompaniesEl.appendChild(b);
+    });
+  }
+
+  // Lit les calendriers cochés, fusionne les copies liées (même événement dans 2 calendriers)
+  // et regroupe les jours consécutifs identiques en un seul événement sur plusieurs jours.
+  async function collectExportEvents(){
+    const ids = COMPANIES.map(c => c.id).filter(id => exportCompanies.has(id));
+    const today = toKey(new Date());
+    const found = new Map();
+    for (const cid of ids) {
+      const snap = await db.collection(colPath(cid)).limit(1000).get();
+      snap.docs.forEach(doc => {
+        const e = doc.data();
+        if (!e || !e.date || (!e.label && !e.category)) return;
+        if (exportPeriod === 'upcoming' && e.date < today) return;
+        const group = Array.from(new Set([cid, ...(e.alsoIn || []).filter(x => coById[x])])).sort();
+        const k = [e.date, group.join(','), e.label || '', e.category || '', e.startTime || '', e.endTime || ''].join('|');
+        if (found.has(k)) return;
+        found.set(k, {
+          date: e.date, endDate: e.date, group,
+          label: e.label || '', category: e.category || null,
+          startTime: e.startTime || '', endTime: e.endTime || '',
+          note: e.note || '', shoot: !!e.shoot,
+        });
+      });
+    }
+    const list = Array.from(found.values()).sort((a, b) =>
+      a.date.localeCompare(b.date) || (a.startTime || '').localeCompare(b.startTime || ''));
+    const merged = [], open = new Map();
+    for (const ev of list) {
+      if (!ev.startTime && !ev.endTime) {
+        const sig = [ev.group.join(','), ev.label, ev.category, ev.note, ev.shoot].join('|');
+        const prev = open.get(sig);
+        if (prev && addDaysKey(prev.endDate, 1) === ev.date) { prev.endDate = ev.date; continue; }
+        open.set(sig, ev);
+      }
+      merged.push(ev);
+    }
+    return merged;
+  }
+
+  function buildCsv(events){
+    const rows = [['Subject', 'Start Date', 'Start Time', 'End Date', 'End Time', 'All Day Event', 'Description', 'Location', 'Private']];
+    events.forEach(ev => {
+      const cat = ev.category ? catById[ev.category] : null;
+      const names = ev.group.map(id => coById[id].short).join(' + ');
+      const title = `[${names}] ${ev.label || (cat ? cat.label : 'Événement')}`;
+      const desc = [
+        cat ? 'Catégorie : ' + cat.label : '',
+        'Calendriers : ' + ev.group.map(id => coById[id].label).join(', '),
+        ev.shoot ? 'Tournage prévu' : '',
+        ev.note ? '\n' + ev.note : '',
+      ].filter(Boolean).join('\n');
+      if (!ev.startTime && !ev.endTime) {
+        rows.push([title, dateUS(ev.date), '', dateUS(ev.endDate), '', 'True', desc, '', 'False']);
+      } else {
+        let s = ev.startTime ? toMins(ev.startTime) : null;
+        let e = ev.endTime ? toMins(ev.endTime) : null;
+        if (s == null) s = Math.max(0, e - 60);
+        if (e == null) e = s + 60;
+        rows.push([title, dateUS(ev.date), time12(s), dateUS(ev.date), time12(e), 'False', desc, '', 'False']);
+      }
+    });
+    return rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+  }
+
+  function fmtEventCount(n){ return n === 1 ? '1 événement' : n + ' événements'; }
+
+  async function refreshExport(){
+    const seq = ++exportSeq;
+    exportGo.disabled = true;
+    exportStatus.textContent = '';
+    exportSummary.textContent = 'Calcul en cours…';
+    if (!db) { exportSummary.textContent = "Les données ne sont pas accessibles dans cette vue."; return; }
+    try {
+      const evs = await collectExportEvents();
+      if (seq !== exportSeq) return;
+      exportEvents = evs;
+      if (!evs.length) {
+        exportSummary.textContent = 'Aucun événement à exporter pour cette sélection.';
+        return;
+      }
+      const first = keyToDate(evs[0].date), last = keyToDate(evs[evs.length - 1].endDate);
+      const f = d => d.getDate() + ' ' + MOIS[d.getMonth()] + ' ' + d.getFullYear();
+      exportSummary.textContent = `${fmtEventCount(evs.length)} prêts, du ${f(first)} au ${f(last)}.`;
+      exportGo.disabled = false;
+    } catch (e) {
+      if (seq !== exportSeq) return;
+      console.error('export read failed', e);
+      exportSummary.textContent = "Impossible de lire le calendrier. Réessaie.";
+    }
+  }
+
+  document.getElementById('openExportBtn').addEventListener('click', () => {
+    exportCompanies = new Set([currentCompany]);
+    exportPeriod = 'upcoming';
+    exportPeriodEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === exportPeriod ? 'true' : 'false'));
+    buildExportCompanies();
+    exportOverlay.classList.add('show');
+    refreshExport();
+  });
+  exportPeriodEl.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    exportPeriod = b.dataset.p;
+    exportPeriodEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.p === exportPeriod ? 'true' : 'false'));
+    refreshExport();
+  }));
+  const closeExport = () => { exportSeq++; exportOverlay.classList.remove('show'); };
+  document.getElementById('exportCancel').addEventListener('click', closeExport);
+  exportOverlay.addEventListener('click', e => { if (e.target === exportOverlay) closeExport(); });
+
+  exportGo.addEventListener('click', async () => {
+    if (!downloads || !exportEvents.length) return;
+    const ids = COMPANIES.map(c => c.id).filter(id => exportCompanies.has(id));
+    const name = ids.length === COMPANIES.length ? 'calendrier-editorial' : 'calendrier-editorial-' + ids.join('-');
+    exportGo.disabled = true;
+    exportStatus.style.color = '';
+    try {
+      await downloads.save({ filename: name + '.csv', data: buildCsv(exportEvents) });
+      exportStatus.textContent = 'Fichier prêt. Importe-le maintenant dans Google Agenda.';
+    } catch (e) {
+      const code = e && e.code;
+      if (code !== 'declined') {
+        exportStatus.style.color = '#B4432E';
+        exportStatus.textContent = code === 'rate_limited'
+          ? 'Une demande est déjà en cours. Attends une seconde et réessaie.'
+          : "Le téléchargement n'a pas pu se faire dans cette vue.";
+      }
+    } finally {
+      exportGo.disabled = false;
+    }
+  });
+
+  // ---------- Init ----------
+  renderTabs();
+  render();
+  (async function init(){
+    try {
+      db = await claude.use('db');
+    } catch (e) {
+      db = null;
+    }
+    if (!db) {
+      document.getElementById('offlineBanner').classList.add('show');
+    }
+    try { assets = await claude.use('assets'); } catch (e) { assets = null; }
+    attachBtn.hidden = !assets;
+    try { downloads = await claude.use('downloads'); } catch (e) { downloads = null; }
+    document.getElementById('openExportBtn').hidden = !(downloads && db);
+    subscribeMonth();
+  })();
+})();
+</script>
+
+
+
+</body></html>

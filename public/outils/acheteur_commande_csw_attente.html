@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Commande Canada Sportswear · commandes en attente</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700&family=Fira+Sans+Condensed:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F6F3F2;--paper:#fff;--ink:#0F0A0A;--mu:#6E5F61;--line:#E2D8D9;--foyer:#4A1620;--ok:#2E6B47;--chg:#9A5A00;--soft:#F3E9EA}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--paper:#1A1214;--ink:#F4EEEF;--mu:#B6A5A8;--line:#3A2A2D;--foyer:#D7A3AD;--ok:#6FBF8E;--chg:#E2A350;--soft:#2A1C1F}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 'Fira Sans',system-ui,sans-serif}
+.hero{background:#0F0A0A;color:#fff;padding:22px 16px 18px}.hero p{margin:0;color:#D7A3AD}
+.hero h1{margin:4px 0 14px;font:900 30px/1.05 'Fira Sans Condensed',sans-serif}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stats div{background:#2F0D14;border-radius:10px;padding:10px}
+.stats b{display:block;font:900 28px/1 'Fira Sans Condensed',sans-serif}.stats span{font-size:13px;color:#E9DCDE}
+main{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+h2{font:900 21px/1.2 'Fira Sans Condensed',sans-serif;margin:26px 0 4px}.sub{color:var(--mu);margin:0 0 10px;font-size:15px}
+.blk{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.blk.ok{border-left-color:var(--ok)}.blk.chg{border-left-color:var(--chg)}
+.blk h3{margin:0 0 8px;font-size:17px;display:flex;justify-content:space-between;gap:8px}.blk h3 small{color:var(--foyer);font-weight:700}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:6px 4px;text-align:center;border-bottom:1px solid var(--line)}th{color:var(--mu);font-weight:500}td:first-child,th:first-child{text-align:left}
+.q{display:inline-flex;align-items:center;gap:2px}.q button{width:24px;height:26px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;font-weight:700;cursor:pointer;padding:0}
+.q span{min-width:20px;font-weight:700}.att{display:block;font-size:11px;color:var(--foyer)}
+.ord{font-size:14px;margin:0;padding:0;list-style:none}.ord li{padding:6px 0;border-bottom:1px solid var(--line);display:flex;gap:8px}.ord li:last-child{border:0}.ord b{min-width:52px;color:var(--foyer)}
+.btns{display:flex;gap:8px;margin-top:10px}.btns button,.big{font:inherit;font-weight:700;border-radius:10px;padding:11px;cursor:pointer;flex:1;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk.ok .b-ok{background:var(--ok);color:#fff;border-color:var(--ok)}.blk.chg .b-chg{background:var(--chg);color:#fff;border-color:var(--chg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--foyer);outline-offset:2px}
+textarea,input[type=text]{width:100%;margin-top:8px;font:inherit;padding:9px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.blk textarea{display:none;min-height:56px}.blk.chg textarea{display:block}
+.big{display:block;width:100%;margin-top:12px;padding:15px;font-size:18px;background:#4A1620;color:#fff;border-color:#4A1620}.big.alt{background:var(--paper);color:var(--ink);font-size:16px}
+.note{color:var(--mu);font-size:14px}#prev{display:none;max-width:100%;border-radius:10px;margin-top:8px}
+</style><style>.it{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.it:last-child{border:0}
+.it input{width:26px;height:26px;margin:0;flex:0 0 26px;accent-color:#2E7D4F}.it .tx{flex:1}.it .tx b{display:block}.it .tx small{color:var(--mu);font-size:12px}
+.it .qq{font:900 24px/1 'Fira Sans Condensed',sans-serif;min-width:40px;text-align:right}.it.done .tx b{text-decoration:line-through;color:var(--mu)}
+.code{display:inline-block;font-size:12px;font-weight:700;background:var(--soft);border-radius:6px;padding:2px 8px;margin:0 0 6px}</style></head><body>
+<header class="hero"><p>ANRO · Canada Sportswear · commande pour fermer les commandes en attente</p><h1>Ce qu'il manque pour livrer nos clients</h1>
+<div class="stats"><div><b id="sT">0</b><span>morceaux</span></div><div><b id="sO">23</b><span>commandes clients</span></div><div><b id="sC">0</b><span>cochés</span></div></div></header>
+<main><p class="sub">Coche chaque ligne quand elle est dans ton panier Canada Sportswear. Les numéros sous chaque ligne sont les commandes clients à livrer.</p>
+<div id="list"></div>
+<div class="blk"><h3>Notes</h3><textarea id="note" style="display:block" placeholder="Backorders, changements…"></textarea></div>
+<h2>Une photo à me montrer ?</h2><input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<button class="big alt" id="camBtn">📷 Caméra</button><p id="camInfo" class="note"></p><img id="prev" alt="Photo choisie">
+<button class="big" id="send">Commande passée · Envoyer</button><p id="msg" class="note" role="status"></p></main>
+<script>
+const G=[
+['Quarter zip','L00545',[['Noir · L','1','36631'],['Noir · XL','1','36457'],['Noir · 2XL','3','36444, 36588, 36650'],['Vert forêt · 2XL','4','36455, 36589, 36465, 36650'],['Vert forêt · 3XL','2','36448, 36416'],['Caramel · L','1','36636'],['Caramel · XL','1','36442'],['Caramel · 3XL','2','36414, 36413'],['Marron (burgundy) · 2XL','3','36588, 36584, 36465'],['Marron (burgundy) · 3XL','1','36416']]],
+['Hoodie adulte','L00550',[['Noir · XL','1','36600'],['Caramel · 3XL','1','36400'],['Marron (burgundy) · 2XL','1','36642'],['Noir · 2XL · pour Trashh Panda','2','36527, 36456'],['Noir · 2XL · pour Trashh Loup','2','36590, 36589'],['Noir · 2XL · pour Trashh Cactus','1','36455']]],
+['Hoodie enfant','L0550Y',[['Noir · XS · pour Trashh Renard','1','36424']]],
+['T-shirt adulte','S05650',[['Noir · 2XL · pour Trashh Loup','1','36456'],['Noir · S · pour Trashh Lapin (adulte ?)','1','36649']]],
+['Manches longues','S05615',[['Charcoal · 3XL','1','36400']]]];
+let ck={};try{ck=JSON.parse(localStorage.getItem('csw-attente')||'{}')}catch(_){}
+const $=x=>document.getElementById(x);let tot=0;
+$('list').innerHTML=G.map(([n,c,rows],gi)=>'<div class="blk"><h3>'+n+'<small>'+rows.reduce((a,r)=>a+ +r[1],0)+' pcs</small></h3><span class="code">'+c+'</span>'+rows.map((r,ri)=>{tot+= +r[1];const k=gi+'_'+ri;return '<label class="it'+(ck[k]?' done':'')+'"><input type="checkbox" data-k="'+k+'"'+(ck[k]?' checked':'')+'><span class="tx"><b>'+r[0]+'</b><small>Commandes '+r[2]+'</small></span><span class="qq">'+r[1]+'</span></label>'}).join('')+'</div>').join('');
+$('sT').textContent=tot;
+const upd=()=>{$('sC').textContent=Object.values(ck).filter(Boolean).length+' / 20'};
+document.addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;ck[k]=e.target.checked;e.target.closest('.it').classList.toggle('done',e.target.checked);try{localStorage.setItem('csw-attente',JSON.stringify(ck))}catch(_){}upd()});upd();
+let photo=null;$('camBtn').onclick=()=>$('cam').click();
+$('cam').onchange=async e=>{const f=e.target.files[0];if(!f)return;const p=$('prev');p.src=URL.createObjectURL(f);p.style.display='block';const i=$('camInfo');i.textContent='Envoi de la photo…';
+try{const a=await claude.use('assets');if(!a)throw 0;const r=await a.upload(f);photo=r.id;i.textContent='Photo prête.'}catch(_){i.textContent='La photo n\u2019est pas partie. Réessaie.'}};
+$('send').onclick=async()=>{const m=$('msg');m.textContent='Envoi…';
+try{const db=await claude.use('db');if(!db)throw 0;await db.doc('reponses/envoi-'+Date.now()).set({quand:new Date().toISOString(),coches:ck,note:$('note').value,photo});m.textContent='Envoyé. Écris « c\u2019est commandé » à Claude.'}catch(_){m.textContent='L\u2019envoi n\u2019a pas marché. Réessaie.'}};
+</script></body></html>

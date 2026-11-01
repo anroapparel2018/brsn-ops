@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>L'Acheteur ANRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;1,200&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charbon:#0F0A0A;--coton:#FFFFFF;--foyer:#4A1620;--braise:#2F0D14;
+  --bg:var(--braise);--panel:var(--charbon);--ink:var(--coton);--ink2:rgba(255,255,255,.66);--ink3:rgba(255,255,255,.4);
+  --line:rgba(255,255,255,.12);--accent:var(--foyer);--accentHi:#7a2636;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+:root[data-theme="light"]{--bg:#F6F1F1;--panel:#FFFFFF;--ink:#0F0A0A;--ink2:rgba(15,10,10,.68);--ink3:rgba(15,10,10,.45);--line:rgba(15,10,10,.14);color-scheme:light}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg stroke='%23fff' stroke-width='1.4'%3E%3Cpath d='M8 8l12 12M20 8L8 20M36 36l12 12M48 36L36 48'/%3E%3C/g%3E%3C/svg%3E")}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 110px;position:relative}
+header{display:flex;align-items:center;gap:12px;padding:6px 0 18px}
+header svg{flex:none}
+header h1{font-weight:600;font-size:22px;margin:0;letter-spacing:0}
+header p{margin:2px 0 0;font-weight:200;font-style:italic;color:var(--ink2);font-size:14px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--charbon);border-top:1px solid rgba(255,255,255,.1);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav button{background:none;border:0;color:rgba(255,255,255,.55);font:inherit;font-size:12px;padding:10px 2px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+nav button svg{width:22px;height:22px}
+nav button[aria-current="page"]{color:#fff}
+nav button[aria-current="page"] svg{stroke:#fff}
+nav button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #fff;outline-offset:2px}
+section{display:none}section.on{display:block}
+h2{font-weight:600;font-size:19px;margin:4px 0 6px}
+.lead{color:var(--ink2);margin:0 0 16px;font-size:15px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--ink2);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+:root[data-theme="light"] input,:root[data-theme="light"] select,:root[data-theme="light"] textarea{background:#fff}
+select option{background:var(--charbon);color:#fff}
+textarea{resize:vertical;min-height:90px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:#fff;border:1px solid var(--accentHi);border-radius:10px;padding:11px 16px;font:inherit;font-weight:500;cursor:pointer}
+.btn:hover{background:var(--accentHi)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.muted{color:var(--ink3);font-size:13px}
+.cap{font-weight:200;font-style:italic;color:var(--ink2);font-size:13px}
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.msg{max-width:92%;padding:11px 14px;border-radius:14px;white-space:pre-wrap;word-wrap:break-word;font-size:15px}
+.msg.me{align-self:flex-end;background:var(--foyer);color:#fff;border-bottom-right-radius:4px}
+.msg.him{align-self:flex-start;background:var(--panel);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.him b{font-weight:600}
+.composer{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{min-height:48px;max-height:180px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.chip{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+/* usines */
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px}
+.fac{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.fac.bd{border-left:4px solid #3c7a4e}.fac.pk{border-left:4px solid var(--accentHi)}.fac.cn{border-left:4px solid #8a6d2c}
+.fac h3{margin:0;font-size:17px;font-weight:600}
+.fac .where{color:var(--ink2);font-size:13px;margin:2px 0 8px}
+.fac p{margin:4px 0;font-size:14px}
+.tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin:2px 4px 2px 0;color:var(--ink2)}
+.duty0{color:#7fd19a;border-color:rgba(127,209,154,.4)}
+.duty18{color:#f0a0ae;border-color:rgba(240,160,174,.4)}
+.fac .act{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.fac select{width:auto;padding:7px 10px;font-size:13px}
+.out{white-space:pre-wrap;font-size:15px}
+.out h4{margin:14px 0 6px;font-weight:600;font-size:14px;color:var(--ink2)}
+/* cout */
+.result{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.result div{border:1px solid var(--line);border-radius:12px;padding:12px}
+.result strong{display:block;font-size:24px;font-weight:600}
+.result span{font-size:12px;color:var(--ink2)}
+.good strong{color:#7fd19a}.bad strong{color:#f0a0ae}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:20px;text-align:center;color:var(--ink2)}
+@media (max-width:420px){.row{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.msg{animation:in .18s ease-out}@keyframes in{from{opacity:0;transform:translateY(4px)}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+      <g stroke="#fff" stroke-width="2.2" stroke-linecap="square"><path d="M10 10l24 24M34 10L10 34"/></g>
+      <g fill="#fff" font-family="Fira Sans" font-weight="600" font-size="10" text-anchor="middle">
+        <text x="22" y="10">N</text><text x="6" y="26">A</text><text x="38" y="26">R</text><text x="22" y="42">O</text>
+      </g>
+    </svg>
+    <div>
+      <h1>L'Acheteur ANRO</h1>
+      <p>Sourcing, usines, samples et coût rendu — ANRO Distribution</p>
+    </div>
+  </header>
+
+  <!-- PARLER -->
+  <section id="s-parler" class="on">
+    <div class="chips" id="chips">
+      <button class="chip">Trouve-moi les meilleures usines de fleece heavyweight au Bangladesh</button>
+      <button class="chip">Pakistan ou Bangladesh pour mes t-shirts ? Fais le calcul</button>
+      <button class="chip">Prépare la première demande de prix et de samples</button>
+      <button class="chip">Comment je vérifie qu'une usine n'est pas un intermédiaire ?</button>
+    </div>
+    <div class="chat" id="chat"></div>
+    <div class="composer">
+      <textarea id="ask" rows="2" placeholder="Parle à ton acheteur…"></textarea>
+      <button class="btn" id="send" aria-label="Envoyer">Envoyer</button>
+    </div>
+    <p class="muted" id="chatNote" style="margin-top:8px"></p>
+  </section>
+
+  <!-- USINES -->
+  <section id="s-usines">
+    <h2>Les usines</h2>
+    <p class="lead">Ta liste courte. Chaque usine reste « à vérifier » tant qu'on n'a pas vu ses certifications, son adresse et un sample.</p>
+    <div class="filters" id="filters"></div>
+    <div id="facList"></div>
+    <details class="panel">
+      <summary style="cursor:pointer;font-weight:500">Ajouter une usine</summary>
+      <div class="row">
+        <div><label for="fNom">Nom</label><input id="fNom"></div>
+        <div><label for="fPays">Pays</label><select id="fPays"><option>Bangladesh</option><option>Pakistan</option><option>Chine</option><option>Autre</option></select></div>
+      </div>
+      <div class="row">
+        <div><label for="fVille">Ville</label><input id="fVille"></div>
+        <div><label for="fType">Type</label><select id="fType"><option>Usine intégrée</option><option>Atelier</option><option>Bureau d'achat</option><option>Fournisseur Alibaba</option></select></div>
+      </div>
+      <label for="fProd">Produits et forces</label><input id="fProd">
+      <label for="fContact">Contact (courriel, WhatsApp, site)</label><input id="fContact">
+      <div style="margin-top:12px"><button class="btn" id="fAdd">Ajouter l'usine</button></div>
+    </details>
+  </section>
+
+  <!-- MESSAGE -->
+  <section id="s-message">
+    <h2>Écrire à une usine</h2>
+    <p class="lead">L'acheteur rédige dans la langue de l'usine, avec la version anglaise et la traduction française. Tu approuves, tu copies, tu envoies.</p>
+    <div class="panel">
+      <label for="mFac">Usine</label><select id="mFac"></select>
+      <div class="row">
+        <div><label for="mGoal">Objectif</label>
+          <select id="mGoal">
+            <option>Premier contact et demande de prix</option>
+            <option>Commander des samples payés</option>
+            <option>Négocier le prix et le MOQ</option>
+            <option>Relance (pas de réponse)</option>
+            <option>Demander certifications et visite d'usine</option>
+            <option>Plainte qualité sur un sample</option>
+          </select></div>
+        <div><label for="mLang">Langue de l'usine</label>
+          <select id="mLang"><option>Auto (selon le pays)</option><option>Anglais seulement</option><option>Bengali</option><option>Ourdou</option><option>Mandarin</option><option>Turc</option><option>Vietnamien</option><option>Portugais</option></select></div>
+      </div>
+      <label for="mNote">Détails à inclure (produits, quantités, délais…)</label>
+      <textarea id="mNote" placeholder="Ex. : hoodie 450 GSM 80/20, grandeurs S à 5XL, 6 couleurs, sample de 2 par couleur"></textarea>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="mGo">Rédiger le message</button>
+        <button class="btn ghost" id="mCopy" hidden>Copier le message</button>
+      </div>
+    </div>
+    <div class="panel out" id="mOut" hidden></div>
+  </section>
+
+  <!-- COUT -->
+  <section id="s-cout">
+    <h2>Coût rendu au Canada</h2>
+    <p class="lead">Ce que te coûte vraiment un morceau une fois à l'entrepôt, comparé à Canada Sportswear.</p>
+    <div class="panel">
+      <div class="row">
+        <div><label for="cOrig">Origine</label><select id="cOrig"><option value="0">Bangladesh (0 %)</option><option value="18">Pakistan (≈ 18 %)</option><option value="18c">Chine (≈ 18 %)</option></select></div>
+        <div><label for="cDuty">Droits (%)</label><input id="cDuty" type="number" step="0.5" value="0"></div>
+      </div>
+      <div class="row">
+        <div><label for="cFob">Prix FOB par morceau (USD)</label><input id="cFob" type="number" step="0.01" value="6.50"></div>
+        <div><label for="cQty">Quantité</label><input id="cQty" type="number" value="5000"></div>
+      </div>
+      <div class="row">
+        <div><label for="cFx">Taux USD → CAD</label><input id="cFx" type="number" step="0.01" value="1.38"></div>
+        <div><label for="cFreight">Fret total (CAD)</label><input id="cFreight" type="number" value="6500"></div>
+      </div>
+      <div class="row">
+        <div><label for="cFees">Courtier, frais portuaires, transport local (CAD)</label><input id="cFees" type="number" value="1500"></div>
+        <div><label for="cIns">Assurance cargo (% de la valeur)</label><input id="cIns" type="number" step="0.1" value="0.5"></div>
+      </div>
+      <label for="cCs">Ton prix actuel chez Canada Sportswear (CAD par morceau)</label><input id="cCs" type="number" step="0.01" value="14.00">
+      <div class="result" id="cRes"></div>
+      <p class="cap" style="margin-top:12px">Au Canada, les droits se calculent sur la valeur FOB (sans le fret). La TPS de 5 % à la frontière est récupérable (CTI), donc pas comptée ici. Les taux de droits sont à confirmer avec ton courtier selon le code SH exact.</p>
+    </div>
+  </section>
+
+  <!-- SPECS -->
+  <section id="s-specs">
+    <h2>Mes specs</h2>
+    <p class="lead">Une fiche par produit. L'acheteur s'en sert dans toutes ses demandes de prix et ses messages.</p>
+    <div id="specList"></div>
+    <div class="panel">
+      <label for="sName">Produit</label><input id="sName" placeholder="Ex. : Hoodie heavyweight">
+      <label for="sBody">Specs complètes</label>
+      <textarea id="sBody" rows="7" placeholder="Tissu et composition, GSM, tricot (french terry, fleece brossé), coupe, tableau des grandeurs S à 5XL en pouces, couleurs Pantone, côtes, coutures, étiquettes, emballage, MOQ visé, prix cible"></textarea>
+      <div style="margin-top:12px"><button class="btn" id="sSave">Enregistrer la fiche</button></div>
+    </div>
+  </section>
+</div>
+
+<nav aria-label="Sections"><div class="in">
+  <button data-s="parler" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H9l-5 4z"/></svg>Acheteur</button>
+  <button data-s="usines"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 20V10l6 3V10l6 3V6h6v14z"/></svg>Usines</button>
+  <button data-s="message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>Message</button>
+  <button data-s="cout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h14v18H5z"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>Coût</button>
+  <button data-s="specs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h7M9 15h7"/></svg>Specs</button>
+</div></nav>
+
+<script>
+const $ = s => document.querySelector(s);
+const STATUTS = ["À vérifier","À contacter","Contacté","Devis reçu","Sample commandé","Sample reçu","Approuvée","Écartée"];
+let db=null, sample=null, userId=null;
+let factories=[], specs=[], chat=[], filter="Toutes";
+
+/* ---------- navigation ---------- */
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.removeAttribute("aria-current"));
+  b.setAttribute("aria-current","page");
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("on"));
+  $("#s-"+b.dataset.s).classList.add("on");
+  window.scrollTo(0,0);
+}));
+
+/* ---------- le cerveau de l'acheteur ---------- */
+function rules(){
+  const fac = factories.map(f=>`- ${f.nom} (${f.pays}, ${f.ville||"?"}) · ${f.type||""} · statut ${f.statut} · ${f.produits||""} · MOQ ${f.moq||"?"} · ${f.notes||""}`).join("\n") || "(aucune)";
+  const sp = specs.map(s=>`### ${s.nom}\n${s.texte}`).join("\n\n") || "(Julien n'a pas encore donné ses specs)";
+  return `Tu es L'ACHETEUR ANRO : analyste, acheteur et négociateur textile senior, membre de l'équipe de Julien Brisson, CEO d'ANRO (Longueuil, Québec). Tu travailles pour lui, avec loyauté et franchise.
+
+LA MISSION
+ANRO a deux volets : ANRO Apparel (marque streetwear québécoise, S à 5XL) et ANRO Distribution (nouveau distributeur B2B de blanks au Canada, pour battre Canada Sportswear : meilleure organisation, meilleure expédition, meilleure qualité, moins cher). Julien achète aujourd'hui sur Alibaba et chez des distributeurs canadiens qui importent du Bangladesh avec une grosse marge. Il veut acheter direct aux usines (Bangladesh, Pakistan, Chine), commencer par des samples payés, puis du volume. Un voyage en Chine est prévu.
+
+TON EXPERTISE
+- Tricot et tissage : jersey, french terry, fleece brossé, interlock, piqué, côtes 1x1 / 2x2 ; fils peignés, ring-spun, open-end ; GSM ; retrait, torsion, boulochage, solidité des couleurs ; teinture en pièce vs teinture vêtement ; lavage enzyme.
+- Tech packs, tableaux de mesures, tolérances, gradation des grandeurs jusqu'au 5XL.
+- Incoterms (EXW, FOB, CIF, DDP), conteneurs (LCL vs 20 pi / 40 pi), délais de transit vers Montréal / Halifax / Vancouver.
+- Douanes canadiennes : Bangladesh = 0 % sur les vêtements (tarif des pays les moins avancés, LDCT) ; le Bangladesh sort de la catégorie le 24 nov. 2026 mais Finances Canada a annoncé une transition de 3 ans (0 % jusqu'à fin 2029 environ) — politique annoncée, à faire confirmer par un courtier. Pakistan et Chine ≈ 18 % sur les tricots (6109, 6110), le TPG exclut presque tous les vêtements. Droits calculés sur la valeur FOB. Règles d'origine et certificat d'origine. Compte d'importation RM, portail CARM de l'ASFC, courtier, transitaire. Étiquetage textile canadien : contenu en fibres bilingue, numéro CA, pays d'origine.
+- Qualité : AQL 2.5, inspection avant expédition (QIMA, Bureau Veritas, SGS, Intertek), certifications OEKO-TEX, BSCI/amfori, WRAP, Sedex, accord RSC (Bangladesh).
+- Paiement : 30 % dépôt / 70 % après inspection, lettre de crédit pour les grosses commandes ; jamais 100 % d'avance à un inconnu ; jamais vers un compte personnel ou d'un autre pays que l'usine.
+- Repérer les intermédiaires déguisés en usines (pas d'adresse d'usine vérifiable, refus d'appel vidéo, prix trop bas, catalogue copié).
+- Tu parles et écris couramment anglais, bengali, ourdou, mandarin, turc, vietnamien, portugais. Pour tout message destiné à une usine, tu fournis la version dans sa langue + la version anglaise (langue d'affaires de référence) + la traduction française pour Julien.
+
+TES RÈGLES
+1. Tu réponds en français québécois, direct et chaleureux, tutoiement. Court et concret : pas de remplissage. Pas de superlatifs creux.
+2. Tu ne dis jamais qu'une usine est fiable sans preuve. Toute usine non vérifiée reste « à vérifier ». Tu distingues ce que tu sais, ce que tu supposes et ce qu'il faut confirmer.
+3. Tu ne peux ni naviguer sur le Web ni envoyer de messages : tu prépares, Julien approuve et envoie. Rien n'est payé ni envoyé sans son accord.
+4. Tu fais toujours le calcul du coût rendu (FOB + fret + droits + frais) avant de recommander un pays ou une usine.
+5. Tu poses UNE seule question à la fois quand il te manque une info essentielle.
+6. Tu défends les intérêts d'ANRO dans les négociations : prix, MOQ, délais, sample, conditions de paiement, pénalités de retard, garantie qualité.
+7. Quand Julien te donne une décision, tu peux mettre à jour la liste d'usines avec tes outils (ajouter une usine, changer un statut).
+
+LES USINES DE LA LISTE
+${fac}
+
+LES SPECS DE JULIEN
+${sp}`;
+}
+
+const tools = [
+  {name:"ajouter_usine",description:"Ajoute une usine à la liste courte d'ANRO, avec le statut « À vérifier ».",
+   inputSchema:{type:"object",properties:{nom:{type:"string"},pays:{type:"string"},ville:{type:"string"},type:{type:"string"},produits:{type:"string"},moq:{type:"string"},notes:{type:"string"}},required:["nom","pays"]},
+   execute: async (i)=>{ await saveFactory({...i,statut:"À vérifier",source:"Ajoutée par l'acheteur"}); return {ok:true}; }},
+  {name:"changer_statut",description:"Change le statut d'une usine de la liste. Statuts permis : "+STATUTS.join(", "),
+   inputSchema:{type:"object",properties:{nom:{type:"string"},statut:{type:"string",enum:STATUTS}},required:["nom","statut"]},
+   execute: async ({nom,statut})=>{ const f=factories.find(x=>x.nom.toLowerCase()===String(nom).toLowerCase()); if(!f) throw new Error("Usine introuvable : "+nom); await db.collection("usines").doc(f.id).update({statut}); return {ok:true}; }}
+];
+
+/* ---------- chat ---------- */
+function bubble(role,text){
+  const d=document.createElement("div"); d.className="msg "+(role==="user"?"me":"him"); d.textContent=text; $("#chat").append(d); return d;
+}
+function renderChat(){
+  $("#chat").innerHTML="";
+  if(!chat.length){
+    bubble("assistant","Salut Julien. C'est moi qui vais chercher tes usines, parler leur langue, négocier et faire les calculs avant que tu sortes un dollar. Donne-moi tes specs quand tu es prêt (onglet Specs), ou pose-moi ta première question.");
+  } else chat.forEach(m=>bubble(m.role,m.content));
+}
+async function persistChat(){
+  if(!db||!userId) return;
+  try{ await db.doc(`data/users/${userId}/acheteur`).set({turns:chat.slice(-40)}); }catch(e){}
+}
+async function send(text){
+  text=(text||"").trim(); if(!text) return;
+  if(!sample){ $("#chatNote").textContent="L'acheteur n'est pas disponible dans cette vue. Ouvre l'outil dans claude.ai."; return; }
+  $("#ask").value=""; $("#send").disabled=true; $("#chatNote").textContent="";
+  chat.push({role:"user",content:text}); renderChat();
+  const out=bubble("assistant","Je regarde ça…");
+  const turns=[{role:"user",content:rules()+"\n\n---\nConversation avec Julien ci-dessous."},{role:"assistant",content:"Compris. Je suis prêt."},...chat.slice(-20)];
+  try{
+    const {text:reply}=await sample(turns,{cache:false,tools,modelTier:"complex",onText:({text})=>{out.textContent=text;}});
+    chat.push({role:"assistant",content:reply}); renderChat(); persistChat();
+  }catch(e){
+    out.textContent=e.text||"";
+    $("#chatNote").textContent = e.code==="rate_limited"?"Trop de demandes d'un coup. Réessaie dans une minute.":e.code==="not_granted"?"Autorise l'outil à interroger Claude pour parler à l'acheteur.":"La réponse n'a pas pu se terminer. Renvoie ta question.";
+    chat.pop();
+  }finally{$("#send").disabled=false;}
+}
+$("#send").addEventListener("click",()=>send($("#ask").value));
+$("#ask").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey))send($("#ask").value)});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>send(c.textContent)));
+
+/* ---------- usines ---------- */
+const cls = p => p==="Bangladesh"?"bd":p==="Pakistan"?"pk":p==="Chine"?"cn":"";
+function renderFilters(){
+  const opts=["Toutes","Bangladesh","Pakistan","Chine",...STATUTS];
+  $("#filters").innerHTML=""; opts.forEach(o=>{const b=document.createElement("button");b.className="chip";b.textContent=o;if(o===filter){b.style.background="var(--foyer)";b.style.color="#fff";b.style.borderColor="var(--accentHi)"}b.onclick=()=>{filter=o;renderFilters();renderFac()};$("#filters").append(b)});
+}
+function renderFac(){
+  const list=factories.filter(f=>filter==="Toutes"||f.pays===filter||f.statut===filter);
+  const box=$("#facList"); box.innerHTML="";
+  if(!list.length){box.innerHTML='<div class="empty">Aucune usine ici pour l\'instant. Ajoute-en une plus bas ou demande à l\'acheteur d\'en trouver.</div>';}
+  list.forEach(f=>{
+    const el=document.createElement("article"); el.className="fac "+cls(f.pays);
+    const duty = f.pays==="Bangladesh"?'<span class="tag duty0">0 % de droits</span>':(f.pays==="Pakistan"||f.pays==="Chine")?'<span class="tag duty18">≈ 18 % de droits</span>':"";
+    el.innerHTML=`<h3></h3><div class="where"></div><p class="prod"></p><p class="notes muted"></p><div>${duty}<span class="tag t-type"></span><span class="tag t-moq"></span></div><div class="act"><select aria-label="Statut"></select><button class="btn ghost w">Écrire</button></div>`;
+    el.querySelector("h3").textContent=f.nom;
+    el.querySelector(".where").textContent=[f.ville,f.pays].filter(Boolean).join(", ")+(f.contact?" · "+f.contact:"");
+    el.querySelector(".prod").textContent=f.produits||"";
+    el.querySelector(".notes").textContent=f.notes||"";
+    el.querySelector(".t-type").textContent=f.type||"Type inconnu";
+    el.querySelector(".t-moq").textContent="MOQ : "+(f.moq||"à demander");
+    const sel=el.querySelector("select"); STATUTS.forEach(s=>{const o=document.createElement("option");o.textContent=s;if(s===f.statut)o.selected=true;sel.append(o)});
+    sel.onchange=async()=>{try{await db.collection("usines").doc(f.id).update({statut:sel.value})}catch(e){alert("Le statut n'a pas été enregistré. Réessaie.")}};
+    el.querySelector(".w").onclick=()=>{document.querySelector('nav button[data-s="message"]').click();$("#mFac").value=f.id;};
+    box.append(el);
+  });
+  const ms=$("#mFac"); const keep=ms.value; ms.innerHTML="";
+  factories.forEach(f=>{const o=document.createElement("option");o.value=f.id;o.textContent=`${f.nom} (${f.pays})`;ms.append(o)});
+  if(keep) ms.value=keep;
+}
+async function saveFactory(f){
+  if(!db) throw new Error("db");
+  await db.collection("usines").add({nom:f.nom,pays:f.pays||"",ville:f.ville||"",type:f.type||"",produits:f.produits||"",moq:f.moq||"",notes:f.notes||"",contact:f.contact||"",statut:f.statut||"À vérifier",source:f.source||"Ajoutée par Julien"});
+}
+$("#fAdd").onclick=async()=>{
+  const nom=$("#fNom").value.trim(); if(!nom){$("#fNom").focus();return;}
+  try{await saveFactory({nom,pays:$("#fPays").value,ville:$("#fVille").value,type:$("#fType").value,produits:$("#fProd").value,contact:$("#fContact").value});
+    ["#fNom","#fVille","#fProd","#fContact"].forEach(s=>$(s).value="");}catch(e){alert("L'usine n'a pas été ajoutée. Vérifie ta connexion et réessaie.")}
+};
+
+/* ---------- message ---------- */
+let lastMsg="";
+$("#mGo").onclick=async()=>{
+  const f=factories.find(x=>x.id===$("#mFac").value); if(!f){alert("Choisis d'abord une usine.");return;}
+  if(!sample){$("#mOut").hidden=false;$("#mOut").textContent="L'acheteur n'est pas disponible dans cette vue.";return;}
+  const autoLang={Bangladesh:"bengali",Pakistan:"ourdou",Chine:"mandarin"}[f.pays]||"anglais";
+  const lang=$("#mLang").value.startsWith("Auto")?autoLang:$("#mLang").value.toLowerCase();
+  $("#mGo").disabled=true; $("#mOut").hidden=false; $("#mOut").textContent="L'acheteur rédige…"; $("#mCopy").hidden=true;
+  const prompt=rules()+`
+
+TÂCHE : rédige un message d'affaires à l'usine « ${f.nom} » (${f.pays}).
+Objectif : ${$("#mGoal").value}.
+Détails de Julien : ${$("#mNote").value||"(aucun, utilise ses specs s'il y en a, sinon reste général et demande leur catalogue, MOQ, prix FOB, délais, certifications)"}.
+Signature : Julien Brisson, CEO, ANRO (Longueuil, Québec, Canada), julien@anroapparel.ca.
+Le message doit être professionnel, précis, et protéger ANRO (samples payés, pas de paiement 100 % d'avance, demande de certifications et d'adresse de l'usine).
+Réponds UNIQUEMENT en JSON : {"objet": "objet du courriel en anglais", "anglais": "message complet en anglais", "langue_usine": "${lang}", "message_langue_usine": "le même message en ${lang} (vide si anglais)", "traduction_fr": "traduction française pour Julien", "conseils": "2 ou 3 conseils de négociation courts, en français"}`;
+  try{
+    const r=await sample.json(prompt,{modelTier:"complex"});
+    lastMsg=(r.message_langue_usine?r.message_langue_usine+"\n\n———\n\n":"")+r.anglais;
+    const o=$("#mOut"); o.innerHTML="";
+    const add=(t,b)=>{if(!b)return;const h=document.createElement("h4");h.textContent=t;const p=document.createElement("div");p.textContent=b;o.append(h,p)};
+    add("Objet",r.objet); add("En "+(r.langue_usine||lang),r.message_langue_usine); add("En anglais",r.anglais); add("Traduction pour toi",r.traduction_fr); add("Conseils de l'acheteur",r.conseils);
+    $("#mCopy").hidden=false;
+  }catch(e){$("#mOut").textContent=e.code==="rate_limited"?"Trop de demandes d'un coup. Réessaie dans une minute.":"Le message n'a pas pu être rédigé. Réessaie.";}
+  finally{$("#mGo").disabled=false;}
+};
+$("#mCopy").onclick=async()=>{try{await navigator.clipboard.writeText(lastMsg);$("#mCopy").textContent="Copié";setTimeout(()=>$("#mCopy").textContent="Copier le message",1500)}catch(e){alert("Sélectionne le texte pour le copier.")}};
+
+/* ---------- coût rendu ---------- */
+const money=n=>n.toLocaleString("fr-CA",{style:"currency",currency:"CAD"});
+function calc(){
+  const v=id=>parseFloat($(id).value)||0;
+  const qty=Math.max(1,v("#cQty")), fobCad=v("#cFob")*v("#cFx");
+  const duty=fobCad*v("#cDuty")/100, ins=fobCad*v("#cIns")/100;
+  const unit=fobCad+duty+ins+(v("#cFreight")+v("#cFees"))/qty;
+  const cs=v("#cCs"), save=cs-unit, total=save*qty;
+  $("#cRes").innerHTML="";
+  const box=(cls,val,lab)=>{const d=document.createElement("div");if(cls)d.className=cls;const s=document.createElement("strong");s.textContent=val;const l=document.createElement("span");l.textContent=lab;d.append(s,l);$("#cRes").append(d)};
+  box("",money(unit),"Coût rendu par morceau");
+  box("",money(duty),"Droits par morceau");
+  box(save>=0?"good":"bad",money(save),"Écart par morceau vs Canada Sportswear");
+  box(total>=0?"good":"bad",money(total),"Écart sur la commande");
+}
+$("#cOrig").onchange=()=>{$("#cDuty").value=$("#cOrig").value==="0"?0:18;calc()};
+document.querySelectorAll("#s-cout input").forEach(i=>i.addEventListener("input",calc)); calc();
+
+/* ---------- specs ---------- */
+function renderSpecs(){
+  const box=$("#specList"); box.innerHTML="";
+  if(!specs.length){box.innerHTML='<div class="empty" style="margin-bottom:14px">Aucune fiche encore. Quand tu es prêt, entre tes specs produit par produit.</div>';return;}
+  specs.forEach(s=>{const d=document.createElement("div");d.className="panel";const h=document.createElement("h3");h.style.margin="0 0 6px";h.style.fontWeight="600";h.textContent=s.nom;const p=document.createElement("div");p.className="out";p.textContent=s.texte;
+    const b=document.createElement("button");b.className="btn ghost";b.style.marginTop="10px";b.textContent="Modifier";b.onclick=()=>{$("#sName").value=s.nom;$("#sBody").value=s.texte;$("#sName").dataset.id=s.id;$("#sBody").focus()};
+    d.append(h,p,b);box.append(d)});
+}
+$("#sSave").onclick=async()=>{
+  const nom=$("#sName").value.trim(),texte=$("#sBody").value.trim(); if(!nom||!texte){alert("Donne un nom de produit et ses specs.");return;}
+  try{const id=$("#sName").dataset.id; if(id) await db.collection("specs").doc(id).set({nom,texte}); else await db.collection("specs").add({nom,texte});
+    $("#sName").value="";$("#sBody").value="";delete $("#sName").dataset.id;}catch(e){alert("La fiche n'a pas été enregistrée. Réessaie.")}
+};
+
+/* ---------- démarrage ---------- */
+renderChat(); renderFilters(); renderFac(); renderSpecs();
+(async()=>{
+  if(!window.claude) return;
+  sample = await claude.use("sample");
+  db = await claude.use("db");
+  const user = await claude.use("user");
+  if(user){ try{userId=await user.id()}catch(e){} }
+  if(db){
+    db.collection("usines").onSnapshot(s=>{factories=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.pays||"").localeCompare(b.pays||"")||a.nom.localeCompare(b.nom));renderFac()});
+    db.collection("specs").onSnapshot(s=>{specs=s.docs.map(d=>({id:d.id,...d.data()}));renderSpecs()});
+    if(userId){ try{const c=await db.doc(`data/users/${userId}/acheteur`).get(); const d=c.data(); if(d&&Array.isArray(d.turns)){chat=d.turns;renderChat()}}catch(e){} }
+  }
+})();
+</script>
+</body>
+</html>

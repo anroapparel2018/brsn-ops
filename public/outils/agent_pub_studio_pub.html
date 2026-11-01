@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO Studio Pub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<style>
+:root{--bg:#FFFFFF;--ink:#0F0A0A;--soft:#6E6464;--line:#E6E0E0;--card:#F7F4F4;--foyer:#4A1620;--braise:#2F0D14;--on:#FFFFFF;--ok:#2E6B3A;--chg:#A35A00;--err:#A3262F;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--ink:#FFFFFF;--soft:#B5AAAA;--line:#2E2424;--card:#1A1213;--foyer:#8A2A3B;--braise:#C9475C;--on:#FFFFFF;--ok:#6FCF83;--chg:#F0A63C;--err:#FF7A84;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--ink:#FFFFFF;--soft:#B5AAAA;--line:#2E2424;--card:#1A1213;--foyer:#8A2A3B;--braise:#C9475C;--on:#FFFFFF;--ok:#6FCF83;--chg:#F0A63C;--err:#FF7A84;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 110px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 130px}
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:6;padding:14px 0 10px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.hrow{display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;border-radius:10px;background:var(--foyer);color:var(--on);display:grid;place-items:center;font-weight:900;font-size:20px;flex:none}
+.ht small{display:block;font-size:12px;color:var(--soft);font-weight:600}
+.ht b{display:block;font-size:20px;font-weight:900;line-height:1.1}
+.sp{flex:1}
+button{font:inherit;cursor:pointer;color:var(--ink)}
+.btn{appearance:none;border:1px solid var(--line);border-radius:12px;padding:11px 15px;font-weight:700;background:var(--card);min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.pri{background:var(--foyer);color:var(--on);border-color:var(--foyer)}
+.btn.del{color:var(--err)}
+.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sm{min-height:38px;padding:7px 11px;font-size:14px}
+.steps{display:flex;gap:6px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:600}
+.steps button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.steps button .d{color:var(--ok);margin-left:4px}
+.card{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;background:var(--bg)}
+h2{font-size:22px;font-weight:900;margin:4px 0 4px;letter-spacing:-.01em}
+h3{font-size:17px;font-weight:700;margin:0 0 6px}
+.hint{color:var(--soft);font-size:14px;margin:0 0 12px}
+label.l{display:block;font-size:14px;font-weight:600;margin:12px 0 6px}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;font:inherit;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink)}
+textarea{min-height:76px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font-size:14px}
+.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.msg{font-size:14px;color:var(--soft);margin:8px 0 0;min-height:1em}
+.msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
+.camp{display:flex;gap:12px;align-items:center;cursor:pointer}
+.camp .n{font-weight:700}
+.camp .d{font-size:13px;color:var(--soft)}
+.badge{font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--card);border:1px solid var(--line);white-space:nowrap}
+.badge.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.brandchip{display:inline-flex;align-items:center;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;border:1px solid var(--line)}
+.phgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.ph{border:1px solid var(--line);border-radius:12px;overflow:hidden;position:relative;background:var(--card)}
+.ph img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+.ph .st{position:absolute;left:6px;bottom:6px;background:var(--bg);font-size:11px;font-weight:700;padding:3px 7px;border-radius:999px}
+.ph .x{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:0;background:var(--bg)}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px 12px;text-align:center;cursor:pointer;background:var(--card)}
+.it{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--card)}
+.it.off{opacity:.45}
+.it small{display:block;font-size:12px;color:var(--soft);font-weight:600;margin-bottom:3px}
+.it .tx{white-space:pre-wrap}
+.it textarea{display:none;margin-top:6px;background:var(--bg)}
+.it.ed textarea{display:block}
+.it.ed .tx{display:none}
+.it .acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pub{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px}
+.pub.ok{border-color:var(--ok);border-width:2px}
+.pub.chg{border-color:var(--chg);border-width:2px}
+.pub canvas{width:100%;height:auto;border-radius:10px;display:block;background:var(--card)}
+.pub .ttl{font-weight:900;font-size:16px;margin-bottom:8px}
+.fmt{display:flex;gap:6px;margin-top:8px}
+.fmt button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px;font-size:13px;font-weight:600}
+.fmt button.on{background:var(--ink);color:var(--bg)}
+.warn{font-size:13px;color:var(--chg);margin-top:6px;font-weight:600}
+.dec{display:flex;gap:8px;margin-top:10px}
+.dec button{flex:1;min-height:46px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:700}
+.pub.ok .a-ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.pub.chg .a-chg{background:var(--chg);color:#fff;border-color:var(--chg)}
+.pub .note{display:none;margin-top:8px}
+.pub.chg .note{display:block}
+@media (max-width:620px){.pub{grid-template-columns:1fr}}
+.tree{font-size:14px;border-left:3px solid var(--foyer);padding-left:12px;margin:8px 0}
+.tree div{margin:4px 0}
+.tree .lv2{padding-left:16px;color:var(--soft)}
+.tree .lv3{padding-left:32px;color:var(--soft)}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--braise);transition:width .25s}
+.soon li{margin:6px 0}
+.dock{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:center;z-index:7}
+.dock .btn{flex:1;max-width:240px;min-height:50px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.sheet.show{display:flex}
+.sheet .in{background:var(--bg);width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow:auto}
+.sheet img{max-width:100%;border-radius:10px;margin-top:8px}
+.hidden{display:none!important}
+.load{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--braise);border-radius:50%;animation:r 1s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes r{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="hrow">
+    <div class="logo">X</div>
+    <div class="ht"><small id="hSmall">STUDIO PUB</small><b id="hTitle">Mes campagnes</b></div>
+    <span class="sp"></span>
+    <button class="btn sm hidden" id="backBtn">← Campagnes</button>
+  </div>
+  <div class="steps hidden" id="steps"></div>
+</header>
+
+<!-- ACCUEIL -->
+<section id="vHome">
+  <div class="chips" id="brandBar" style="margin-bottom:12px"></div>
+  <div class="row" style="margin-bottom:12px">
+    <button class="btn pri" id="newBtn">＋ Nouvelle campagne</button>
+    <button class="btn" id="tplBtn">📋 Partir d'un modèle</button>
+    <button class="btn" id="brandBtn">🏷️ Profil de la marque</button>
+  </div>
+  <div id="tplBox" class="card hidden"><h3>Modèles</h3><div id="tplList"></div></div>
+  <div id="campList"><p class="msg"><span class="load"></span>Chargement…</p></div>
+</section>
+
+<!-- PROFIL DE MARQUE -->
+<section id="vBrand" class="hidden">
+  <div class="card">
+    <h2 id="bTitle">Profil de la marque</h2>
+    <p class="hint">L'agent part de cette fiche pour les visuels, le ton des textes et Meta.</p>
+    <div class="drop" id="gDrop"><strong>📘 Téléverser le guide de marque</strong><span class="hint" style="display:block;margin:4px 0 0">PDF ou images. Claude le lit et remplit la fiche tout seul.</span></div>
+    <input type="file" id="gIn" accept="application/pdf,image/*" multiple hidden>
+    <p class="msg" id="gMsg"></p>
+    <label class="l">Nom</label><input type="text" id="bNom">
+    <label class="l">Site</label><input type="text" id="bSite" placeholder="anroapparel.ca">
+    <div class="g2">
+      <div><label class="l">Couleur de fond</label><input type="text" id="bFond" placeholder="#0F0A0A"></div>
+      <div><label class="l">Couleur du texte</label><input type="text" id="bTexte" placeholder="#FFFFFF"></div>
+    </div>
+    <div class="g2">
+      <div><label class="l">Couleur d'accent</label><input type="text" id="bAccent" placeholder="#4A1620"></div>
+      <div><label class="l">Grandeurs</label><input type="text" id="bTailles" placeholder="Du S au 6XL"></div>
+    </div>
+    <label class="l">Police principale</label><input type="text" id="bPolice" placeholder="Fira Sans">
+    <label class="l">Description de la marque</label><textarea id="bDesc" placeholder="Ce qu’est la marque, à qui elle parle, son univers…"></textarea>
+    <label class="l">Le ton de la marque</label><textarea id="bTon"></textarea>
+    <label class="l">Compte Meta (numéro act_…)</label><input type="text" id="bCompte" placeholder="act_…">
+    <label class="l">Audiences existantes à réutiliser (une par ligne)</label><textarea id="bAud"></textarea>
+    <div class="row" style="margin-top:12px"><button class="btn pri" id="bSave">💾 Enregistrer le profil</button></div>
+    <p class="msg" id="bMsg"></p>
+  </div>
+</section>
+
+<!-- CAMPAGNE -->
+<section id="vCamp" class="hidden">
+  <!-- 1 BRIEF -->
+  <div id="s-brief">
+    <div class="card">
+      <h2>Le brief</h2>
+      <p class="hint">Quelques touches, puis on passe aux photos.</p>
+      <label class="l">Nom de la campagne</label><input type="text" id="fNom" placeholder="Noël · Gâte-toi">
+      <label class="l">L'offre</label><textarea id="fOffre"></textarea>
+      <div class="g2"><div><label class="l">Début</label><input type="date" id="fDebut"></div><div><label class="l">Fin</label><input type="date" id="fFin"></div></div>
+      <div class="g2">
+        <div><label class="l">Budget</label><input type="number" id="fBudget" min="0" step="10" placeholder="1500"></div>
+        <div><label class="l">Type de budget</label><select id="fBudgetType"><option value="total">Total de la campagne</option><option value="jour">Par jour</option></select></div>
+      </div>
+      <label class="l">Les angles</label><div class="chips" id="fAngle"></div>
+      <label class="l">Produits à mettre de l'avant</label><input type="text" id="fProd">
+      <label class="l">Grandeurs</label><input type="text" id="fTailles">
+      <label class="l">Nombre de pubs</label><select id="fNb"><option>3</option><option>4</option><option selected>6</option><option>8</option></select>
+      <label class="l">Note pour Claude (facultatif)</label><textarea id="fNote" placeholder="Ex. : concept humoristique, textes drôles."></textarea>
+    </div>
+    <button class="btn pri full" data-go="photos">Suivant : les photos →</button>
+  </div>
+
+  <!-- 2 PHOTOS -->
+  <div id="s-photos" class="hidden">
+    <div class="card">
+      <h2>Les photos</h2>
+      <p class="hint">Choisis tes photos (environ une par pub). L'agent les allège, puis repère les visages pour placer les textes loin d'eux.</p>
+      <div class="drop" id="phDrop"><strong>📸 Ajouter des photos</strong></div>
+      <input type="file" id="phIn" accept="image/*" multiple hidden>
+      <div class="phgrid" id="phGrid"></div>
+      <p class="msg" id="phMsg"></p>
+    </div>
+    <button class="btn pri full" data-go="textes">Suivant : les textes →</button>
+  </div>
+
+  <!-- 3 TEXTES -->
+  <div id="s-textes" class="hidden">
+    <div class="card">
+      <h2>Les textes</h2>
+      <p class="hint">Claude écrit tout dans le ton de la marque. Tu modifies, supprimes ou réécris ce que tu veux.</p>
+      <button class="btn pri" id="genBtn">✨ Claude écrit les textes</button>
+      <p class="msg" id="genMsg"></p>
+    </div>
+    <div id="genBox" class="hidden"></div>
+    <button class="btn pri full" data-go="pubs">Suivant : les pubs →</button>
+  </div>
+
+  <!-- 4 PUBS / APPROBATION -->
+  <div id="s-pubs" class="hidden">
+    <div class="card">
+      <h2>Tes pubs</h2>
+      <p class="hint">L'image à gauche, chaque texte dans sa case. Approuve chaque pub ou dis ce qu'il faut changer.</p>
+      <p class="msg" id="pubMsg"></p>
+    </div>
+    <div id="pubList"></div>
+    <button class="btn pri full" data-go="envoi">Suivant : l'envoi au Drive →</button>
+  </div>
+
+  <!-- 5 ENVOI -->
+  <div id="s-envoi" class="hidden">
+    <div class="card">
+      <h2>Envoi au Drive</h2>
+      <p class="hint">Les pubs approuvées partent dans le Drive, en 4:5 et en 9:16, avec un document des textes.</p>
+      <label class="l">Lien du dossier des pubs dans le Drive</label>
+      <input type="text" id="dFolder" placeholder="https://drive.google.com/drive/folders/…">
+      <label class="l">Nom du nouveau dossier</label><input type="text" id="dSub">
+      <div style="height:12px"></div>
+      <button class="btn pri full" id="dSend">☁️ Envoyer au Drive</button>
+      <div class="bar hidden" id="dBar"><i></i></div>
+      <p class="msg" id="dMsg"></p>
+      <div style="height:8px"></div>
+      <button class="btn full" id="dDl">⬇️ Ou télécharger les visuels sur cet appareil</button>
+      <p class="msg" id="dlMsg"></p>
+    </div>
+    <button class="btn pri full" data-go="meta">Suivant : Meta et TikTok →</button>
+  </div>
+
+  <!-- 6 META -->
+  <div id="s-meta" class="hidden">
+    <div class="card">
+      <h2>Meta et TikTok</h2>
+      <p class="hint">Voici la campagne telle que l'agent va la monter, en pause.</p>
+      <div class="tree" id="mTree"></div>
+      <label class="l">Audiences (une par ligne)</label>
+      <textarea id="mAud"></textarea>
+      <p class="msg" id="mBudget"></p>
+      <div class="row" style="margin-top:10px"><button class="btn pri" id="mReady">✅ Prête pour Meta</button></div>
+      <p class="msg" id="mMsg"></p>
+    </div>
+    <div class="card">
+      <h3>Ce qui s'active avec le branchement</h3>
+      <p class="hint">Dès que Supermetrics est payé, que tu me dis quel compte ANRO a les 212 000 $ et que TikTok Ads est créé :</p>
+      <ul class="soon">
+        <li>Montage automatique dans Meta et TikTok, en pause, puis tu actives</li>
+        <li>Tes clips organiques axés vente proposés chaque jour</li>
+        <li>Alerte immédiate si quelque chose cloche</li>
+        <li>Mini-rapport le lundi et le jeudi, avec boutons</li>
+        <li>Bilan complet à la fin de la campagne</li>
+      </ul>
+    </div>
+    <div class="row">
+      <button class="btn" id="dupBtn">⧉ Dupliquer</button>
+      <button class="btn" id="asTplBtn">📋 Enregistrer comme modèle</button>
+      <span class="sp"></span>
+      <button class="btn del" id="delBtn">Supprimer</button>
+    </div>
+    <p class="msg" id="cMsg"></p>
+  </div>
+</section>
+</div>
+
+<div class="dock">
+  <button class="btn" id="camBtn">📷 Caméra</button>
+  <button class="btn pri" id="noteBtn">Envoyer</button>
+</div>
+<input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+
+<div class="sheet" id="sheet"><div class="in">
+  <h3>Envoyer à Claude</h3>
+  <p class="hint">Écris ce qui bloque ou ce que tu veux. La photo et l'état de la campagne partent avec.</p>
+  <textarea id="nTxt" placeholder="Ton message…"></textarea>
+  <img id="nImg" class="hidden" alt="Photo jointe">
+  <div class="row" style="margin-top:10px"><button class="btn" id="nCam">📷 Photo</button><span class="sp"></span><button class="btn" id="nCancel">Annuler</button><button class="btn pri" id="nSend">Envoyer</button></div>
+  <p class="msg" id="nMsg"></p>
+</div></div>
+
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const ANGLES = ["Vente agressive","Famille","Humour","Big & Tall","Urgence","Prolongation","Nouveauté","Qualité","Idée cadeau"];
+const BRANDS = {
+  anro:{nom:"ANRO",site:"anroapparel.ca",fond:"#0F0A0A",texte:"#FFFFFF",accent:"#4A1620",tailles:"Du S au 6XL",compte:"",aud:"Acheteurs similaires (lookalike)\nReciblage visiteurs 30 jours\nReciblage panier abandonné\nClients existants",ton:"Marque streetwear québécoise (Longueuil) fondée en 2018. Voix directe et chaleureuse, tutoiement, français québécois naturel (« pis », « t’as »), on parle de « la famille » et « les nôtres ». Jamais de superlatifs creux ni de ton corporatif."},
+  wide:{nom:"Wide the Brand",site:"widethebrand.com",fond:"#141414",texte:"#FFFFFF",accent:"#CC5500",tailles:"",compte:"",aud:"",ton:""},
+  nora:{nom:"NORA Apparel",site:"",fond:"#141414",texte:"#FFFFFF",accent:"#6B6B6B",tailles:"",compte:"",aud:"",ton:""},
+  nobl:{nom:"NOBL & CO",site:"noblnco.ca",fond:"#141414",texte:"#FFFFFF",accent:"#6B6B6B",tailles:"",compte:"",aud:"",ton:""},
+  studio:{nom:"Le Stud.io",site:"",fond:"#141414",texte:"#FFFFFF",accent:"#6B6B6B",tailles:"",compte:"",aud:"",ton:""}
+};
+const BUILTIN = [
+ {nom:"Packs 3 · 6 · 12",offre:"3 morceaux -15 %, 6 morceaux -20 %, 12 morceaux -25 %. Mélange libre, produits à prix régulier, soldes exclus.",angle:["Vente agressive","Famille"],prod:"Hoodies, cargos, t-shirts, chemises, casquettes"},
+ {nom:"Prolongation de promo",offre:"La promo en cours est prolongée. Mêmes rabais.",angle:["Prolongation","Urgence"],prod:"Toute la boutique"},
+ {nom:"Black Friday",offre:"Rabais Black Friday sur la boutique. À préciser.",angle:["Urgence","Vente agressive"],prod:"Toute la boutique"},
+ {nom:"Noël · Gâte-toi, pis gâte quelqu’un d’autre",offre:"Achète un morceau, le 2e est à 50 %. Répétable autant de fois que tu veux : gâte-toi, ta mère, ton père, ton voisin, le laitier… Cette année, on magasine chez ANRO.",angle:["Humour","Idée cadeau","Famille"],prod:"Toute la boutique",note:"Concept humoristique, textes drôles."},
+ {nom:"Vente de fin d’année",offre:"Gros rabais sur tout le site, du 24 au 31 décembre. Rabais à préciser.",angle:["Urgence","Vente agressive"],prod:"Tout le site"},
+ {nom:"Lancement de produit",offre:"Nouveau produit disponible. Prix et quantités à préciser.",angle:["Nouveauté","Qualité"],prod:""}
+];
+const STEPS = [["brief","1 · Brief"],["photos","2 · Photos"],["textes","3 · Textes"],["pubs","4 · Pubs"],["envoi","5 · Drive"],["meta","6 · Meta"]];
+const MOIS = ["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+
+let db=null, sample=null, assetsApi=null, mcp=null, dl=null;
+let camps=[], tpls=[], brandsDb={}, curBrand="anro", cur=null, curId=null, step="brief", saveT=null, dirty=false;
+const imgCache = {};
+
+try{ const b=localStorage.getItem('sp_brand'); if(b && BRANDS[b]) curBrand=b; }catch(e){}
+
+const brand = id => Object.assign({}, BRANDS[id||curBrand], brandsDb[id||curBrand]||{});
+const fmtD = d => { if(!d) return ""; const [y,m,j]=d.split("-"); return (+j)+" "+MOIS[+m-1]; };
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug = s => String(s||"campagne").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"").slice(0,40);
+function setMsg(id,t,cls){ const e=$(id); e.className="msg"+(cls?" "+cls:""); e.innerHTML=t; }
+
+/* ---------- Navigation ---------- */
+function view(v){
+  ["vHome","vBrand","vCamp"].forEach(x=>$(x).classList.toggle('hidden', x!==v));
+  $('backBtn').classList.toggle('hidden', v==="vHome");
+  $('steps').classList.toggle('hidden', v!=="vCamp");
+  const b=brand();
+  $('hSmall').textContent = b.nom.toUpperCase()+" · STUDIO PUB";
+  $('hTitle').textContent = v==="vHome" ? "Mes campagnes" : v==="vBrand" ? "Profil de la marque" : (cur && cur.nom || "Nouvelle campagne");
+  window.scrollTo(0,0);
+  if(v==="vHome") renderHome();
+}
+$('backBtn').onclick = async () => { if(dirty) await save(true); view("vHome"); };
+function goStep(s){
+  step=s;
+  STEPS.forEach(([k])=>$('s-'+k).classList.toggle('hidden',k!==s));
+  renderSteps();
+  if(s==="photos") renderPhotos();
+  if(s==="textes") renderGen();
+  if(s==="pubs") renderPubs();
+  if(s==="envoi") prepEnvoi();
+  if(s==="meta") renderMeta();
+  window.scrollTo(0,0);
+}
+function stepDone(k){
+  if(!cur) return false;
+  if(k==="brief") return !!(cur.nom && cur.offre);
+  if(k==="photos") return (cur.photos||[]).length>0;
+  if(k==="textes") return !!cur.gen;
+  if(k==="pubs") return (cur.pubs||[]).length>0 && cur.pubs.every(p=>p.ok===true);
+  if(k==="envoi") return !!cur.drive;
+  if(k==="meta") return cur.statut==="prête pour Meta";
+}
+function renderSteps(){
+  const S=$('steps'); S.innerHTML="";
+  STEPS.forEach(([k,l])=>{ const b=document.createElement('button'); b.className=k===step?"on":""; b.textContent=l; if(stepDone(k)){const d=document.createElement('span');d.className='d';d.textContent='✓';b.append(d);} b.onclick=()=>goStep(k); S.append(b); });
+}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goStep(b.dataset.go));
+
+/* ---------- Accueil ---------- */
+function renderBrandBar(){
+  const B=$('brandBar'); B.innerHTML="";
+  Object.keys(BRANDS).forEach(id=>{ const b=brand(id); const x=document.createElement('button'); x.className="brandchip"+(id===curBrand?" on":"");
+    const d=document.createElement('span'); d.className='dot'; d.style.background=b.accent; x.append(d, document.createTextNode(b.nom));
+    x.onclick=()=>{ curBrand=id; try{localStorage.setItem('sp_brand',id);}catch(e){} renderBrandBar(); view("vHome"); }; B.append(x); });
+}
+function renderHome(){
+  renderBrandBar();
+  const L=$('campList'); L.innerHTML="";
+  const mine = camps.filter(c=>(c.data.marque||"anro")===curBrand).sort((a,b)=>(b.data.maj||0)-(a.data.maj||0));
+  if(!db){ L.innerHTML='<div class="card"><p class="msg">Ouvre l’app dans claude.ai pour voir tes campagnes.</p></div>'; return; }
+  if(!mine.length){ L.innerHTML='<div class="card"><p class="msg" style="margin:0">Aucune campagne pour '+esc(brand().nom)+' encore. Touche ＋ Nouvelle campagne ou pars d’un modèle.</p></div>'; return; }
+  mine.forEach(c=>{ const d=document.createElement('div'); d.className="card camp";
+    const t=document.createElement('div'); t.className='sp';
+    const n=document.createElement('div'); n.className='n'; n.textContent=c.data.nom||"Sans nom";
+    const dd=document.createElement('div'); dd.className='d'; dd.textContent=(c.data.debut||c.data.fin)?(fmtD(c.data.debut)+" → "+fmtD(c.data.fin)):"Dates à choisir";
+    t.append(n,dd);
+    const bd=document.createElement('span'); bd.className='badge';
+    const pubs=c.data.pubs||[]; const okN=pubs.filter(p=>p.ok===true).length;
+    bd.textContent = c.data.statut==="prête pour Meta" ? "Prête pour Meta" : c.data.drive ? "Dans le Drive" : pubs.length ? (okN+"/"+pubs.length+" approuvées") : c.data.gen ? "Textes prêts" : "Brouillon";
+    if(c.data.statut==="prête pour Meta"||c.data.drive) bd.classList.add('ok');
+    d.append(t,bd); d.onclick=()=>openCamp(c.id,c.data); L.append(d); });
+}
+function blank(t){ const b=brand(); t=t||{};
+  return {marque:curBrand,nom:t.nom||"",offre:t.offre||"",debut:"",fin:"",budget:"",budgetType:"total",angle:[...(t.angle||[])],prod:t.prod||"",tailles:b.tailles||"",nb:6,note:t.note||"",photos:[],gen:null,pubs:[],audiences:b.aud||"",drive:null,statut:"brouillon",maj:Date.now()}; }
+$('newBtn').onclick=()=>openCamp(null,blank());
+$('tplBtn').onclick=()=>{ $('tplBox').classList.toggle('hidden'); const L=$('tplList'); L.innerHTML="";
+  [...BUILTIN, ...tpls.filter(t=>(t.data.marque||"anro")===curBrand).map(t=>Object.assign({mine:1},t.data))].forEach(t=>{ const b=document.createElement('button'); b.className='btn full'; b.style.cssText="justify-content:flex-start;margin-bottom:6px"; b.textContent=(t.mine?"⭐ ":"")+t.nom; b.onclick=()=>{ $('tplBox').classList.add('hidden'); openCamp(null,blank(t)); }; L.append(b); }); };
+
+/* ---------- Profil de marque ---------- */
+const BF = {bNom:"nom",bSite:"site",bFond:"fond",bTexte:"texte",bAccent:"accent",bTailles:"tailles",bPolice:"police",bDesc:"desc",bTon:"ton",bCompte:"compte",bAud:"aud"};
+$('gDrop').onclick=()=>$('gIn').click();
+async function pdfPages(file,max){
+  const lib=window.pdfjsLib; if(!lib) throw {code:'pdf'};
+  const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+  const out=[]; const n=Math.min(doc.numPages,max);
+  for(let i=1;i<=n;i++){ const pg=await doc.getPage(i); const vp0=pg.getViewport({scale:1}); const sc=1100/Math.max(vp0.width,vp0.height); const vp=pg.getViewport({scale:sc});
+    const c=document.createElement('canvas'); c.width=Math.round(vp.width); c.height=Math.round(vp.height); const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+    await pg.render({canvasContext:x,viewport:vp}).promise;
+    out.push(await new Promise(r=>c.toBlob(r,'image/jpeg',0.82))); }
+  return out;
+}
+$('gIn').onchange=async()=>{
+  const files=[...$('gIn').files]; $('gIn').value=''; if(!files.length) return;
+  if(!sample){ setMsg('gMsg',"Claude n’est pas disponible ici : ouvre l’app dans claude.ai.","err"); return; }
+  setMsg('gMsg','<span class="load"></span>Lecture du guide…');
+  try{
+    const lim=await sample.limits(); const maxImg=(lim.images&&lim.images.maxCount)||8;
+    let imgs=[];
+    for(const f of files){ if(imgs.length>=maxImg) break;
+      if(f.type==='application/pdf'||/\.pdf$/i.test(f.name)) imgs=imgs.concat(await pdfPages(f,maxImg-imgs.length));
+      else imgs.push(await shrink(f,1100,0.82)); }
+    if(!imgs.length) throw {code:'vide'};
+    if(assetsApi){ try{ for(const f of files){ const r=await assetsApi.upload(f); brandsDb[curBrand]=Object.assign({},brandsDb[curBrand]||{},{guide:r.id}); } }catch(e){} }
+    setMsg('gMsg','<span class="load"></span>Claude analyse ta marque…');
+    const r=await sample.json('Voici les pages du guide de marque de « '+($('bNom').value||brand().nom)+' ». Lis-le au complet et décris la marque pour un agent de publicité. Réponds seulement avec un objet JSON : {"nom":"","site":"","fond":"#hex couleur foncée principale","texte":"#hex couleur du texte sur le fond","accent":"#hex couleur d’accent","police":"police principale","tailles":"grandeurs offertes si mentionnées, sinon vide","desc":"description de la marque en 3 à 5 phrases : ce qu’elle est, à qui elle parle, son univers, ses produits","ton":"le ton et la voix à utiliser dans les pubs, avec les mots à dire et à éviter"}. En français québécois. Laisse vide ce que le guide ne dit pas.',{images:imgs,modelTier:'complex'});
+    let n=0; Object.entries(BF).forEach(([k,f])=>{ const v=r&&r[f]; if(typeof v==='string'&&v.trim()&&!['bCompte','bAud'].includes(k)){ $(k).value=v.trim(); n++; } });
+    setMsg('gMsg','✅ Fiche remplie ('+n+' champs). Vérifie, corrige au besoin, puis Enregistrer le profil.','ok');
+  }catch(e){ setMsg('gMsg', e.code==='not_granted'?"Autorise Claude à voir les images pour qu’il lise le guide.":e.code==='images_unavailable'?"La lecture d’images n’est pas disponible ici.":e.code==='pdf'?"Le lecteur PDF n’a pas chargé. Essaie avec des captures d’écran du guide.":"Claude n’a pas réussi à lire le guide. Réessaie, ou envoie des captures d’écran.",'err'); }
+};
+$('brandBtn').onclick=()=>{ const b=brand(); Object.entries(BF).forEach(([k,f])=>$(k).value=b[f]||""); $('bMsg').textContent=""; view("vBrand"); };
+$('bSave').onclick=async()=>{ if(!db){ setMsg('bMsg',"Ouvre l’app dans claude.ai pour enregistrer.","err"); return; }
+  const o={}; Object.entries(BF).forEach(([k,f])=>o[f]=$(k).value.trim()); if(brandsDb[curBrand]&&brandsDb[curBrand].guide) o.guide=brandsDb[curBrand].guide;
+  try{ await db.doc("marques/"+curBrand).set(o); brandsDb[curBrand]=o; setMsg('bMsg',"Profil enregistré ✓","ok"); }catch(e){ setMsg('bMsg',"L’enregistrement n’a pas marché.","err"); } };
+
+/* ---------- Campagne : brief ---------- */
+const F = {fNom:"nom",fOffre:"offre",fDebut:"debut",fFin:"fin",fBudget:"budget",fBudgetType:"budgetType",fProd:"prod",fTailles:"tailles",fNb:"nb",fNote:"note"};
+function openCamp(id,data){
+  curId=id; cur=JSON.parse(JSON.stringify(data));
+  cur.marque=cur.marque||"anro"; cur.photos=cur.photos||[]; cur.pubs=cur.pubs||[]; cur.budgetType=cur.budgetType||"total";
+  if(cur.audiences==null) cur.audiences=brand(cur.marque).aud||"";
+  if(cur.marque!==curBrand){ curBrand=cur.marque; }
+  Object.entries(F).forEach(([k,f])=>$(k).value = cur[f]==null?"":cur[f]);
+  chips(); view("vCamp"); goStep(cur.gen?"pubs":"brief");
+}
+function chips(){ const C=$('fAngle'); C.innerHTML=""; ANGLES.forEach(a=>{ const b=document.createElement('button'); b.textContent=a; b.className=cur.angle.includes(a)?"on":""; b.onclick=()=>{ cur.angle=cur.angle.includes(a)?cur.angle.filter(x=>x!==a):[...cur.angle,a]; chips(); touch(); }; C.append(b); }); }
+Object.entries(F).forEach(([k,f])=>$(k).addEventListener('input',()=>{ cur[f]= k==="fNb" ? +$(k).value : $(k).value; if(k==="fNom") $('hTitle').textContent=cur.nom||"Nouvelle campagne"; touch(); }));
+function touch(){ dirty=true; clearTimeout(saveT); saveT=setTimeout(()=>save(true),1500); }
+async function save(auto){
+  if(!db||!cur) return;
+  cur.maj=Date.now();
+  try{
+    if(!curId){ const r=db.collection("campagnes").doc(); curId=r.id; await r.set(cur); }
+    else await db.doc("campagnes/"+curId).set(cur);
+    dirty=false; renderSteps();
+  }catch(e){ setMsg('cMsg',"L’enregistrement n’a pas marché ("+esc(e.code||e.message)+").","err"); }
+}
+
+/* ---------- Images ---------- */
+async function decode(file){
+  try{ return await createImageBitmap(file,{imageOrientation:'from-image'}); }
+  catch(e){ return await new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>rej(e); im.src=URL.createObjectURL(file); }); }
+}
+async function shrink(src,maxPx,q){
+  const bmp = (src instanceof Blob) ? await decode(src) : src;
+  const s=Math.min(1,maxPx/Math.max(bmp.width,bmp.height));
+  const W=Math.round(bmp.width*s), H=Math.round(bmp.height*s);
+  let cw=bmp.width, ch=bmp.height, cur2=bmp;
+  while(cw/2>=W && ch/2>=H){ const c=document.createElement('canvas'); c.width=Math.round(cw/2); c.height=Math.round(ch/2); const x=c.getContext('2d'); x.imageSmoothingQuality='high'; x.drawImage(cur2,0,0,c.width,c.height); cur2=c; cw=c.width; ch=c.height; }
+  const o=document.createElement('canvas'); o.width=W; o.height=H; const x=o.getContext('2d'); x.imageSmoothingQuality='high'; x.fillStyle="#fff"; x.fillRect(0,0,W,H); x.drawImage(cur2,0,0,W,H);
+  return await new Promise((res,rej)=>o.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',q||0.86));
+}
+function loadImg(url){
+  if(imgCache[url]) return imgCache[url];
+  imgCache[url]=new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=()=>{ delete imgCache[url]; rej(new Error('img')); }; im.src=url; });
+  return imgCache[url];
+}
+
+/* ---------- Photos ---------- */
+$('phDrop').onclick=()=>$('phIn').click();
+$('phIn').onchange=async()=>{
+  const files=[...$('phIn').files]; $('phIn').value="";
+  if(!files.length) return;
+  if(!assetsApi){ setMsg('phMsg',"L’ajout de photos n’est pas disponible ici : ouvre l’app dans claude.ai.","err"); return; }
+  for(const f of files){
+    const ph={id:Math.random().toString(36).slice(2,10), nom:f.name.replace(/\.[^.]+$/,""), url:"", asset:"", analyse:null, etat:"Allègement…"};
+    cur.photos.push(ph); renderPhotos();
+    try{
+      const blob=await shrink(f,2048,0.86);
+      ph.etat="Envoi…"; renderPhotos();
+      const r=await assetsApi.upload(blob);
+      ph.url=r.url; ph.asset=r.id; ph.etat="Analyse…"; renderPhotos(); touch();
+      await analyse(ph);
+    }catch(e){ ph.etat="❌ "+(e.code==="too_large"?"trop lourde":"erreur"); }
+    renderPhotos(); touch();
+  }
+};
+async function analyse(ph){
+  if(!sample){ ph.etat="Prête (sans analyse)"; return; }
+  try{
+    const lim=await sample.limits();
+    if(!lim.images){ ph.etat="Prête (sans analyse)"; return; }
+    const im=await loadImg(ph.url);
+    const small=await shrink(im,768,0.8);
+    const r=await sample.json('Analyse cette photo de mode qui servira de fond à une publicité. Repère TOUS les visages visibles. Réponds seulement avec un objet JSON : {"visages":[{"x":0.1,"y":0.2,"l":0.1,"h":0.12}],"focal":{"x":0.5,"y":0.45},"description":"courte description en français"}. Coordonnées normalisées de 0 à 1 par rapport à la largeur et à la hauteur de la photo : x et y = coin haut gauche du visage, l = largeur, h = hauteur ; prends une marge généreuse autour de chaque tête (cheveux et casquette compris). focal = le centre du groupe de personnes ou du sujet principal.',{images:[small],modelTier:"default"});
+    const ok=n=>typeof n==="number"&&n>=0&&n<=1.2;
+    ph.analyse={visages:(Array.isArray(r.visages)?r.visages:[]).filter(v=>ok(v.x)&&ok(v.y)&&ok(v.l)&&ok(v.h)), focal:(r.focal&&ok(r.focal.x)&&ok(r.focal.y))?r.focal:{x:.5,y:.45}, description:String(r.description||"")};
+    ph.etat="✓ "+ph.analyse.visages.length+" visage"+(ph.analyse.visages.length>1?"s":"");
+  }catch(e){ ph.etat = e.code==="not_granted" ? "Prête (Claude non autorisé)" : "Prête (analyse ratée)"; }
+}
+function renderPhotos(){
+  const G=$('phGrid'); G.innerHTML="";
+  cur.photos.forEach(ph=>{ const d=document.createElement('div'); d.className='ph';
+    const im=document.createElement('img'); im.alt=ph.nom; if(ph.url) im.src=ph.url;
+    const st=document.createElement('span'); st.className='st'; st.textContent=ph.etat||"";
+    const x=document.createElement('button'); x.className='x'; x.textContent='✕'; x.setAttribute('aria-label','Retirer');
+    x.onclick=()=>{ cur.photos=cur.photos.filter(p=>p!==ph); cur.pubs.forEach(p=>{ if(p.photo===ph.id) p.photo=null; }); renderPhotos(); touch(); };
+    d.append(im,st,x); G.append(d); });
+  setMsg('phMsg', cur.photos.length ? cur.photos.length+" photo"+(cur.photos.length>1?"s":"")+" · "+cur.nb+" pubs prévues" : "");
+}
+
+/* ---------- Textes ---------- */
+function voice(){ const b=brand(cur.marque);
+  return "Tu es le rédacteur publicitaire de "+b.nom+(b.site?" ("+b.site+")":"")+". "+(b.desc?b.desc+" ":"")+(b.ton||"Ton direct et chaleureux, tutoiement, français québécois naturel.")+" Textes universels qui parlent de tous les morceaux, pas d’un seul produit. Emojis : 2 ou 3 par texte principal, bien placés, jamais en rafale ; les listes de rabais commencent par 👉. Apostrophe typographique ’ et guillemets « »."; }
+function briefTxt(){ return "Campagne : "+cur.nom+"\nOffre : "+cur.offre+"\nDates : du "+(fmtD(cur.debut)||"?")+" au "+(fmtD(cur.fin)||"?")+"\nAngles : "+(cur.angle.join(", ")||"au choix")+"\nProduits : "+cur.prod+"\nGrandeurs : "+cur.tailles+"\nNote : "+(cur.note||"aucune"); }
+$('genBtn').onclick=async()=>{
+  if(!sample){ setMsg('genMsg',"Claude n’est pas disponible ici : ouvre l’app dans claude.ai.","err"); return; }
+  if(!cur.offre.trim()){ setMsg('genMsg',"Écris d’abord l’offre dans le brief.","err"); return; }
+  const b=$('genBtn'); b.disabled=true; setMsg('genMsg','<span class="load"></span>Claude écrit tes textes…');
+  const bas = (cur.fin?"JUSQU’AU "+fmtD(cur.fin).toUpperCase()+" · ":"")+(brand(cur.marque).site||"").toUpperCase();
+  const prompt = voice()+"\n\n"+briefTxt()+"\n\nÉcris les textes de cette campagne Meta. Réponds seulement avec un objet JSON :\n"+
+   '{"principaux":["4 textes principaux, hook fort en première ligne"],"titres":["5 titres de 40 caractères max"],"descriptions":["2 descriptions de 30 caractères max"],"bouton":"Magasiner","pubs":[{"titre":"TITRE COURT EN MAJUSCULES, 2 lignes max, \\n pour couper","sous":"sous-titre court ou vide","gros":"gros chiffre comme -25 % ou vide","etiquette":"petite étiquette sous le gros chiffre ou vide","petite":"ligne d’offre courte ou vide"}]}'+
+   "\nIl faut exactement "+cur.nb+" objets dans \"pubs\", chacun avec un angle différent. Les textes sur l’image restent très courts.";
+  try{
+    const r=await sample.json(prompt,{modelTier:"default"});
+    if(!r||!Array.isArray(r.principaux)||!Array.isArray(r.pubs)) throw {code:"forme"};
+    const mk=a=>(a||[]).map(t=>({t:String(t),off:0}));
+    cur.gen={principaux:mk(r.principaux),titres:mk(r.titres),descriptions:mk(r.descriptions),bouton:[{t:String(r.bouton||"Magasiner"),off:0}]};
+    const ph=cur.photos.filter(p=>p.url);
+    cur.pubs=r.pubs.slice(0,cur.nb).map((p,i)=>({titre:String(p.titre||""),sous:String(p.sous||""),gros:String(p.gros||""),etiquette:String(p.etiquette||""),petite:String(p.petite||""),bas:bas,photo:ph.length?ph[i%ph.length].id:null,zone:null,ok:null,note:""}));
+    renderGen(); touch(); setMsg('genMsg',"Textes prêts ✓ Modifie ce que tu veux plus bas, puis va voir tes pubs.","ok");
+  }catch(e){ setMsg('genMsg', e.code==="not_granted"?"Autorise Claude dans l’app pour qu’il écrive les textes.":e.code==="rate_limited"?"Trop de demandes d’un coup. Réessaie dans une minute.":"Claude n’a pas réussi cette fois. Touche encore ✨ pour réessayer.","err"); }
+  b.disabled=false;
+};
+async function rewrite(kind,old){
+  if(!sample) return null;
+  try{ const r=await sample(voice()+"\n\n"+briefTxt()+"\n\nRéécris ce "+kind+" autrement, même offre, même longueur environ. Réponds seulement avec le nouveau texte, sans guillemets.\n\nTexte actuel :\n"+old,{modelTier:"quick",cache:false}); return r.text.trim(); }catch(e){ return null; }
+}
+function item(lab,obj,opts){
+  opts=opts||{};
+  const d=document.createElement('div'); d.className="it"+(obj.off?" off":"");
+  const s=document.createElement('small'); s.textContent=lab;
+  const tx=document.createElement('div'); tx.className='tx'; tx.textContent=obj.t||"(vide)";
+  const ta=document.createElement('textarea'); ta.value=obj.t;
+  const a=document.createElement('div'); a.className='acts';
+  const m=document.createElement('button'); m.className='btn sm'; m.textContent='✏️ Modifier';
+  m.onclick=()=>{ if(d.classList.contains('ed')){ obj.t=ta.value; tx.textContent=obj.t||"(vide)"; d.classList.remove('ed'); m.textContent='✏️ Modifier'; touch(); opts.change&&opts.change(); } else { d.classList.add('ed'); m.textContent='✓ OK'; ta.focus(); } };
+  const del=document.createElement('button'); del.className='btn sm del'; del.textContent=obj.off?'↩︎ Remettre':'🗑️ Supprimer';
+  del.onclick=()=>{ obj.off=obj.off?0:1; touch(); opts.change&&opts.change(); opts.rerender&&opts.rerender(); };
+  a.append(m,del);
+  if(opts.kind){ const w=document.createElement('button'); w.className='btn sm'; w.textContent='✨ Réécrire';
+    w.onclick=async()=>{ w.disabled=true; w.textContent='…'; const n=await rewrite(opts.kind,obj.t); if(n){ obj.t=n; ta.value=n; tx.textContent=n; touch(); } w.disabled=false; w.textContent='✨ Réécrire'; }; a.append(w); }
+  d.append(s,tx,ta,a); return d;
+}
+const GROUPS=[["principaux","Textes principaux","Texte","texte principal"],["titres","Titres","Titre","titre de pub Meta (40 caractères max)"],["descriptions","Descriptions","Description","description Meta (30 caractères max)"],["bouton","Bouton","Bouton",null]];
+function renderGen(){
+  const B=$('genBox');
+  if(!cur.gen){ B.classList.add('hidden'); return; }
+  B.classList.remove('hidden'); B.innerHTML="";
+  GROUPS.forEach(([k,title,lab,kind])=>{
+    const c=document.createElement('div'); c.className='card';
+    const h=document.createElement('h3'); h.textContent=title; c.append(h);
+    (cur.gen[k]||[]).forEach((o,i)=>c.append(item(lab+" "+(i+1),o,{kind:kind,rerender:renderGen})));
+    if(k!=="bouton"){ const add=document.createElement('button'); add.className='btn sm'; add.textContent='＋ Ajouter';
+      add.onclick=()=>{ cur.gen[k].push({t:"",off:0}); touch(); renderGen(); }; c.append(add); }
+    B.append(c);
+  });
+}
+
+/* ---------- Rendu des visuels ---------- */
+function wrapText(x,txt,maxW){ const words=String(txt).split(/\s+/); const lines=[]; let l="";
+  words.forEach(w=>{ const t=l?l+" "+w:w; if(x.measureText(t).width>maxW && l){ lines.push(l); l=w; } else l=t; }); if(l) lines.push(l); return lines; }
+function hexA(h,a){ const m=String(h||"#000").replace('#',''); const n=m.length===3?m.split('').map(c=>c+c).join(''):m.padEnd(6,'0'); return "rgba("+parseInt(n.slice(0,2),16)+","+parseInt(n.slice(2,4),16)+","+parseInt(n.slice(4,6),16)+","+a+")"; }
+function layoutLines(x,p,W,maxW,k){
+  k=k||1; const L=[]; const Z=v=>v*k;
+  if(p.titre && !p.titreOff){ let s=Z(W*0.115); const lines=String(p.titre).toUpperCase().split(/\n|\\n/);
+    while(s>Z(W*0.055)){ x.font='900 '+s+'px "Fira Sans"'; if(lines.every(l=>x.measureText(l).width<=maxW)) break; s-=2; }
+    x.font='900 '+s+'px "Fira Sans"';
+    lines.forEach(l=>wrapText(x,l,maxW).forEach(w=>L.push({t:w,f:'900 '+s+'px "Fira Sans"',h:s*0.98}))); L.push({gap:Z(W*0.025)}); }
+  if(p.sous && !p.sousOff){ const s=Z(W*0.042); x.font='600 '+s+'px "Fira Sans"'; wrapText(x,p.sous,maxW).forEach(w=>L.push({t:w,f:'600 '+s+'px "Fira Sans"',h:s*1.25})); L.push({gap:Z(W*0.02)}); }
+  if(p.gros && !p.grosOff){ let s=Z(W*0.2); x.font='900 '+s+'px "Fira Sans"'; while(x.measureText(p.gros).width>maxW && s>Z(W*0.08)){ s-=3; x.font='900 '+s+'px "Fira Sans"'; } L.push({t:p.gros,f:'900 '+s+'px "Fira Sans"',h:s*0.95}); }
+  if(p.etiquette && !p.etiquetteOff){ const s=Z(W*0.036); L.push({t:String(p.etiquette).toUpperCase(),f:'700 '+s+'px "Fira Sans"',h:s*1.9,pill:true,s:s}); L.push({gap:Z(W*0.015)}); }
+  if(p.petite && !p.petiteOff){ const s=Z(W*0.04); x.font='700 '+s+'px "Fira Sans"'; wrapText(x,p.petite,maxW).forEach(w=>L.push({t:w,f:'700 '+s+'px "Fira Sans"',h:s*1.3})); L.push({gap:Z(W*0.02)}); }
+  if(p.bas && !p.basOff){ const s=Math.max(W*0.024,Z(W*0.03)); L.push({gap:Z(W*0.01)}); L.push({t:p.bas,f:'700 '+s+'px "Fira Sans"',h:s*1.4,bas:true,s:s}); }
+  while(L.length && L[L.length-1].gap) L.pop();
+  L.H=L.reduce((a,l)=>a+(l.gap||l.h),0);
+  return L;
+}
+async function renderPub(p,fmt,W){
+  const H = fmt==="916" ? Math.round(W*16/9) : Math.round(W*1.25);
+  const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const b=brand(cur.marque);
+  x.fillStyle=b.fond||"#0F0A0A"; x.fillRect(0,0,W,H);
+  const ph=cur.photos.find(q=>q.id===p.photo);
+  let faces=[];
+  if(ph && ph.url){
+    try{ const im=await loadImg(ph.url);
+      const s=Math.max(W/im.width,H/im.height), dw=im.width*s, dh=im.height*s;
+      const f=(ph.analyse&&ph.analyse.focal)||{x:.5,y:.45};
+      let ox=W/2-f.x*dw, oy=H/2-f.y*dh; ox=Math.min(0,Math.max(W-dw,ox)); oy=Math.min(0,Math.max(H-dh,oy));
+      x.drawImage(im,ox,oy,dw,dh);
+      faces=((ph.analyse&&ph.analyse.visages)||[]).map(v=>({x:ox+v.x*dw,y:oy+v.y*dh,w:v.l*dw,h:v.h*dh})).filter(f=>f.y<H&&f.y+f.h>0);
+    }catch(e){}
+  }
+  const pad=W*0.07, maxW=W-pad*2, m=W*0.03;
+  const safeTop = fmt==="916" ? H*0.14 : H*0.055, safeBot = fmt==="916" ? H*0.21 : H*0.055;
+  // bandes libres au-dessus et au-dessous des visages
+  const fTop = faces.length ? Math.min(...faces.map(f=>f.y)) - m : H;
+  const fBot = faces.length ? Math.max(...faces.map(f=>f.y+f.h)) + m : 0;
+  const band = side => side==="haut" ? {y0:safeTop, y1:Math.min(H-safeBot, fTop)} : {y0:Math.max(safeTop, fBot), y1:H-safeBot};
+  let side = p.zone;
+  if(!side){ const bh=band("haut"), bb=band("bas"); side = (bb.y1-bb.y0) >= (bh.y1-bh.y0)*0.9 ? "bas" : "haut"; }
+  const bd = band(side); const room = Math.max(0, bd.y1-bd.y0);
+  let k=1, lines=layoutLines(x,p,W,maxW,1);
+  while(lines.H>room && k>0.45){ k-=0.05; lines=layoutLines(x,p,W,maxW,k); }
+  const blockH=lines.H;
+  const y0 = side==="haut" ? safeTop : H-safeBot-blockH;
+  const r={x:pad,y:y0,w:maxW,h:blockH};
+  const hit=faces.some(f=>r.x<f.x+f.w && r.x+r.w>f.x && r.y<f.y+f.h && r.y+r.h>f.y);
+  // dégradé limité à la zone du texte, sans assombrir les visages
+  const gTop = side==="haut" ? 0 : Math.max(fBot, y0-H*0.1);
+  const gBot = side==="haut" ? Math.min(faces.length?fTop:H, y0+blockH+H*0.1) : H;
+  const g = side==="haut" ? x.createLinearGradient(0,gTop,0,gBot) : x.createLinearGradient(0,gBot,0,gTop);
+  g.addColorStop(0,hexA(b.fond,0.85)); g.addColorStop(0.6,hexA(b.fond,0.5)); g.addColorStop(1,hexA(b.fond,0));
+  x.fillStyle=g; x.fillRect(0,gTop,W,Math.max(0,gBot-gTop));
+  let y=y0; x.textBaseline='top';
+  lines.forEach(l=>{
+    if(l.gap){ y+=l.gap; return; }
+    x.font=l.f;
+    if(l.pill){ const tw=x.measureText(l.t).width; x.fillStyle=b.accent||"#4A1620"; const h2=l.s*1.6; x.beginPath(); if(x.roundRect) x.roundRect(pad,y,tw+l.s*1.4,h2,h2/2); else x.rect(pad,y,tw+l.s*1.4,h2); x.fill(); x.fillStyle=b.texte||"#fff"; x.fillText(l.t,pad+l.s*0.7,y+l.s*0.32); }
+    else if(l.bas){ x.fillStyle=b.accent||"#4A1620"; x.fillRect(pad,y+l.s*0.15,W*0.035,l.s*0.8); x.fillStyle=hexA(b.texte||"#fff",0.92); x.fillText(l.t,pad+W*0.05,y); }
+    else { x.save(); x.shadowColor='rgba(0,0,0,.35)'; x.shadowBlur=W*0.012; x.fillStyle=b.texte||"#fff"; x.fillText(l.t,pad,y); x.restore(); }
+    y+=l.h;
+  });
+  return {canvas:c, hit:hit, side:side};
+}
+
+/* ---------- Pubs : approbation ---------- */
+const PUBF=[["titre","Titre sur l’image"],["sous","Sous-titre"],["gros","Gros chiffre"],["etiquette","Étiquette"],["petite","Ligne d’offre"],["bas","Ligne du bas"]];
+function renderPubs(){
+  const L=$('pubList'); L.innerHTML="";
+  if(!cur.pubs.length){ setMsg('pubMsg',"Pas encore de pubs. Va à l’étape 3 pour que Claude écrive les textes."); return; }
+  const okN=cur.pubs.filter(p=>p.ok===true).length;
+  setMsg('pubMsg', okN+" sur "+cur.pubs.length+" approuvée"+(okN>1?"s":""), okN===cur.pubs.length?"ok":"");
+  cur.pubs.forEach((p,i)=>L.append(pubCard(p,i)));
+}
+function pubCard(p,i){
+  const d=document.createElement('div'); d.className='pub'+(p.ok===true?' ok':p.ok===false?' chg':'');
+  const left=document.createElement('div');
+  const cv=document.createElement('div'); left.append(cv);
+  const warn=document.createElement('div'); warn.className='warn hidden'; warn.textContent='⚠️ Le texte touche un visage : change la position ou la photo.'; left.append(warn);
+  let fmt=p._fmt||"45";
+  const fm=document.createElement('div'); fm.className='fmt';
+  [["45","4:5 fil"],["916","9:16 story"]].forEach(([k,l])=>{ const b=document.createElement('button'); b.textContent=l; b.className=k===fmt?'on':''; b.onclick=()=>{ p._fmt=fmt=k; fm.querySelectorAll('button').forEach(z=>z.className=z===b?'on':''); draw(); }; fm.append(b); });
+  left.append(fm);
+  const pos=document.createElement('div'); pos.className='fmt';
+  [["haut","⬆️ Texte en haut"],["bas","⬇️ Texte en bas"]].forEach(([k,l])=>{ const b=document.createElement('button'); b.textContent=l; b.onclick=()=>{ p.zone=k; touch(); draw(); }; pos.append(b); });
+  left.append(pos);
+  if(cur.photos.filter(q=>q.url).length>1){ const sw=document.createElement('button'); sw.className='btn sm full'; sw.style.marginTop='8px'; sw.textContent='🔄 Changer la photo';
+    sw.onclick=()=>{ const ps=cur.photos.filter(q=>q.url); const k=ps.findIndex(q=>q.id===p.photo); p.photo=ps[(k+1)%ps.length].id; p.zone=null; touch(); draw(); }; left.append(sw); }
+  async function draw(){ const r=await renderPub(p,fmt,540); cv.innerHTML=""; cv.append(r.canvas); warn.classList.toggle('hidden',!r.hit); pos.querySelectorAll('button').forEach((z,j)=>z.className=(["haut","bas"][j]===r.side)?'on':''); }
+  draw();
+  const right=document.createElement('div');
+  const t=document.createElement('div'); t.className='ttl'; t.textContent='Pub '+String(i+1).padStart(2,'0'); right.append(t);
+  PUBF.forEach(([k,lab])=>{ if(!p[k]) return; const o={t:p[k],off:p[k+'Off']?1:0};
+    const it=item(lab,o,{change:()=>{ p[k]=o.t; p[k+'Off']=o.off?1:0; draw(); }, rerender:()=>{ it.replaceWith(pubFieldRefresh()); }});
+    function pubFieldRefresh(){ renderPubs(); return document.createElement('span'); }
+    right.append(it); });
+  const dec=document.createElement('div'); dec.className='dec';
+  const a=document.createElement('button'); a.className='a-ok'; a.textContent='✅ Approuver';
+  const c=document.createElement('button'); c.className='a-chg'; c.textContent='✏️ À changer';
+  const note=document.createElement('textarea'); note.className='note'; note.placeholder='Qu’est-ce qu’on change ?'; note.value=p.note||"";
+  note.oninput=()=>{ p.note=note.value; touch(); };
+  a.onclick=()=>{ p.ok=true; d.className='pub ok'; touch(); renderPubsHeader(); };
+  c.onclick=()=>{ p.ok=false; d.className='pub chg'; touch(); note.focus(); renderPubsHeader(); };
+  dec.append(a,c); right.append(dec,note);
+  d.append(left,right); return d;
+}
+function renderPubsHeader(){ const okN=cur.pubs.filter(p=>p.ok===true).length; setMsg('pubMsg', okN+" sur "+cur.pubs.length+" approuvée"+(okN>1?"s":""), okN===cur.pubs.length?"ok":""); renderSteps(); }
+
+/* ---------- Envoi au Drive ---------- */
+function prepEnvoi(){
+  try{ const f=localStorage.getItem('sp_folder_'+cur.marque); if(f && !$('dFolder').value) $('dFolder').value=f; }catch(e){}
+  $('dSub').value = cur.nom || "Campagne";
+  const okN=cur.pubs.filter(p=>p.ok===true).length;
+  setMsg('dMsg', cur.drive ? '✅ Déjà envoyée. <a href="'+esc(cur.drive)+'" target="_blank" rel="noopener">Ouvrir le dossier</a>' : okN ? okN+" pub"+(okN>1?"s":"")+" approuvée"+(okN>1?"s":"")+" prête"+(okN>1?"s":"")+" à partir." : "Aucune pub approuvée pour l’instant (étape 4).", cur.drive?"ok":"");
+}
+function folderId(v){ v=(v||"").trim(); const m=v.match(/folders\/([\w-]{10,})/)||v.match(/[?&]id=([\w-]{10,})/); if(m) return m[1]; if(/^[\w-]{20,}$/.test(v)) return v; return null; }
+const toB64 = b => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=()=>rej(r.error); r.readAsDataURL(b); });
+const canvasBlob = c => new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',0.92));
+function mcpErr(e){
+  switch(e&&e.code){
+    case 'server_not_connected': return "Google Drive n’est pas branché à Claude. Branche-le dans les connecteurs, puis réessaie.";
+    case 'needs_reauth': return "Ta connexion Google Drive est expirée. Reconnecte-la dans les connecteurs de Claude.";
+    case 'approval_required': return "Il faut accepter l’accès à Google Drive quand Claude le demande.";
+    case 'blocked_by_policy': return "L’accès à Google Drive est bloqué pour cet outil.";
+    case 'tool_error': return "Google Drive a refusé : vérifie que le lien est celui d’un dossier où tu peux écrire.";
+    case 'server_unavailable': case 'upstream_error': return "Google Drive ne répond pas. Regarde dans le dossier ce qui est arrivé avant de relancer.";
+    default: return "Envoi impossible pour le moment.";
+  }
+}
+function textesDoc(){
+  const g=cur.gen||{}; const on=a=>(a||[]).filter(o=>!o.off&&o.t.trim()).map(o=>o.t);
+  let s=cur.nom+"\n"+(cur.debut||cur.fin?("Du "+fmtD(cur.debut)+" au "+fmtD(cur.fin)+"\n"):"")+"\n";
+  s+="TEXTES PRINCIPAUX\n\n"+on(g.principaux).map((t,i)=>"Texte "+(i+1)+"\n"+t).join("\n\n")+"\n\n";
+  s+="TITRES\n"+on(g.titres).join("\n")+"\n\nDESCRIPTIONS\n"+on(g.descriptions).join("\n")+"\n\nBOUTON\n"+on(g.bouton).join("\n")+"\n";
+  return s;
+}
+$('dSend').onclick=async()=>{
+  const pid=folderId($('dFolder').value);
+  if(!pid){ setMsg('dMsg',"Colle le lien d’un dossier Drive (il contient « /folders/ »).","err"); return; }
+  const pubs=cur.pubs.map((p,i)=>({p,i})).filter(o=>o.p.ok===true);
+  if(!pubs.length){ setMsg('dMsg',"Approuve au moins une pub à l’étape 4.","err"); return; }
+  if(!mcp){ setMsg('dMsg',"Le branchement Drive n’est pas disponible ici. Utilise le téléchargement.","err"); return; }
+  try{ localStorage.setItem('sp_folder_'+cur.marque,$('dFolder').value.trim()); }catch(e){}
+  const btn=$('dSend'); btn.disabled=true;
+  const bar=$('dBar'), fill=bar.querySelector('i'); bar.classList.remove('hidden'); fill.style.width='0%';
+  setMsg('dMsg','<span class="load"></span>Création du dossier…');
+  let folder;
+  try{ const r=await mcp.callTool('Google Drive','create_file',{title:$('dSub').value.trim()||cur.nom||"Campagne",contentMimeType:'application/vnd.google-apps.folder',parentId:pid}); folder=r&&r.payload; if(!folder||!folder.id) throw {code:'tool_error'}; }
+  catch(e){ setMsg('dMsg',mcpErr(e),"err"); btn.disabled=false; bar.classList.add('hidden'); return; }
+  const total=pubs.length*2+1; let n=0, fails=0; const base=slug(cur.nom);
+  for(const {p,i} of pubs){
+    for(const fmt of ["45","916"]){
+      setMsg('dMsg','<span class="load"></span>Envoi '+(n+1)+" sur "+total+"…");
+      try{ const r=await renderPub(p,fmt,1080); const b64=await toB64(await canvasBlob(r.canvas));
+        await mcp.callTool('Google Drive','create_file',{title:base+"_pub"+String(i+1).padStart(2,'0')+"_"+(fmt==="45"?"4x5":"9x16")+".jpg",base64Content:b64,contentMimeType:'image/jpeg',disableConversionToGoogleType:true,parentId:folder.id}); }
+      catch(e){ fails++; if(['server_not_connected','needs_reauth','approval_required','blocked_by_policy'].includes(e&&e.code)){ setMsg('dMsg',mcpErr(e),"err"); btn.disabled=false; return; } }
+      n++; fill.style.width=Math.round(n/total*100)+'%';
+    }
+  }
+  try{ await mcp.callTool('Google Drive','create_file',{title:"Textes des pubs · "+(cur.nom||"Campagne"),textContent:textesDoc(),contentMimeType:'text/plain',parentId:folder.id}); }catch(e){ fails++; }
+  n++; fill.style.width='100%';
+  cur.drive=folder.viewUrl||""; touch(); btn.disabled=false;
+  const link=folder.viewUrl?' <a href="'+esc(folder.viewUrl)+'" target="_blank" rel="noopener">Ouvrir le dossier</a>':'';
+  setMsg('dMsg', fails ? (n-fails)+" fichiers envoyés, "+fails+" en erreur."+link : "✅ Tout est dans « "+esc(folder.title)+" » : "+pubs.length*2+" visuels et le document des textes."+link, fails?"err":"ok");
+};
+$('dDl').onclick=async()=>{
+  if(!dl){ setMsg('dlMsg',"Le téléchargement n’est pas disponible ici.","err"); return; }
+  const pubs=cur.pubs.map((p,i)=>({p,i})).filter(o=>o.p.ok===true);
+  if(!pubs.length){ setMsg('dlMsg',"Approuve au moins une pub à l’étape 4.","err"); return; }
+  let ok=0; const base=slug(cur.nom);
+  for(const {p,i} of pubs) for(const fmt of ["45","916"]){
+    try{ const r=await renderPub(p,fmt,1080); await dl.save({filename:base+"_pub"+String(i+1).padStart(2,'0')+"_"+(fmt==="45"?"4x5":"9x16")+".jpg",data:await canvasBlob(r.canvas)}); ok++; }
+    catch(e){ if(e&&e.code==='unavailable'){ setMsg('dlMsg',"Le téléchargement n’est pas disponible ici.","err"); return; } }
+  }
+  setMsg('dlMsg',ok+" visuel"+(ok>1?"s":"")+" enregistré"+(ok>1?"s":"")+".","ok");
+};
+
+/* ---------- Meta ---------- */
+function renderMeta(){
+  const b=brand(cur.marque);
+  $('mAud').value=cur.audiences||"";
+  const auds=(cur.audiences||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  const okP=cur.pubs.map((p,i)=>({p,i})).filter(o=>o.p.ok===true);
+  const T=$('mTree'); T.innerHTML="";
+  const add=(cls,txt)=>{ const d=document.createElement('div'); d.className=cls; d.textContent=txt; T.append(d); };
+  add('', "📣 "+b.nom+" · Ventes · "+(cur.nom||"Campagne")+" · "+(cur.debut||"date"));
+  (auds.length?auds:["(ajoute tes audiences plus bas)"]).forEach(a=>{ add('lv2',"👥 "+a); okP.forEach(({p,i})=>add('lv3',"🖼️ Pub "+String(i+1).padStart(2,'0')+" · "+String(p.titre||"").replace(/\\n|\n/g," "))); if(!okP.length) add('lv3',"(les pubs approuvées s’ajoutent ici)"); });
+  const bud=+cur.budget||0;
+  setMsg('mBudget', bud ? "Budget : "+bud.toLocaleString('fr-CA')+" $ "+(cur.budgetType==="jour"?"par jour":"au total")+(auds.length?" · environ "+Math.round(bud/auds.length).toLocaleString('fr-CA')+" $ par audience au départ":"")+". Plateformes : Meta (Facebook, Instagram), puis TikTok." : "Ajoute ton budget dans le brief.");
+  setMsg('mMsg', cur.statut==="prête pour Meta" ? "✅ Marquée prête pour Meta." : "", "ok");
+}
+$('mAud').addEventListener('input',()=>{ cur.audiences=$('mAud').value; touch(); renderMetaTreeOnly(); });
+function renderMetaTreeOnly(){ const v=$('mAud').value; renderMeta(); $('mAud').value=v; }
+$('mReady').onclick=()=>{ cur.statut="prête pour Meta"; touch(); renderMeta(); };
+$('dupBtn').onclick=async()=>{ const c=JSON.parse(JSON.stringify(cur)); c.nom=(c.nom||"Campagne")+" (copie)"; c.statut="brouillon"; c.drive=null; c.pubs.forEach(p=>{p.ok=null;p.note="";}); curId=null; cur=c; $('fNom').value=c.nom; await save(false); setMsg('cMsg',"Copie créée ✓ Tu travailles maintenant dans la copie.","ok"); renderSteps(); };
+$('asTplBtn').onclick=async()=>{ if(!db) return; try{ await db.collection("modeles").doc().set({marque:cur.marque,nom:cur.nom||"Mon modèle",offre:cur.offre,angle:cur.angle,prod:cur.prod,note:cur.note||""}); setMsg('cMsg',"Enregistré comme modèle ⭐","ok"); }catch(e){ setMsg('cMsg',"Le modèle n’a pas été enregistré.","err"); } };
+$('delBtn').onclick=async()=>{ if(!curId){ view("vHome"); return; } if(!confirm("Supprimer cette campagne pour de bon ?")) return; try{ await db.doc("campagnes/"+curId).delete(); cur=null; view("vHome"); }catch(e){ setMsg('cMsg',"Suppression impossible.","err"); } };
+
+/* ---------- Caméra et Envoyer à Claude ---------- */
+let camData="";
+const openSheet=()=>{ $('sheet').classList.add('show'); $('nMsg').textContent=""; };
+$('noteBtn').onclick=openSheet;
+$('camBtn').onclick=()=>$('camIn').click();
+$('nCam').onclick=()=>$('camIn').click();
+$('nCancel').onclick=()=>$('sheet').classList.remove('show');
+$('camIn').onchange=async()=>{ const f=$('camIn').files[0]; $('camIn').value=""; if(!f) return;
+  try{ const b=await shrink(f,900,0.8); camData="data:image/jpeg;base64,"+await toB64(b); $('nImg').src=camData; $('nImg').classList.remove('hidden'); }catch(e){}
+  openSheet(); };
+$('nSend').onclick=async()=>{
+  const txt=$('nTxt').value.trim(); if(!txt && !camData){ $('nTxt').focus(); return; }
+  if(!db){ setMsg('nMsg',"Ouvre l’app dans claude.ai pour envoyer.","err"); return; }
+  const b=$('nSend'); b.disabled=true;
+  const etat = cur ? {campagne:cur.nom||"", id:curId||"", etape:step, pubs:(cur.pubs||[]).map((p,i)=>({pub:i+1,titre:p.titre,ok:p.ok,note:p.note||""}))} : {ecran:"accueil"};
+  try{ await db.doc("notes/"+Date.now()).set({quand:new Date().toISOString(),marque:curBrand,texte:txt,photo:camData,etat:etat});
+    setMsg('nMsg',"✅ Envoyé à Claude.","ok"); $('nTxt').value=""; camData=""; $('nImg').classList.add('hidden'); setTimeout(()=>$('sheet').classList.remove('show'),1200); }
+  catch(e){ setMsg('nMsg',"L’envoi n’a pas marché. Réessaie.","err"); }
+  b.disabled=false;
+};
+
+/* ---------- Démarrage ---------- */
+view("vHome");
+(async()=>{
+  try{ await document.fonts.load('900 40px "Fira Sans"'); await document.fonts.load('700 20px "Fira Sans"'); await document.fonts.load('600 20px "Fira Sans"'); }catch(e){}
+  const timer=setTimeout(()=>{ if(!camps.length) setMsg && ($('campList').innerHTML='<div class="card"><p class="msg">Le chargement est long. Vérifie ta connexion.</p></div>'); },10000);
+  [db,sample,assetsApi,mcp,dl]=await Promise.all(["db","sample","assets","mcp","downloads"].map(n=>claude.use(n).catch(()=>null)));
+  if(!db){ clearTimeout(timer); renderHome(); return; }
+  try{ const ms=await db.collection("marques").get(); ms.docs.forEach(d=>brandsDb[d.id]=d.data()); }catch(e){}
+  try{ const ts=await db.collection("modeles").get(); tpls=ts.docs.map(d=>({id:d.id,data:d.data()})); }catch(e){}
+  db.collection("campagnes").onSnapshot(s=>{ clearTimeout(timer); camps=s.docs.map(d=>({id:d.id,data:d.data()})); if(!$('vHome').classList.contains('hidden')) renderHome(); }, ()=>{ clearTimeout(timer); $('campList').innerHTML='<div class="card"><p class="msg err">Impossible de charger les campagnes.</p></div>'; });
+})();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ANRO · Tes idées de vidéos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFFFFF;--ink:#0F0A0A;--soft:#5E5455;--line:#E7E1E1;--card:#F6F3F3;--foyer:#4A1620;--braise:#2F0D14;--on:#FFFFFF;--tag:#F1E6E8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0A0A;--ink:#FFFFFF;--soft:#B9AEAF;--line:#2C2224;--card:#1A1214;--foyer:#C98A95;--braise:#2F0D14;--on:#FFFFFF;--tag:#2F0D14;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F0A0A;--ink:#FFFFFF;--soft:#B9AEAF;--line:#2C2224;--card:#1A1214;--foyer:#C98A95;--braise:#2F0D14;--on:#FFFFFF;--tag:#2F0D14;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px 56px}
+header.hero{background:#0F0A0A;color:#FFFFFF;padding:28px 20px 40px}
+header.hero .in{max-width:680px;margin:0 auto}
+.logo{font-weight:900;font-size:22px;letter-spacing:.04em}
+.hero h1{font-weight:900;font-size:clamp(38px,11vw,62px);line-height:.98;margin:40px 0 18px;letter-spacing:-.01em}
+.hero p{font-size:18px;color:#D9CFD0;margin:0;max-width:34ch}
+section{margin-top:40px}
+h2{font-weight:700;font-size:24px;line-height:1.2;margin:0 0 12px}
+.lead{color:var(--soft);margin:0 0 18px}
+.musts{display:grid;gap:10px}
+.must{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:14px;background:var(--braise);color:var(--on)}
+.must b{display:block;font-weight:700;font-size:18px}
+.must span{color:#E4D6D8;font-size:15px}
+.must .n{font-weight:900;font-size:30px;line-height:1;min-width:46px}
+ul.free{margin:0;padding-left:20px}
+ul.free li{margin:6px 0}
+.wear{display:flex;flex-wrap:wrap;gap:8px}
+.wear span{background:var(--tag);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:15px}
+details.idea{border-top:1px solid var(--line)}
+details.idea:last-of-type{border-bottom:1px solid var(--line)}
+details.idea summary{list-style:none;cursor:pointer;padding:20px 0;display:block}
+details.idea summary::-webkit-details-marker{display:none}
+.piece{font-size:14px;color:var(--foyer);font-weight:500}
+.hook{font-weight:700;font-size:21px;line-height:1.25;margin:4px 0 0}
+.more{font-size:14px;color:var(--soft);margin-top:6px}
+details[open] .more{display:none}
+.body{padding:0 0 22px}
+.plan{margin:0;padding:0;list-style:none}
+.plan li{display:grid;grid-template-columns:68px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:16px}
+.plan li em{font-style:normal;color:var(--soft);font-size:14px}
+.extra{margin-top:12px;font-size:15px;color:var(--soft)}
+.extra b{color:var(--ink);font-weight:500}
+.box{background:var(--card);border-radius:14px;padding:18px}
+.box p{margin:0 0 8px}
+.box p:last-child{margin:0}
+code{font-family:inherit;font-weight:500;background:var(--tag);padding:2px 6px;border-radius:6px;font-size:15px;overflow-wrap:anywhere}
+footer{margin-top:48px;color:var(--soft);font-size:14px}
+summary:focus-visible{outline:2px solid var(--foyer);outline-offset:4px;border-radius:6px}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+<div class="logo">ANRO</div>
+<h1>Tu as carte blanche. Garde juste le style.</h1>
+<p>Bienvenue dans la famille. Voici des idées de départ pour tes vidéos. T'es bonne là-dedans, alors amuse-toi avec.</p>
+</div></header>
+
+<main class="wrap">
+<section>
+<h2>Comment ça marche</h2>
+<p class="lead">Les 8 idées plus bas, c'est une base. Tu peux les modifier, les jumeler, en mélanger deux en une seule, changer le décor ou le texte. Si une idée à toi est meilleure, vas-y. On te fait confiance.</p>
+<ul class="free">
+<li>Change les répliques pour qu'elles sonnent comme toi.</li>
+<li>Jumelle deux concepts dans la même vidéo si ça marche mieux.</li>
+<li>Ajoute ton humour, tes transitions, tes sons tendance.</li>
+<li>Tourne plusieurs versions d'une même idée si tu sens que ça peut rouler.</li>
+</ul>
+</section>
+
+<section>
+<h2>Les 3 seules affaires qu'on garde</h2>
+<div class="musts">
+<div class="must"><div class="n">30 s</div><div><b>En bas de 30 secondes</b><span>Toujours. Et le hook dans les 2 premières secondes, sinon on perd le monde.</span></div></div>
+<div class="must"><div class="n">9:16</div><div><b>Le style ANRO</b><span>Vertical, vrai, lumière naturelle, ton chaleureux et drôle. Pas de pub qui sonne corporate.</span></div></div>
+<div class="must"><div class="n">X</div><div><b>Le linge en vedette</b><span>On voit bien le morceau et le logo au moins une fois en plan serré. Linge défroissé, sans poils ni étiquettes.</span></div></div>
+</div>
+</section>
+
+<section>
+<h2>Le linge</h2>
+<div class="wear">
+<span>Hoodie lapin mauve adulte</span><span>Hoodie lapin mauve enfant</span><span>Hoodie country</span><span>Le doublé vert</span><span>Jogging noir</span><span>Pantalon noir</span>
+</div>
+</section>
+
+<section>
+<h2>Tes 8 idées de départ</h2>
+<p class="lead">Touche une idée pour voir le déroulement suggéré.</p>
+
+<details class="idea"><summary><div class="piece">Hoodie lapin mauve · toi et ta fille</div><p class="hook">« Ma fille voulait absolument le même hoodie que moi… »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-2 s</em>Gros plan sur toi, air découragé, tu dis le hook.</li><li><em>2-10 s</em>Tu sors de ta chambre en hoodie lapin mauve.</li><li><em>10-18 s</em>Ta fille arrive derrière, habillée pareil. Vous vous regardez.</li><li><em>18-30 s</em>Vous marchez au ralenti vers la caméra, main dans la main.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Le duo officiel de la maison</p></div></details>
+
+<details class="idea"><summary><div class="piece">Hoodie lapin mauve · toi et ta fille</div><p class="hook">« Ma fille dit qu'elle le porte mieux que moi. On vous laisse juger. »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Vous deux côte à côte, ta fille fait oui de la tête.</li><li><em>3-12 s</em>Ta pose, puis la sienne, même cadrage.</li><li><em>12-24 s</em>Défilé dans le corridor, chacune son tour.</li><li><em>24-30 s</em>Elle repasse et vole la vedette. Tu lèves les bras.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Vote en commentaire : maman ou mini? Le but, c'est de faire exploser les commentaires.</p></div></details>
+
+<details class="idea"><summary><div class="piece">Hoodie country</div><p class="hook">« POV : t'as rien à mettre pour le show country à soir »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Tu fouilles ton garde-robe, découragée.</li><li><em>3-8 s</em>Assise sur le lit, linge partout.</li><li><em>8-10 s</em>Claquement de doigts, transition.</li><li><em>10-30 s</em>Hoodie country, bottes, chapeau, petit pas de line dance.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Problème réglé</p></div></details>
+
+<details class="idea"><summary><div class="piece">Hoodie country</div><p class="hook">« Fille de ville vs fille de campagne qui portent le même hoodie »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Écran séparé, tu dis le hook au centre.</li><li><em>3-15 s</em>Côté ville : café latte, trottoir, sac à main.</li><li><em>15-27 s</em>Côté campagne : foin, pick-up ou clôture, bottes.</li><li><em>27-30 s</em>Les deux versions de toi se font un high five.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Toi, t'es laquelle?</p></div></details>
+
+<details class="idea"><summary><div class="piece">Le doublé vert</div><p class="hook">« Test : est-ce que le doublé vert tient au frette d'octobre? »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Dehors le matin, buée visible, tu dis le hook.</li><li><em>3-10 s</em>Tu enfiles le doublé, café à la main.</li><li><em>10-22 s</em>Quelqu'un gèle à côté en t-shirt, toi t'es bien.</li><li><em>22-30 s</em>Plan serré sur la doublure, puis ton verdict.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Verdict : je l'enlève pas avant avril</p></div></details>
+
+<details class="idea"><summary><div class="piece">Le doublé vert + jogging noir</div><p class="hook">« Prête pour la journée en 30 secondes chrono »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-2 s</em>Chrono à l'écran, tu sors du lit.</li><li><em>2-12 s</em>Jogging noir, puis doublé vert, une coupe par morceau.</li><li><em>12-24 s</em>Cheveux attachés, clés, sac.</li><li><em>24-30 s</em>Tu ouvres la porte, le chrono arrête à 0:29.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Le kit lâche-pas-ta-matinée</p></div></details>
+
+<details class="idea"><summary><div class="piece">Pantalon noir</div><p class="hook">« Un seul pantalon noir. Trois vies différentes. »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Plan serré sur le pantalon, tu dis le hook.</li><li><em>3-12 s</em>Look job, avec chemise. Montre la coupe de dos.</li><li><em>12-21 s</em>Look sortie, top et bijoux.</li><li><em>21-30 s</em>Look cozy en hoodie ANRO, tu t'écrases sur le divan.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Lequel tu choisis : 1, 2 ou 3?</p></div></details>
+
+<details class="idea"><summary><div class="piece">Jogging noir</div><p class="hook">« Le jogging que j'ai porté 5 places dans la même journée »</p><div class="more">Voir l'idée</div></summary><div class="body">
+<ul class="plan"><li><em>0-3 s</em>Tu dis le hook, compteur 1/5 à l'écran.</li><li><em>3-24 s</em>Divan, épicerie, garderie, gym, souper chez ta mère.</li><li><em>24-28 s</em>Plan serré : il a encore l'air neuf.</li><li><em>28-30 s</em>Tu t'écrases sur le divan, 5/5.</li></ul>
+<p class="extra"><b>Texte à l'écran :</b> Et il a encore l'air neuf</p></div></details>
+</section>
+
+<section>
+<h2>Quand c'est tourné</h2>
+<div class="box">
+<p>Dépose tes vidéos dans le dossier Drive qu'on te partage : les fichiers bruts et ta version montée.</p>
+<p>Nomme-les simplement, par exemple <code>ANRO_UGC_Mini-moi</code>.</p>
+<p>Tes bonis de performance se calculent sur les vues organiques seulement, pas sur celles de la pub. Plus ça roule tout seul, plus t'es récompensée.</p>
+</div>
+</section>
+
+<section>
+<h2>Une question?</h2>
+<p class="lead">Écris à Julien en tout temps. Tu fais partie de la famille : le studio, la boutique et les tournages te sont ouverts.</p>
+</section>
+
+<footer>ANRO Apparel · 2164, rue de la Province, Longueuil · anroapparel.ca</footer>
+</main>
+</body>
+</html>

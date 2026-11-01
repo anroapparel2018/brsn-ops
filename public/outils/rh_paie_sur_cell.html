@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Faire la paie sur ton cell — ANRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --charbon:#0F0A0A; --coton:#FFFFFF; --foyer:#4A1620; --braise:#2F0D14;
+  --bg:#FFFFFF; --ink:#0F0A0A; --soft:#F3EEEE; --line:#E4DADB; --mute:#6B5D5F; --accent:#4A1620; --ok:#2E6B3A;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --bg:#0F0A0A; --ink:#FFFFFF; --soft:#1C1314; --line:#3A2A2C; --mute:#B9A9AB; --accent:#C7586B; --ok:#6FBF7E; } }
+:root[data-theme="dark"]{ --bg:#0F0A0A; --ink:#FFFFFF; --soft:#1C1314; --line:#3A2A2C; --mute:#B9A9AB; --accent:#C7586B; --ok:#6FBF7E; }
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fira Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:0 18px 140px}
+header.hero{background:var(--braise);color:#fff;padding:34px 22px 28px;margin:0 -18px 22px}
+.hero .x{font-weight:900;font-size:15px;opacity:.75;letter-spacing:.02em}
+.hero h1{font-size:34px;line-height:1.05;margin:10px 0 12px;font-weight:900}
+.hero p{margin:0;opacity:.9;max-width:34ch}
+.warn{background:var(--soft);border-left:5px solid var(--accent);padding:14px 16px;border-radius:6px;margin:0 0 22px}
+.warn b{display:block;margin-bottom:2px}
+.progress{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--line);margin-bottom:18px}
+.bar{height:8px;background:var(--soft);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s}
+.progress small{color:var(--mute);font-size:14px}
+.step{border:1px solid var(--line);border-radius:14px;margin:0 0 16px;overflow:hidden;background:var(--bg)}
+.step.done{border-color:var(--ok)}
+.step summary{list-style:none;cursor:pointer;display:flex;gap:14px;align-items:center;padding:16px}
+.step summary::-webkit-details-marker{display:none}
+.num{flex:0 0 40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:900;display:grid;place-items:center;font-size:18px}
+.step.done .num{background:var(--ok)}
+.step h2{font-size:19px;margin:0;line-height:1.25}
+.step .body{padding:0 16px 18px}
+.step ol,.step ul{padding-left:20px;margin:8px 0}
+.step li{margin:6px 0}
+.tip{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:15px;margin-top:12px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button,.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:13px 16px;cursor:pointer;min-height:48px}
+.b-ok{background:var(--ok);color:#fff;flex:1}
+.b-cam{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* téléphone animé */
+.phone{width:200px;margin:14px auto 6px;border:7px solid var(--charbon);border-radius:26px;background:#fff;color:#0F0A0A;height:330px;position:relative;overflow:hidden;font-size:11px}
+.scr{position:absolute;inset:0;padding:10px}
+.topbar{height:22px;background:#2CA01C;margin:-10px -10px 8px;color:#fff;font-weight:700;display:flex;align-items:center;padding:0 8px;font-size:10px}
+.url{background:#eee;border-radius:10px;padding:4px 8px;margin-bottom:8px;font-size:10px;color:#333}
+.row{background:#f2f2f2;border-radius:5px;padding:6px 7px;margin:5px 0}
+.hl{background:#2CA01C;color:#fff;font-weight:700;text-align:center}
+.hlw{outline:2px solid #2CA01C}
+.finger{position:absolute;width:30px;height:30px;border-radius:50%;background:rgba(74,22,32,.35);border:2px solid #4A1620;pointer-events:none;animation:tap 1.8s infinite}
+@keyframes tap{0%{transform:scale(1);opacity:0}20%{opacity:1}45%{transform:scale(.7)}70%{transform:scale(1);opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.finger{animation:none}}
+.cap{text-align:center;color:var(--mute);font-size:14px;margin:4px 0 0}
+.camout{margin-top:12px;padding:12px;border-radius:8px;background:var(--soft);font-size:15px;white-space:pre-wrap;display:none}
+.camout img{max-width:100%;border-radius:6px;margin-bottom:8px}
+.final{background:var(--braise);color:#fff;border-radius:14px;padding:20px;margin-top:24px}
+.final h2{margin:0 0 8px}
+.final textarea{width:100%;min-height:80px;border-radius:8px;border:0;padding:10px;font:inherit;margin:10px 0}
+.b-send{background:#fff;color:var(--braise);width:100%;font-size:18px}
+.status{margin-top:10px;font-size:15px}
+.ref{font-size:15px;color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="x">ANRO · Formation</div>
+  <h1>Faire la paie sur ton cell</h1>
+  <p>QuickBooks Paie, étape par étape, sur ton Android. Environ 10 minutes, le lundi de paie.</p>
+</header>
+
+<div class="warn"><b>Important avant de commencer</b>L'appli QuickBooks sur le cell ne permet pas de faire la paie. On passe par <b>Chrome</b>, sur le site de QuickBooks. C'est la même paie qu'à l'ordi, juste plus petit.</div>
+
+<div class="progress"><div class="bar"><i id="bar"></i></div><small id="ptxt">0 sur 9 étapes faites</small></div>
+
+<div id="steps"></div>
+
+<div class="final">
+  <h2>C'est envoyé, la paie ?</h2>
+  <p style="margin:0;opacity:.9">Écris un mot si quelque chose a accroché (montant bizarre, employé manquant). Ça m'arrive direct.</p>
+  <textarea id="note" placeholder="Ex. : tout est beau / Sébastien avait 0 heure…"></textarea>
+  <button class="b-send" id="send">Envoyer à Claude</button>
+  <div class="status" id="status"></div>
+</div>
+
+<p class="ref">Calendrier ANRO : période du dimanche au samedi, tu approuves le lundi (au plus tard le mardi), les employés sont payés le jeudi.</p>
+</div>
+
+<input type="file" id="camfile" accept="image/*" capture="environment" hidden>
+
+<script>
+const STEPS=[
+ {t:"Approuver les heures de la période",
+  b:`<ol><li>Ouvre <b>QuickBooks Time</b> (appli ou Chrome).</li><li>Va dans <b>Approbations</b> (ou <i>Approvals</i>).</li><li>Regarde chaque employé qui punch : les heures ont-elles du sens ?</li><li>Appuie sur <b>Approuver</b> pour la période du dimanche au samedi.</li></ol>
+  <div class="tip">Iris et Angelica ne punchent pas, c'est normal de ne pas les voir là. Rey non plus : il est payé en sous-traitance.</div>`,
+  ph:`<div class="topbar">QuickBooks Time</div><div class="row">Sébastien · 31,5 h</div><div class="row">Frédéric · 40 h</div><div class="row">Amélie · 22 h</div><div class="row hl" style="margin-top:14px">Approuver</div>`, f:[78,138], cap:"Vérifie, puis approuve"},
+ {t:"Ouvrir Chrome (pas l'appli QuickBooks)",
+  b:`<ol><li>Ouvre <b>Chrome</b> sur ton cell.</li><li>Dans la barre d'adresse, tape : <b>qbo.intuit.com</b></li></ol><div class="tip">Ajoute-le à ton écran d'accueil : ⋮ en haut à droite → <b>Ajouter à l'écran d'accueil</b>. La prochaine fois, un seul tap.</div>`,
+  ph:`<div class="url">qbo.intuit.com</div><div class="row" style="height:180px;display:grid;place-items:center;color:#888">Chrome</div>`, f:[60,22], cap:"Tape l'adresse dans Chrome"},
+ {t:"Te connecter",
+  b:`<ol><li>Entre ton courriel <b>julien@anroapparel.ca</b> et ton mot de passe.</li><li>QuickBooks t'envoie un <b>code</b> par texto ou courriel : entre-le.</li><li>Si on te demande quelle compagnie : choisis <b>9452-2893 Québec inc. (ANRO)</b>.</li></ol>`,
+  ph:`<div class="topbar">intuit</div><div class="row">Courriel</div><div class="row">Mot de passe</div><div class="row hl" style="margin-top:12px">Se connecter</div><div class="row" style="margin-top:20px">Code : _ _ _ _ _ _</div>`, f:[78,118], cap:"Connexion + code"},
+ {t:"Mettre l'affichage ordinateur (si les menus manquent)",
+  b:`<ol><li>Si tu ne vois pas le menu complet : appuie sur <b>⋮</b> en haut à droite de Chrome.</li><li>Coche <b>Version pour ordinateur</b>.</li><li>Tourne ton cell à l'horizontale : c'est beaucoup plus facile à lire.</li></ol><div class="tip">Pince avec deux doigts pour zoomer sur un bouton trop petit.</div>`,
+  ph:`<div class="url">qbo.intuit.com &nbsp; ⋮</div><div class="row">Nouvel onglet</div><div class="row">Historique</div><div class="row hlw">☑ Version pour ordinateur</div>`, f:[78,88], cap:"⋮ → Version pour ordinateur"},
+ {t:"Aller dans Paie → Employés",
+  b:`<ol><li>Ouvre le menu de gauche (☰ si caché).</li><li>Appuie sur <b>Paie</b> (ou <i>Payroll</i>).</li><li>Puis sur <b>Employés</b>.</li></ol>`,
+  ph:`<div class="topbar">☰ QuickBooks</div><div class="row">Tableau de bord</div><div class="row">Ventes</div><div class="row">Dépenses</div><div class="row hlw">Paie</div><div class="row" style="margin-left:14px">Employés</div>`, f:[70,118], cap:"Paie → Employés"},
+ {t:"Appuyer sur « Exécuter la paie »",
+  b:`<ol><li>En haut à droite de la page Employés : le gros bouton vert <b>Exécuter la paie</b> (<i>Run payroll</i>).</li><li>Choisis le calendrier <b>aux 2 semaines</b>.</li></ol>`,
+  ph:`<div class="topbar">Employés</div><div class="row hl">Exécuter la paie</div><div class="row">Sébastien Fortin</div><div class="row">Frédéric Paquette</div><div class="row">Iris Besneux</div>`, f:[78,32], cap:"Le bouton vert"},
+ {t:"Vérifier la période, la date et le compte",
+  b:`<ul><li><b>Période</b> : du dimanche au samedi (2 semaines).</li><li><b>Date de paie</b> : le jeudi.</li><li><b>Compte bancaire</b> : le compte d'ANRO habituel.</li></ul><div class="tip">Si la date de paie n'est pas un jeudi, arrête-toi et prends une photo avec 📷.</div>`,
+  ph:`<div class="topbar">Exécuter la paie</div><div class="row hlw">Période : dim. → sam.</div><div class="row hlw">Date de paie : jeudi</div><div class="row">Compte : ANRO</div>`, f:[110,48], cap:"Trois choses à vérifier"},
+ {t:"Vérifier chaque employé",
+  b:`<ul><li>Les <b>heures</b> viennent de QuickBooks Time : elles doivent être là. Si un employé est à 0 alors qu'il a travaillé, retourne à l'étape 1.</li><li><b>Iris</b> : 25 h par semaine, donc <b>50 h</b> pour la période.</li><li><b>Rey</b> ne doit pas être coché (sous-traitant).</li><li>Décoche quelqu'un qui n'a pas travaillé.</li></ul>`,
+  ph:`<div class="topbar">Employés à payer</div><div class="row">☑ Sébastien · 63 h</div><div class="row">☑ Frédéric · 80 h</div><div class="row">☑ Iris · 50 h</div><div class="row">☑ Amélie · 44 h</div><div class="row hlw">☐ Rey</div>`, f:[50,142], cap:"Rey reste décoché"},
+ {t:"Aperçu, puis soumettre",
+  b:`<ol><li>Appuie sur <b>Aperçu de la paie</b> (<i>Preview payroll</i>).</li><li>Regarde le <b>total</b> et les retenues (DAS). Un montant qui saute aux yeux ? 📷.</li><li>Appuie sur <b>Soumettre la paie</b> (<i>Submit payroll</i>).</li><li>Puis <b>Terminer</b>. C'est fait.</li></ol><div class="tip">Soumets le lundi, au plus tard le mardi, pour que le dépôt arrive le jeudi.</div>`,
+  ph:`<div class="topbar">Aperçu</div><div class="row">Salaires bruts</div><div class="row">Retenues (DAS)</div><div class="row"><b>Total</b></div><div class="row hl" style="margin-top:12px">Soumettre la paie</div>`, f:[78,118], cap:"Aperçu → Soumettre → Terminer"}
+];
+const KEY="anro-paie-guide";
+let done={}; try{done=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+const box=document.getElementById("steps");
+STEPS.forEach((s,i)=>{
+  const d=document.createElement("details"); d.className="step"+(done[i]?" done":""); if(i===0)d.open=true;
+  d.innerHTML=`<summary><span class="num">${i+1}</span><h2>${s.t}</h2></summary><div class="body">
+   <div class="phone" aria-hidden="true"><div class="scr">${s.ph}</div><span class="finger" style="left:${s.f[0]}px;top:${s.f[1]}px"></span></div>
+   <p class="cap">${s.cap}</p>${s.b}
+   <div class="btnrow"><button class="b-ok" data-i="${i}">${done[i]?"✓ Fait":"C'est fait"}</button><button class="b-cam" data-c="${i}">📷 Caméra</button></div>
+   <div class="camout" id="cam${i}"></div></div>`;
+  box.appendChild(d);
+});
+function prog(){const n=Object.values(done).filter(Boolean).length;document.getElementById("bar").style.width=(n/STEPS.length*100)+"%";document.getElementById("ptxt").textContent=n+" sur "+STEPS.length+" étapes faites";}
+prog();
+box.addEventListener("click",e=>{
+  const ok=e.target.closest(".b-ok"); const cam=e.target.closest(".b-cam");
+  if(ok){const i=+ok.dataset.i;done[i]=!done[i];try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}
+    const st=ok.closest(".step");st.classList.toggle("done",!!done[i]);ok.textContent=done[i]?"✓ Fait":"C'est fait";prog();
+    if(done[i]){st.open=false;const nx=st.nextElementSibling;if(nx){nx.open=true;nx.scrollIntoView({behavior:"smooth",block:"start"});}}}
+  if(cam){camStep=+cam.dataset.c;document.getElementById("camfile").click();}
+});
+let camStep=0;
+document.getElementById("camfile").addEventListener("change",async ev=>{
+  const f=ev.target.files[0]; ev.target.value=""; if(!f)return;
+  const out=document.getElementById("cam"+camStep); out.style.display="block";
+  out.innerHTML=`<img src="${URL.createObjectURL(f)}" alt="Ta photo d'écran">`;
+  const p=document.createElement("div"); p.textContent="Claude regarde ta photo…"; out.appendChild(p);
+  try{
+    const sample=await claude.use("sample");
+    if(!sample){p.textContent="L'aide par photo n'est pas disponible ici. Envoie la photo dans la conversation avec Claude.";return;}
+    const s=STEPS[camStep];
+    await sample(`Tu aides Julien (propriétaire d'ANRO) à faire la paie dans QuickBooks Online Paie Canada, dans Chrome sur son cellulaire Android. Il est à l'étape ${camStep+1} : « ${s.t} ». Regarde sa capture d'écran et dis-lui en français québécois, en tutoiement, en 3 phrases courtes max : où il est, et exactement où appuyer ensuite. Si tu vois un problème (date de paie pas un jeudi, employé à 0 h, Rey coché, montant anormal), dis-le clairement. Calendrier : période dimanche au samedi, aux 2 semaines, payé le jeudi.`,
+      {images:[f],onText:({text})=>{p.textContent=text}});
+  }catch(err){p.textContent=err&&err.code==="not_granted"?"Autorise l'aide par photo pour que Claude puisse voir ton écran.":"La photo n'a pas pu être analysée. Réessaie ou envoie-la dans la conversation.";}
+});
+document.getElementById("send").addEventListener("click",async()=>{
+  const st=document.getElementById("status"); st.textContent="Envoi…";
+  const payload={quand:new Date().toISOString(),etapes_faites:Object.keys(done).filter(k=>done[k]).map(k=>+k+1),note:document.getElementById("note").value.trim()};
+  try{
+    const db=await claude.use("db");
+    if(!db){st.textContent="Envoi impossible ici. Copie ta note dans la conversation avec Claude.";return;}
+    await db.collection("envois").doc("paie-"+Date.now()).set(payload);
+    st.textContent="✓ Envoyé. Claude a ta réponse.";
+  }catch(e){st.textContent="L'envoi n'a pas passé. Réessaie dans un instant.";}
+});
+</script>
+</body>
+</html>

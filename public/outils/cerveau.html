@@ -1,0 +1,115 @@
+<!doctype html><html lang="fr"><head>
+<script src="/outils/pont.js"></script><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BRSN OPS · le cerveau</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--acc:#CC5500;--bg:#141414;--card:#1D1D1D;--card2:#252525;--line:#333;--txt:#F4F2EF;--mut:#A3A3A3}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#EEEDEB;--card:#fff;--card2:#F6F5F3;--line:#DEDBD6;--txt:#141414;--mut:#6B6B6B}}
+:root[data-theme="light"]{--bg:#EEEDEB;--card:#fff;--card2:#F6F5F3;--line:#DEDBD6;--txt:#141414;--mut:#6B6B6B}
+:root[data-theme="dark"]{--bg:#141414;--card:#1D1D1D;--card2:#252525;--line:#333;--txt:#F4F2EF;--mut:#A3A3A3}
+*{box-sizing:inherit}html,body{margin:0;background:var(--bg);color:var(--txt);font-family:'Archivo',system-ui,sans-serif}
+.wide{font-stretch:125%;font-weight:800;letter-spacing:-.01em}
+header{background:#141414;color:#fff;padding:20px 16px 18px}
+header .top{display:flex;align-items:center;gap:12px}
+.mark{width:42px;height:42px;border-radius:10px;background:var(--acc);display:flex;align-items:center;justify-content:center;font-stretch:125%;font-weight:900;font-size:26px;color:#141414}
+header h1{margin:0;font-size:26px;line-height:1}header p{margin:6px 0 0;color:#cfcfcf;font-size:14px}
+header .k{font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--acc)}
+main{max-width:980px;margin:0 auto;padding:14px 12px 110px}
+h2{font-size:18px;margin:22px 0 10px;text-transform:uppercase}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}.stat b{display:block;font-size:24px;font-stretch:125%;font-weight:900}.stat span{font-size:12px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+#detail{grid-column:1/-1;margin:0}
+.ag{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;display:flex;flex-direction:column;gap:6px}
+.ag .e{font-size:26px}.ag .n{font-size:16px}.ag .d{font-size:13px;color:var(--mut);line-height:1.4}
+.st{align-self:flex-start;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut)}
+.st.ok{background:#1E8A50;border-color:#1E8A50;color:#fff}.st.wip{background:var(--acc);border-color:var(--acc);color:#141414}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.dom{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.dom h3{margin:0 0 8px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+.dom a{display:block;color:var(--txt);text-decoration:none;font-size:14px;padding:7px 0;border-top:1px solid var(--line)}
+.dom a:first-of-type{border-top:0}.dom a::after{content:" ↗";color:var(--mut)}
+button,.cam{font-family:inherit;font-size:14px;font-weight:700;border-radius:10px;padding:10px 13px;border:1px solid var(--line);background:var(--card);color:var(--txt);cursor:pointer}
+button.pri{background:var(--acc);border-color:var(--acc);color:#141414}.cam input{display:none}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0}
+.panel h3{margin:0 0 6px}.panel ul{margin:6px 0 10px;padding-left:20px;font-size:14px;line-height:1.55}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=text],textarea{width:100%;font-family:inherit;font-size:15px;border-radius:10px;border:1px solid var(--line);background:var(--card2);color:var(--txt);padding:10px}
+textarea{min-height:80px}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);cursor:pointer}.sw.on{outline:3px solid var(--txt);outline-offset:2px}
+.msg{font-size:13px;color:var(--mut);min-height:18px;margin:6px 0}
+.dock{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hidden{display:none!important}#camprev{max-width:100%;border-radius:10px;margin-top:8px;display:none}
+@media (max-width:420px){.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat b{font-size:20px}}
+</style></head><body>
+<header><div class="top"><div class="mark">N</div><div><div class="k">LE CERVEAU</div><h1 class="wide" id="appName">BRSN OPS</h1></div></div>
+<p>Tous tes agents et tous tes outils au même endroit. On bâtit chaque agent un à la fois, ici, puis on exporte le tout en vraie app.</p></header>
+<main>
+ <div class="stats"><div class="stat"><b id="sOk">0</b><span>Prêts</span></div><div class="stat"><b id="sWip">0</b><span>En construction</span></div><div class="stat"><b id="sTodo">0</b><span>À bâtir</span></div></div>
+ <h2 class="wide">Mes agents</h2>
+ <div class="grid" id="agents"></div>
+ <div id="detail" class="panel hidden" style="grid-column:1/-1"></div>
+ <h2 class="wide">Mes outils déjà faits</h2>
+ <div class="tools" id="tools"></div>
+ <h2 class="wide">Personnaliser</h2>
+ <div class="panel">
+  <label class="msg" style="display:block">Nom de l'app</label><input type="text" id="tName" value="BRSN OPS">
+  <p class="msg">Couleur principale</p><div class="row" id="swatches"></div>
+  <p class="msg">Mode</p><div class="row"><button data-m="auto">Auto</button><button data-m="dark">Sombre</button><button data-m="light">Clair</button></div>
+  <p class="msg" id="tMsg"></p>
+ </div>
+</main>
+<div class="dock"><button id="noteBtn">📝 Note</button><label class="cam">📷 Caméra<input type="file" accept="image/*" capture="environment" id="camin"></label><button class="pri" id="sendBtn">Envoyer à Claude</button></div>
+<div id="notePanel" class="panel hidden" style="max-width:980px;margin:0 auto 90px"><h3 class="wide">Note</h3><textarea id="noteTx" placeholder="Une idée, une tâche, quelque chose à ne pas oublier…"></textarea><img id="camprev" alt=""><div class="row" style="margin-top:8px"><button class="pri" id="noteSave">Envoyer la note à Claude</button><button id="noteClose">Fermer</button></div><p class="msg" id="noteMsg"></p></div>
+<script>
+const A="https://claude.ai/artifact/";
+const AGENTS=[
+{id:"cerveau",e:"🧠",n:"Le Cerveau",s:"todo",d:"Ton copilote. Tu lui demandes tout : stratégie, décisions, idées. Il connaît tes compagnies et dirige les autres agents.",f:["Ton brief du matin : ce qui presse, ce qui avance","Répond à toutes tes questions sur tes compagnies","Envoie le travail au bon agent","Apprend de tes approbations (Génie Mémoire)"]},
+{id:"brasdroit",e:"🗂️",n:"Le Bras droit",s:"todo",d:"Adjointe et gardien : courriels, agenda, tâches, suivis, et tout ce que tu risques d'oublier.",f:["Analyse chaque courriel Outlook et prépare la réponse","Rien n'est envoyé sans ton approbation","Tâches au POOL ClickUp, tri du vendredi, urgences du mercredi","Radar de tous tes projets : ce qui reste, ce qui bloque","Classement des documents au Drive"]},
+{id:"tresorier",e:"💰",n:"Le Trésorier",s:"todo",d:"Toutes tes finances : QuickBooks, factures, paies, banques, cash flow, structure des compagnies.",f:["Factures par photo dans QuickBooks (via Zapier)","Paie et pointage, calendrier des sorties d'argent","Rapports trimestriels (DIE-ON, commissions)","Banques, prêts, assurances, REQ, liaison avec RMC Comptabilité"]},
+{id:"marketeur",e:"📣",n:"Le Marketeur",s:"wip",d:"Pubs Meta et TikTok, promos, calendrier de contenu, Metricool, infolettres.",url:A+"8BnpwmSq9sCUrxDWPjpokV",f:["✅ Studio Pub : campagnes, modèles, textes avec emojis","⏳ Photos du Drive, visuels 4:5 et 9:16, approbation, dépôt au Drive","Calendrier de contenu et programmation Metricool","Promos (Black Friday, Noël), infolettres Klaviyo avec Angelica"]},
+{id:"studio",e:"🎬",n:"Le Studio",s:"todo",d:"Vidéo, photo et podcast : montage, tournages, équipement, Le Stud.io.",f:["Génie du montage avec Descript : Reels, extraits, podcasts","Préparation des tournages et inventaire de l'équipement","Réservations et services du Stud.io","Programme UGC et créateurs"]},
+{id:"creatif",e:"🎨",n:"Le Créatif",s:"todo",d:"Design et marque : visuels, guides de marque, tech packs, étiquettes, emballages.",f:["Guides ANRO, BRSN, NOBL & CO, NORA respectés","Flats au format Thickems, niveau pro","Étiquettes, sacs d'envoi, boîtes, collants","Fichiers prêts à imprimer (PDF)"]},
+{id:"acheteur",e:"🛒",n:"L'Acheteur",s:"todo",d:"Produits et fournisseurs : usines, samples, grandeurs, bons de commande, importation et douanes.",f:["Brouillons aux usines avec profil ANRO, 25 / 25 / 50 ou net 60","Chartes de grandeurs et specs, du S au 6XL","Quantités selon tes ventes Shopify","CARM, UPS, transitaires, conteneurs"]},
+{id:"operations",e:"🏭",n:"Les Opérations",s:"todo",d:"Entrepôt, production et boutique : commandes, réception, impression DTF, merchandising.",f:["Préparation des commandes et expédition","Réception des fournisseurs et production DTF","Réapprovisionnement (propose, tu approuves, inventaire jamais touché)","Aménagement de la boutique, POS, tablettes"]},
+{id:"web",e:"🛍️",n:"Le Web",s:"todo",d:"Tes sites Shopify : ANRO, NOBL & CO, NORA, Le Stud.io, ANRO Distribution.",f:["Thèmes dupliqués, tout en coulisse","Blocs modifiables par toi","Codes promo en brouillon, rien de publié sans ton go","Ne touche jamais aux prix ni aux inventaires"]},
+{id:"rh",e:"👥",n:"Les RH",s:"todo",d:"Ton équipe : contrats, horaires, formations, recrutement, dossiers.",f:["Contrats au gabarit ANRO, Docusign, cosignature avec Dominick","Horaires et quarts dans ClickUp","Formations au format Magic Trackpad","Copie à Frédéric pour chaque dossier d'employé"]},
+{id:"affaires",e:"🤝",n:"Les Affaires",s:"todo",d:"Clients BRSN, consultation, collabs d'artistes, événements et levées de fonds.",f:["Clients Wide the Brand, MTLB, NORA, NOBL : contrats et suivis","Collabs DIE-ON, MusiquePlus, artistes","Salon de la femme, soirée VIP, pop-ups","Levées de fonds et partenaires"]},
+{id:"perso",e:"🏠",n:"Le Perso",s:"todo",d:"Ta vie à toi, hors ANRO : maison, voyages, crypto, espagnol, auto.",f:["Achat de maison, solarium, atelier","Voyages et vacances avec Jen","Projet crypto et apprentissage de l'espagnol (PROFE)","Jamais dans le ClickUp d'ANRO"]}];
+const TOOLS=[
+["Marketing et pubs",[["Studio Pub (nouvelle app)","8BnpwmSq9sCUrxDWPjpokV"],["Textes des pubs, prolongation 19 nov.","7cCiQWeoGF9ZJ5SVUT4Z5a"],["Textes généraux de la campagne","6HAXP9W8AwJBPWYkH5L1KU"],["Atelier des pubs","AEnTpYw4bSK5SwfRATNEY5"],["Captions S01 à S06","NTEAquzEznCHoKDqVecP3p"],["Liste de tournage de Rey","Q8BYXrjj9fqQxk7zAcTnkA"],["Trailer visuel final","Rq2qTthrWapCbM9w5zbHRL"]]],
+["Boutique et opérations",[["Tablettes de pliés, mur par mur","BtvFDtgpo2aBygr1s2Svho"],["Guide des tablettes de pliés","Bwmqrxq4VfRmUD791sie8i"],["POS Go et codes-barres","B4wYttYsW8fpb6k2ttgaQj"],["Bon de livraison 4×6","9dqCKbwJ5iKFnixyYgbSgL"],["Salle e-com en 3D","LL7KganC1fgNCnkiu6jcJb"],["Le backstore idéal","6ZWtzQB97BJhCZq4DQSMKY"],["Racks : importer de Chine","5DLaok9XM9aWnC1aPDbg9D"]]],
+["Administration",[["Plan de match : tout dans un seul compte","88LdVatJhvzgFF74TshVzd"],["Plan QuickBooks et banques","AqSmZTK6cey51GeVSLB6XD"],["Ménage ClickUp","HuBeVkj4b9v3g1xWZiRvpX"],["Textes « On recrute »","RN1rW2AefnwG4M1KQ6qQQt"]]],
+["BRSN et clients",[["Guide de marque BRSN","2nvNCjRfRusv7zWNyCx8qe"],["Deal Wide the Brand","AUNNVRbV6E5u6tCnsmeTT8"],["Préparation de la rencontre Wide","8q3asMLorHbjvBCGk4pWys"],["Contrat de services Wide the Brand","P287YCbYEWzWR64RP2BjYo"]]],
+["Le Stud.io",[["Nouveaux prix du montage vidéo","Jy75QgPZBnBvCJm2JdVZv7"]]],
+["Personnel",[["Bogotá : trip de gars","9WH42cT36jNbGCgijvqKK8"],["Te filmer seul avec l'Osmo Pocket 4","9QjgnxZsZj5S7sy6iZfKGd"],["Solarium zéro odeur","FE6dDSNkCHvSA5sf2DaXyw"],["Hockey libre Rive-Sud","GyrrxUJqvbAG9CFZV5i6h2"]]]];
+const COLORS=[["#CC5500","Orange brûlé BRSN"],["#4A1620","Foyer ANRO"],["#4E333C","Bordeaux NOBL"],["#1E6FD9","Bleu"],["#1E8A50","Vert"],["#C9A227","Or"]];
+let db=null,theme={name:"BRSN OPS",acc:"#CC5500",mode:"auto"},openId=null;
+const $=id=>document.getElementById(id);
+function applyTheme(){document.documentElement.style.setProperty('--acc',theme.acc);$('appName').textContent=theme.name||"BRSN OPS";document.title=(theme.name||"BRSN OPS")+" · le cerveau";$('tName').value=theme.name||"";
+ if(theme.mode=="auto")document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',theme.mode);
+ document.querySelectorAll('[data-m]').forEach(b=>b.classList.toggle('pri',b.dataset.m==theme.mode));
+ const S=$('swatches');S.innerHTML="";COLORS.forEach(([c,l])=>{const d=document.createElement('div');d.className="sw"+(c==theme.acc?" on":"");d.style.background=c;d.title=l;d.onclick=()=>{theme.acc=c;applyTheme();saveTheme()};S.appendChild(d)})}
+let tT=null;function saveTheme(){clearTimeout(tT);tT=setTimeout(async()=>{if(!db){$('tMsg').textContent="Le thème s'applique ici. Pour le garder, ouvre l'app dans claude.ai.";return}try{await db.doc("reglages/theme").set(theme);$('tMsg').textContent="Thème enregistré ✓"}catch(e){$('tMsg').textContent="Thème non enregistré."}},700)}
+$('tName').oninput=()=>{theme.name=$('tName').value;applyTheme();saveTheme()};
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{theme.mode=b.dataset.m;applyTheme();saveTheme()});
+const SL={ok:"✅ Prêt",wip:"🛠️ En construction",todo:"⏳ À bâtir"};
+function renderAgents(){const G=$('agents');const P0=$('detail');document.querySelector('main').insertBefore(P0,G.nextSibling);P0.classList.add('hidden');G.innerHTML="";let c={ok:0,wip:0,todo:0};AGENTS.forEach(a=>{c[a.s]++;const d=document.createElement('div');d.className="ag";d.innerHTML=`<div class="e"></div><div class="n wide"></div><div class="d"></div><span class="st ${a.s}"></span>`;d.querySelector('.e').textContent=a.e;d.querySelector('.n').textContent=a.n;d.querySelector('.d').textContent=a.d;d.querySelector('.st').textContent=SL[a.s];d.onclick=()=>detail(a,d);G.appendChild(d)});$('sOk').textContent=c.ok;$('sWip').textContent=c.wip;$('sTodo').textContent=c.todo}
+function detail(a,card){const P=$('detail');if(card)card.after(P);if(openId==a.id&&!P.classList.contains('hidden')){P.classList.add('hidden');openId=null;return}openId=a.id;P.classList.remove('hidden');
+ P.innerHTML=`<h3 class="wide"></h3><p class="msg"></p><ul></ul><div class="row"></div><p class="msg" id="dMsg"></p>`;P.querySelector('h3').textContent=a.e+" "+a.n;P.querySelector('p').textContent=SL[a.s]+" · "+a.d;
+ const ul=P.querySelector('ul');a.f.forEach(x=>{const li=document.createElement('li');li.textContent=x;ul.appendChild(li)});
+ const R=P.querySelector('.row');if(a.url){const o=document.createElement('button');o.className="pri";o.textContent="Ouvrir l'agent";o.onclick=()=>window.open(a.url,"_blank");R.appendChild(o)}
+ const vote=async(v)=>{const m=$('dMsg');if(!db){m.textContent="Ouvre l'app dans claude.ai pour envoyer ta réponse.";return}try{await db.collection("demandes").doc().set({agent:a.id,nom:a.n,type:v,quand:new Date().toISOString(),fait:false});m.textContent=(v=="approuvé"?"Approuvé ✓":"Noté : à changer.")+" Écris « c'est envoyé » quand tu as fait le tour."}catch(e){m.textContent="Ta réponse n'est pas partie."}};
+ const ok=document.createElement('button');ok.textContent="✅ Approuver";ok.onclick=()=>vote("approuvé");R.appendChild(ok);const ch=document.createElement('button');ch.textContent="✏️ À changer";ch.onclick=()=>vote("à changer");R.appendChild(ch);
+ const b=document.createElement('button');b.textContent=a.s=="todo"?"🛠️ Bâtir cet agent ensuite":"✍️ Demander une amélioration";b.onclick=async()=>{const m=$('dMsg');if(!db){m.textContent="Ouvre l'app dans claude.ai pour envoyer ta demande.";return}try{await db.collection("demandes").doc().set({agent:a.id,nom:a.n,type:a.s=="todo"?"bâtir":"améliorer",quand:new Date().toISOString(),fait:false});m.textContent="Demande envoyée ✓ Écris « c'est envoyé » dans la conversation."}catch(e){m.textContent="La demande n'est pas partie."}};R.appendChild(b);
+ P.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function renderTools(){const T=$('tools');T.innerHTML="";TOOLS.forEach(([dom,list])=>{const d=document.createElement('div');d.className="dom";d.innerHTML="<h3></h3>";d.querySelector('h3').textContent=dom;list.forEach(([n,id])=>{const a=document.createElement('a');a.href=A+id;a.target="_blank";a.textContent=n;d.appendChild(a)});T.appendChild(d)})}
+$('noteBtn').onclick=()=>{$('notePanel').classList.remove('hidden');$('noteTx').focus();$('notePanel').scrollIntoView({behavior:'smooth'})};
+$('noteClose').onclick=()=>$('notePanel').classList.add('hidden');
+$('camin').onchange=e=>{const f=e.target.files[0];if(!f)return;const im=$('camprev');im.src=URL.createObjectURL(f);im.style.display='block';$('notePanel').classList.remove('hidden')};
+async function sendNote(){const m=$('noteMsg'),t=$('noteTx').value.trim();if(!t){m.textContent="Écris d'abord ta note.";return}if(!db){m.textContent="Ouvre l'app dans claude.ai pour envoyer.";return}try{await db.collection("notes").doc().set({texte:t,quand:new Date().toISOString(),traitee:false});$('noteTx').value="";m.textContent="Note envoyée ✓ Écris « c'est envoyé » dans la conversation."}catch(e){m.textContent="La note n'est pas partie."}}
+$('noteSave').onclick=sendNote;$('sendBtn').onclick=()=>{$('notePanel').classList.remove('hidden');if($('noteTx').value.trim())sendNote();else{$('noteMsg').textContent="Écris ce que tu veux m'envoyer, puis touche Envoyer la note.";$('noteTx').focus()}};
+renderAgents();renderTools();applyTheme();
+(async()=>{db=await claude.use("db");if(!db)return;try{const s=await db.doc("reglages/theme").get();if(s.exists){theme={...theme,...s.data()};applyTheme()}}catch(e){}})();
+</script></body></html>

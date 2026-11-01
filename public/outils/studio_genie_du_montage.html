@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<script src="/outils/pont.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Génie du montage · On règle ça</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0F0A0A;--card:#1F1617;--line:#3A2A2C;--txt:#fff;--mute:#B7A6A8;--foyer:#4A1620;--hi:#C84B5E;--ok:#6CC28A;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#F7F3F3;--card:#fff;--line:#E6DADB;--txt:#0F0A0A;--mute:#6E5B5D}}
+:root[data-theme="light"]{--bg:#F7F3F3;--card:#fff;--line:#E6DADB;--txt:#0F0A0A;--mute:#6E5B5D}
+:root[data-theme="dark"]{--bg:#0F0A0A;--card:#1F1617;--line:#3A2A2C;--txt:#fff;--mute:#B7A6A8}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--txt);font-family:'Fira Sans',system-ui,-apple-system,Arial,sans-serif;line-height:1.4}
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 130px}
+header{background:var(--foyer);color:#fff;border-radius:18px;padding:18px;margin-bottom:12px}
+header h1{margin:0;font-weight:900;font-size:23px}header p{margin:6px 0 0;opacity:.85;font-size:14px}
+.prog{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin:8px 0 14px}.prog i{display:block;height:100%;background:var(--hi);width:0;transition:width .2s}
+.q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
+.q.done{border-color:var(--ok)}
+.q b{display:block;font-size:16px;margin-bottom:4px}.q .h{font-size:13px;color:var(--mute);margin-bottom:10px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1px solid var(--line);background:transparent;color:var(--txt);border-radius:12px;padding:12px 13px;font:600 15px 'Fira Sans',sans-serif;cursor:pointer}
+.opt.on{background:var(--hi);border-color:var(--hi);color:#fff}
+input[type=text]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px;font:16px 'Fira Sans',sans-serif;color:var(--txt);margin-top:8px}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.cam{display:flex;align-items:center;gap:10px}.cam img{max-width:90px;border-radius:10px;border:1px solid var(--line)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;justify-content:center}
+.bar button,.bar label{flex:1;max-width:300px;border:0;border-radius:14px;padding:15px;font:800 16px 'Fira Sans',sans-serif;cursor:pointer;text-align:center}
+.go{background:var(--hi);color:#fff}.camb{background:transparent;border:1px solid var(--line)!important;color:var(--txt)}
+.st{font-size:14px;color:var(--mute);text-align:center;margin-top:10px;min-height:20px}
+#file{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>On règle le montage</h1><p>Touche tes choix. À la fin, un seul bouton : Envoyer. Je reçois tout.</p></header>
+<div class="prog"><i id="pg"></i></div>
+<div id="qs"></div>
+<div class="q" id="photoBox" hidden><b>Photo envoyée avec tes réponses</b><div class="cam"><img id="thumb" alt="Photo de ton écran"><span id="camSt" class="h"></span></div></div>
+<div class="st" id="st"></div>
+</div>
+<input type="file" id="file" accept="image/*" capture="environment">
+<div class="bar"><label class="camb" for="file" id="camBtn">📷 Caméra</label><button class="go" id="send">Envoyer</button></div>
+<script>
+const Q=[
+{id:"chemin",t:"Comment on débloque le montage ?",h:"Le plus rapide : Descript, qui lit ton Drive tout seul.",o:["Recharger Descript ce soir, sur mon téléphone","Configurer Creatomate ce soir à l'ordi ou à l'iPad","Les deux : Descript ce soir, Creatomate en fin de semaine","Raf monte en attendant, on règle l'outil plus tard"]},
+{id:"budget",t:"Budget mensuel maximum pour l'outil de montage",o:["Moins de 50 $","50 à 150 $","150 à 300 $","Pas de limite si ça marche"]},
+{id:"ecran",t:"As-tu un ordi ou un iPad sous la main ce soir ?",o:["Oui, ordi","Oui, iPad","Non, seulement mon téléphone"]},
+{id:"priorite",t:"Quelle vidéo je monte en premier ?",o:["Film du mariage Jen & André","Teaser de Cédric (Parloir)","Contenu ANRO / santé mentale","Le clip « Coton ouaté »"]},
+{id:"depot",t:"Qui dépose les vidéos dans le Drive « 🎬 Montage à faire » ?",o:["Moi","Rey","Angelica","Automatique depuis mon iPhone (à installer)"]},
+{id:"sons",t:"Les sons de ta recette (Woosh, ding, Money Chakin, pop…)",o:["Je les télécharge d'Envato ce soir","Angelica les télécharge","Claude me donne la liste, je le fais plus tard"]},
+{id:"formats",t:"Formats à sortir",o:["9:16 seulement (TikTok, Reels)","9:16 + 1:1","9:16 + 1:1 + 16:9 (YouTube)"]},
+{id:"approb",t:"Où veux-tu voir les montages pour les approuver ?",o:["Dans le Génie du montage (mon app)","Dans le Drive","Les deux"]},
+{id:"vitesse",t:"Délai voulu entre le dépôt et le montage prêt",o:["Moins d'une heure","Le jour même","24 h, c'est correct"]}
+];
+const A={};let db=null,assets=null,photo=null;const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+ $('#qs').innerHTML=Q.map(q=>{const a=A[q.id]||{c:'',n:''};return `<div class="q ${a.c||a.n?'done':''}"><b>${esc(q.t)}</b>${q.h?`<div class="h">${esc(q.h)}</div>`:''}<div class="opts">${q.o.map((o,i)=>`<button class="opt ${a.c===o?'on':''}" data-q="${q.id}" data-i="${i}">${esc(o)}</button>`).join('')}</div><input type="text" data-n="${q.id}" placeholder="Précision (facultatif)" value="${esc(a.n)}"></div>`}).join('');
+ document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const q=Q.find(x=>x.id===b.dataset.q),o=q.o[+b.dataset.i];const a=A[q.id]||(A[q.id]={c:'',n:''});a.c=a.c===o?'':o;render();});
+ document.querySelectorAll('[data-n]').forEach(i=>i.onchange=()=>{(A[i.dataset.n]||(A[i.dataset.n]={c:'',n:''})).n=i.value.trim();render();});
+ const n=Q.filter(q=>{const a=A[q.id];return a&&(a.c||a.n)}).length;$('#pg').style.width=(n/Q.length*100)+'%';}
+render();
+$('#file').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('#photoBox').hidden=false;$('#thumb').src=URL.createObjectURL(f);
+ if(!assets){$('#camSt').textContent='Photo prise. Envoi de photo indisponible ici.';return;}
+ $('#camSt').textContent='Envoi de la photo…';
+ try{const r=await assets.upload(f);photo=r.id;$('#camSt').textContent='Photo prête ✓ (elle part avec Envoyer)';}catch(err){$('#camSt').textContent='Photo pas envoyée, réessaie';}};
+$('#send').onclick=async()=>{const btn=$('#send');
+ if(!db){$('#st').textContent='Envoi indisponible pour l\u2019instant. Réessaie dans quelques secondes.';return;}
+ btn.disabled=true;$('#st').textContent='Envoi…';
+ try{await db.doc('reponses/montage').set({answers:A,photo:photo,sent:new Date().toISOString()});$('#st').textContent='Envoyé ✓ Écris « envoyé » à Claude.';}
+ catch(e){$('#st').textContent='Pas envoyé, réessaie.';}
+ btn.disabled=false;};
+(async()=>{if(!(window.claude&&claude.use))return;
+ try{db=await claude.use('db');if(db){const d=await db.doc('reponses/montage').get();if(d.exists){const x=d.data();if(x.answers){for(const k in x.answers)A[k]={...x.answers[k]};render();}}}}catch(e){db=null;}
+ try{assets=await claude.use('assets');}catch(e){assets=null;}})();
+</script>
+</body>
+</html>
