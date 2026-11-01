@@ -16,14 +16,26 @@ export type CategorieAgenda = (typeof CATEGORIES_AGENDA)[number]["id"];
 const REGLES: [CategorieAgenda, string[]][] = [
   ["urgent", ["urgent", "urgence", "asap", "deadline", "critique"]],
   ["production", ["tournage", "shooting", "shoot", "production", "prod ", "stock", "inventaire", "reception", "livraison", "usine", "echantillon", "live", "montage", "photo", "video"]],
-  ["admin", ["contrat", "paie", "payroll", "finance", "comptab", "rmc", "facture", "banque", "rbc", "impot", "taxe", "tps", "tvq", "courriel", "email", "assurance", "req ", "budget", "paiement"]],
+  ["admin", ["contrat", "paie", "paye", "payer", "loyer", "payroll", "finance", "comptab", "rmc", "facture", "banque", "rbc", "impot", "taxe", "tps", "tvq", "courriel", "email", "assurance", "req ", "budget", "paiement", "location "]],
   ["systemes", ["systeme", "implantation", "brsn ops", "app ", "slack", "clickup", "shopify", "quickbooks", "automatisation", "formation", "documentation", "setup", "config"]],
-  ["contenu", ["contenu", "marketing", "pub", "campagne", "meta", "tiktok", "instagram", "post", "reel", "promo", "newsletter", "influence", "black friday", "calendrier editorial"]],
-  ["personnel", ["perso", "famille", "medecin", "dentiste", "gym", "sport", "anniversaire", "souper", "diner", "vacances", "conge", "enfant"]],
-  ["rdv", ["rencontre", "rendez-vous", "rdv", "meeting", "reunion", "call", "appel", "lunch", "cafe", "entrevue", "board", "point "]],
+  ["contenu", ["contenu", "marketing", "pub", "campagne", "meta", "tiktok", "instagram", "post", "reel", "promo", "newsletter", "influence", "black friday", "calendrier editorial", "collab"]],
+  ["personnel", ["perso", "famille", "medecin", "medicament", "dentiste", "gym", "sport", "hockey", "anniversaire", "souper", "diner", "vacances", "conge", "enfant", "maison", "poubelle", "recyclage", "tatou", "tatoo"]],
+  ["rdv", ["rencontre", "rendez-vous", "rdv", "meeting", "reunion", "call", "appel", "lunch", "cafe", "entrevue", "board", "point ", "gala", "expo", "salon", "evenement"]],
+];
+
+// Pastilles que Julien met déjà dans ses titres : elles ont priorité sur les mots.
+const PASTILLES: [CategorieAgenda, string[]][] = [
+  ["urgent", ["🔴", "🚨", "‼️"]],
+  ["production", ["🟠"]],
+  ["rdv", ["🩷", "💗", "🌸"]],
+  ["contenu", ["🟢"]],
+  ["admin", ["🔵"]],
+  ["systemes", ["🟣"]],
+  ["personnel", ["🟡"]],
 ];
 
 export function categoriser(titre: string, aDesInvites = false): CategorieAgenda {
+  for (const [cat, emojis] of PASTILLES) if (emojis.some((e) => titre.includes(e))) return cat;
   const t = ` ${titre} `.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   for (const [cat, mots] of REGLES) if (mots.some((m) => t.includes(m))) return cat;
   return aDesInvites ? "rdv" : "autre";
