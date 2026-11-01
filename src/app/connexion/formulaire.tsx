@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { envoyerLienMagique } from "@/lib/supabase/client";
 
 type Etat = "pret" | "envoi" | "envoye" | "erreur" | "limite";
 
@@ -11,18 +11,18 @@ export function FormulaireConnexion() {
   const [courriel, setCourriel] = useState("");
   const [etat, setEtat] = useState<Etat>("pret");
 
+  // Un lien d'invitation arrive ici avec la session après le # : on le passe à /auth/callback.
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes("access_token") || hash.includes("error")) {
+      window.location.replace(`/auth/callback${hash}`);
+    }
+  }, []);
+
   async function envoyer(e: React.FormEvent) {
     e.preventDefault();
     setEtat("envoi");
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email: courriel.trim(),
-      options: {
-        // Personne ne peut se créer un compte ici : seulement les comptes invités.
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/auth/confirm`,
-      },
-    });
+    const { error } = await envoyerLienMagique(courriel.trim());
     if (!error) setEtat("envoye");
     // Supabase limite le nombre de courriels envoyés par heure.
     else if (error.status === 429 || error.code === "over_email_send_rate_limit") setEtat("limite");
@@ -34,8 +34,8 @@ export function FormulaireConnexion() {
       <div className="mt-8 rounded-2xl bg-carte p-6">
         <p className="text-2xl font-bold">📬 Regarde tes courriels</p>
         <p className="mt-2 text-lg text-discret">
-          Clique sur le lien envoyé à <strong className="text-texte">{courriel}</strong>. Ouvre-le
-          sur cet appareil-ci.
+          Clique sur le lien « Log In » envoyé à{" "}
+          <strong className="text-texte">{courriel}</strong>.
         </p>
         <button
           onClick={() => setEtat("pret")}

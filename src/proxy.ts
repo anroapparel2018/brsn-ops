@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages accessibles sans être connecté.
-const PAGES_PUBLIQUES = ["/connexion", "/auth/confirm"];
+const PAGES_PUBLIQUES = ["/connexion", "/auth/confirm", "/auth/callback"];
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
