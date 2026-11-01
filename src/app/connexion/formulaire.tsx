@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-type Etat = "pret" | "envoi" | "envoye" | "erreur";
+type Etat = "pret" | "envoi" | "envoye" | "erreur" | "limite";
 
 export function FormulaireConnexion() {
   const lienExpire = useSearchParams().get("erreur") === "lien";
@@ -23,7 +23,10 @@ export function FormulaireConnexion() {
         emailRedirectTo: `${window.location.origin}/auth/confirm`,
       },
     });
-    setEtat(error ? "erreur" : "envoye");
+    if (!error) setEtat("envoye");
+    // Supabase limite le nombre de courriels envoyés par heure.
+    else if (error.status === 429 || error.code === "over_email_send_rate_limit") setEtat("limite");
+    else setEtat("erreur");
   }
 
   if (etat === "envoye") {
@@ -75,6 +78,12 @@ export function FormulaireConnexion() {
         <p className="text-base text-orange">
           Impossible d&apos;envoyer le lien. Vérifie ton courriel : seuls les comptes autorisés
           peuvent se connecter.
+        </p>
+      )}
+      {etat === "limite" && (
+        <p className="text-base text-orange">
+          Trop de liens demandés en peu de temps. Attends un peu (jusqu&apos;à une heure) et
+          réessaie, ou utilise le dernier lien reçu.
         </p>
       )}
     </form>
