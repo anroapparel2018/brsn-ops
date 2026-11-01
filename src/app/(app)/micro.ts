@@ -25,6 +25,13 @@ function constructeur(): Constructeur | undefined {
 
 const rien = () => () => {};
 
+function estIphone() {
+  return (
+    /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+}
+
 export function useMicro({
   surTexte,
   surFin,
@@ -44,9 +51,11 @@ export function useMicro({
       if (!Reco) return;
       const r = new Reco();
       r.lang = "fr-CA";
-      r.continuous = true;
+      // Sur iPhone, l'écoute continue ne renvoie souvent rien : on écoute une phrase à la fois.
+      r.continuous = !estIphone();
       r.interimResults = true;
       texte.current = depart;
+      let codeErreur = "";
 
       r.onresult = (e) => {
         let dit = "";
@@ -55,22 +64,31 @@ export function useMicro({
         surTexte(texte.current);
       };
       r.onerror = (e) => {
-        if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-          setErreur("Le micro est bloqué. Autorise-le dans les réglages du navigateur.");
-        } else if (e.error !== "no-speech" && e.error !== "aborted") {
-          setErreur("Le micro n'a pas fonctionné. Réessaie.");
-        }
+        codeErreur = e.error;
       };
       r.onend = () => {
         setEcoute(false);
         reco.current = null;
+        if (codeErreur === "not-allowed" || codeErreur === "service-not-allowed") {
+          setErreur("Le micro est bloqué. Autorise-le dans Réglages > Safari > Micro.");
+        } else if (texte.current === depart && codeErreur !== "aborted") {
+          // Rien capté : on le dit au lieu de ne rien faire.
+          setErreur(
+            `Je n'ai rien entendu${codeErreur ? ` (code : ${codeErreur})` : ""}. Réessaie, ou touche la case et utilise le 🎤 du clavier.`,
+          );
+        }
         surFin(texte.current);
       };
 
       setErreur(null);
       reco.current = r;
-      r.start();
-      setEcoute(true);
+      try {
+        r.start();
+        setEcoute(true);
+      } catch {
+        reco.current = null;
+        setErreur("Le micro n'a pas pu démarrer. Touche la case et utilise le 🎤 du clavier.");
+      }
     },
     [surTexte, surFin],
   );
