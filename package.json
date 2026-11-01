@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "mot-de-passe": "node --env-file=.env.local scripts/definir-mot-de-passe.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
