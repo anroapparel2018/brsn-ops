@@ -69,7 +69,7 @@ async function Contenu() {
 
       <section className="mt-6 rounded-2xl bg-carte p-5">
         <h2 className="text-xl font-black">Google Agenda</h2>
-        <ReglageGoogle connecte={agenda.connecte} derniereSynchro={agenda.derniereSynchro} />
+        <ReglageGoogle connecte={agenda.connecte} peutEcrire={agenda.peutEcrire} derniereSynchro={agenda.derniereSynchro} />
       </section>
 
       <section className="mt-6 rounded-2xl bg-carte p-5">

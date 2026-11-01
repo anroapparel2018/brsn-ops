@@ -157,10 +157,14 @@ export function VueAgenda({
       )}
 
       {!peutEcrire && (
-        <p className="mt-3 rounded-xl bg-carte p-3 text-sm text-discret">
-          Pour créer des événements, rebranche ton agenda (Réglages → Google Agenda) afin d&apos;accorder la
-          permission « créer des événements ».
-        </p>
+        <div className="mt-3 rounded-xl bg-carte p-3">
+          <p className="text-sm text-discret">
+            Pour que l&apos;app puisse créer tes événements approuvés, Google doit accorder une nouvelle permission.
+          </p>
+          <a href="/api/google/connexion" className="mt-2 flex h-12 items-center justify-center rounded-xl bg-orange text-base font-bold text-white">
+            Rebrancher mon agenda
+          </a>
+        </div>
       )}
 
       <button

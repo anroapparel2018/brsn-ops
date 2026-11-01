@@ -3,12 +3,19 @@
 import { useTransition } from "react";
 import { deconnecterGoogle } from "../agenda/actions";
 
-// Réglages : état du Google Agenda (lecture seule) et déconnexion.
-export function ReglageGoogle({ connecte, derniereSynchro }: { connecte: boolean; derniereSynchro: string | null }) {
+// Réglages : état du Google Agenda, rebrancher (nouvelle permission) et déconnexion.
+export function ReglageGoogle({
+  connecte,
+  peutEcrire,
+  derniereSynchro,
+}: {
+  connecte: boolean;
+  peutEcrire: boolean;
+  derniereSynchro: string | null;
+}) {
   const [enCours, demarrer] = useTransition();
   if (!connecte) {
     return (
-       
       <a href="/api/google/connexion" className="mt-3 flex h-12 items-center justify-center rounded-xl bg-orange text-base font-bold text-white">
         Connecter mon agenda Google
       </a>
@@ -16,7 +23,9 @@ export function ReglageGoogle({ connecte, derniereSynchro }: { connecte: boolean
   }
   return (
     <div className="mt-3 flex flex-col gap-2">
-      <p className="text-base">✅ Branché en lecture seule.</p>
+      <p className="text-base">
+        ✅ Branché {peutEcrire ? "(lecture + création après ton OK)" : "en lecture seule"}.
+      </p>
       {derniereSynchro && (
         <p className="text-sm text-discret">
           Dernière mise à jour :{" "}
@@ -24,6 +33,11 @@ export function ReglageGoogle({ connecte, derniereSynchro }: { connecte: boolean
             new Date(derniereSynchro),
           )}
         </p>
+      )}
+      {!peutEcrire && (
+        <a href="/api/google/connexion" className="flex h-12 items-center justify-center rounded-xl bg-orange text-base font-bold text-white">
+          Rebrancher pour créer des événements
+        </a>
       )}
       <button
         onClick={() => {
