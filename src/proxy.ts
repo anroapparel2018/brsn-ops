@@ -45,10 +45,10 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // Rafraîchit la session et vérifie qui est connecté.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Rafraîchit la session et vérifie qui est connecté. getClaims vérifie la signature du jeton
+  // localement (clés publiques mises en cache) : pas d'aller-retour réseau à chaque page.
+  const { data } = await supabase.auth.getClaims();
+  const user = data?.claims?.sub ? data.claims : null;
 
   const estPublique = PAGES_PUBLIQUES.some((p) => pathname.startsWith(p));
 

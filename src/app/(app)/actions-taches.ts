@@ -1,7 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { AGENTS, type AgentId } from "@/lib/agents";
 import { appelerClaude, cleDisponible, texteDe } from "@/lib/ia";
 import {

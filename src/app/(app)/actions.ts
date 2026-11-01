@@ -1,7 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { aujourdhui } from "@/lib/date";
 import { bilanDeLaJournee, demanderAUnAgent } from "@/lib/agents-ia";
 import { messageErreurIA } from "@/lib/ia";
@@ -38,7 +38,7 @@ export async function enregistrerPriorite(rang: number, texte: string) {
   } else {
     await supabase
       .from("priorites")
-      .upsert({ cree_par: user.id, jour, rang, texte: propre }, { onConflict: "cree_par,jour,rang" });
+      .upsert({ cree_par: user.id, jour, rang, texte: propre }, { onConflict: "compagnie_id,cree_par,jour,rang" });
   }
   refresh();
 }

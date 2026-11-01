@@ -1,7 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { AGENTS } from "@/lib/agents";
 
 export type FicheSaisie = {

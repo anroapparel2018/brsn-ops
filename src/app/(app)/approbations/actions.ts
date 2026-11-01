@@ -1,7 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 
 // Enregistre la décision de Julien sur une approbation (avec commentaire et photo facultatifs).
 // Rien n'est envoyé ailleurs : l'agent concerné lira la décision dans l'app.

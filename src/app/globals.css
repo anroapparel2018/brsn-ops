@@ -50,10 +50,21 @@
   --color-discret: var(--discret);
   --color-alerte: var(--alerte);
   --color-alerte-fond: var(--alerte-fond);
-  --font-sans: var(--font-archivo);
+  --font-sans: var(--police, var(--font-archivo));
 }
 
 body {
   background: var(--fond);
   color: var(--texte);
+}
+
+/* Boutons d'accent : couleur de la marque, texte toujours lisible (moteur de thème). */
+.bg-orange {
+  background-color: var(--accent-bouton, var(--orange));
+}
+.bg-orange.text-white {
+  color: var(--accent-sur-bouton, #ffffff);
+}
+h1, h2 {
+  font-family: var(--police-titres, inherit);
 }

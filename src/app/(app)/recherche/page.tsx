@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { trouverAgent, lienAgent, type AgentId } from "@/lib/agents";
 import { FICHES } from "@/lib/fiches";
 
