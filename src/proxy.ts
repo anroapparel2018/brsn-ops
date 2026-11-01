@@ -2,7 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages accessibles sans être connecté.
-const PAGES_PUBLIQUES = ["/connexion", "/auth/confirm", "/auth/callback"];
+// (/api/push/rappels : tâche planifiée de Vercel, protégée par son propre secret.)
+const PAGES_PUBLIQUES = ["/connexion", "/auth/confirm", "/auth/callback", "/api/push/rappels"];
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -62,6 +63,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Toutes les pages, sauf les fichiers statiques et les images.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icones/|apple-icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icones/|apple-icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };
