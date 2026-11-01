@@ -10,6 +10,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "BRSN OPS",
   description: "Les agents de Julien Brisson, au même endroit.",
+  appleWebApp: { capable: true, title: "BRSN OPS", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
