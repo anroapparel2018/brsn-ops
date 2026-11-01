@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // Les instructions des agents (docs/agents/*.md) sont lues par le serveur.
+  outputFileTracingIncludes: {
+    "/*": ["./docs/agents/**/*"],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

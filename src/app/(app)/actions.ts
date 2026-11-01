@@ -1,16 +1,18 @@
 "use server";
 
 import { refresh } from "next/cache";
-import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { aujourdhui } from "@/lib/date";
-import { demanderAUnAgent } from "@/lib/agents-ia";
+import { bilanDeLaJournee, demanderAUnAgent } from "@/lib/agents-ia";
+import { messageErreurIA } from "@/lib/ia";
 import { trouverAgent } from "@/lib/agents";
 import {
   lireAlertes,
   lireApprobationsEnAttente,
   lireMessages,
   lirePriorites,
+  lireTachesAFaire,
+  lireTachesFaitesRecemment,
 } from "@/lib/donnees";
 
 // Chaque action vérifie d'abord qui est connecté (elles sont joignables directement par le réseau).
@@ -72,29 +74,13 @@ export async function ecrireAUnAgent(
   }
 
   const { supabase } = await utilisateurConnecte();
-  const [historique, priorites, approbations, alertes] = await Promise.all([
-    lireMessages(agent.id, 20),
-    lirePriorites(),
-    lireApprobationsEnAttente(),
-    lireAlertes(),
-  ]);
+  const [historique, contexte] = await Promise.all([lireMessages(agent.id, 20), lireContexte()]);
 
   let reponse: string;
   try {
-    reponse = await demanderAUnAgent(agent.id, historique, message, {
-      priorites,
-      approbations,
-      alertes,
-    });
+    reponse = await demanderAUnAgent(agent.id, historique, message, contexte);
   } catch (e) {
-    if (e instanceof Anthropic.AuthenticationError) {
-      return { erreur: "La clé Anthropic est refusée. Vérifie-la dans .env.local." };
-    }
-    if (e instanceof Anthropic.RateLimitError) {
-      return { erreur: `${agent.nom} est très occupé. Réessaie dans une minute.` };
-    }
-    console.error(`${agent.nom} :`, e);
-    return { erreur: `${agent.nom} n'a pas pu répondre. Réessaie dans un moment.` };
+    return { erreur: messageErreurIA(e, agent.nom) };
   }
 
   // Heures distinctes pour garder l'ordre question → réponse.
@@ -110,4 +96,38 @@ export async function ecrireAUnAgent(
   ]);
   refresh();
   return { derniereReponse: reponse };
+}
+
+async function lireContexte() {
+  const [priorites, approbations, alertes, taches] = await Promise.all([
+    lirePriorites(),
+    lireApprobationsEnAttente(),
+    lireAlertes(),
+    lireTachesAFaire(),
+  ]);
+  return { priorites, approbations, alertes, taches };
+}
+
+// Bilan de fin de journée généré par le Cerveau (sur demande).
+export async function genererBilan(): Promise<{ texte?: string; erreur?: string }> {
+  await utilisateurConnecte();
+  const [contexte, faites] = await Promise.all([lireContexte(), lireTachesFaitesRecemment()]);
+  const debutJour = new Date(`${aujourdhui()}T00:00:00-05:00`).getTime();
+  const aujourdhuiFaites = faites.filter((t) => t.fait_le && new Date(t.fait_le).getTime() >= debutJour);
+  try {
+    return { texte: await bilanDeLaJournee(aujourdhuiFaites, contexte) };
+  } catch (e) {
+    return { erreur: messageErreurIA(e) };
+  }
+}
+
+// Objectif de ventes : saisie manuelle en attendant Shopify.
+export async function enregistrerVentes(form: FormData) {
+  const { supabase } = await utilisateurConnecte();
+  const ventes = Number(String(form.get("ventes") ?? "").replace(/[^\d.]/g, ""));
+  if (!Number.isFinite(ventes)) return;
+  await supabase
+    .from("reglages")
+    .upsert({ cle: "ventes_annee", valeur: { montant: ventes, maj: new Date().toISOString() }, maj_le: new Date().toISOString() });
+  refresh();
 }

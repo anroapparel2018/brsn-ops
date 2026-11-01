@@ -26,6 +26,27 @@ export async function lireTachesFaitesRecemment(): Promise<Tache[]> {
   return (data ?? []) as Tache[];
 }
 
+export async function lireVentesAnnee(): Promise<{ montant: number; maj: string } | null> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("reglages").select("valeur").eq("cle", "ventes_annee").maybeSingle();
+  return (data?.valeur as { montant: number; maj: string }) ?? null;
+}
+
+// Coût de l'API Claude depuis le début du mois (heure du Québec).
+export async function lireCoutDuMois() {
+  const supabase = await createClient();
+  const debut = `${aujourdhui().slice(0, 7)}-01T00:00:00-05:00`;
+  const { data } = await supabase.from("usage_ia").select("cout_usd, jetons_entree, jetons_sortie").gte("cree_le", debut);
+  return (data ?? []).reduce(
+    (t, r) => ({
+      cout: t.cout + Number(r.cout_usd),
+      jetons: t.jetons + r.jetons_entree + r.jetons_sortie,
+      appels: t.appels + 1,
+    }),
+    { cout: 0, jetons: 0, appels: 0 },
+  );
+}
+
 // Rappels arrivés à échéance et pas encore vus.
 export async function lireRappelsDus(): Promise<Tache[]> {
   const supabase = await createClient();
@@ -75,6 +96,23 @@ export async function lireApprobationsEnAttente(): Promise<ApprobationsEnAttente
     if (new Date(a.cree_le).getTime() < limite) resultat.anciennes++;
   }
   return resultat;
+}
+
+const COLONNES_APPROBATION = "id, agent, titre, details, statut, commentaire, photo, cree_le, decide_le";
+
+export async function lireApprobations(agent?: AgentId) {
+  const supabase = await createClient();
+  let attente = supabase.from("approbations").select(COLONNES_APPROBATION).eq("statut", "en_attente");
+  let faites = supabase.from("approbations").select(COLONNES_APPROBATION).neq("statut", "en_attente");
+  if (agent) {
+    attente = attente.eq("agent", agent);
+    faites = faites.eq("agent", agent);
+  }
+  const [a, f] = await Promise.all([
+    attente.order("cree_le"),
+    faites.order("decide_le", { ascending: false }).limit(30),
+  ]);
+  return { enAttente: a.data ?? [], historique: f.data ?? [] };
 }
 
 export type Alerte = {

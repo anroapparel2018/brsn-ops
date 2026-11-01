@@ -1,15 +1,25 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { connection } from "next/server";
 import { getUser } from "@/lib/supabase/server";
-import { AGENTS } from "@/lib/agents";
-import { jourEnLettres } from "@/lib/date";
-import { lireAlertes, lireApprobationsEnAttente, lirePriorites } from "@/lib/donnees";
+import { AGENTS, trouverAgent } from "@/lib/agents";
+import { aujourdhui, jourEnLettres } from "@/lib/date";
+import {
+  lireAlertes,
+  lireApprobationsEnAttente,
+  lirePriorites,
+  lireTachesAFaire,
+  lireVentesAnnee,
+} from "@/lib/donnees";
+import { DATES_IMPORTANTES, joursAvant, OBJECTIF_VENTES, PROMOS } from "@/lib/promos";
+import { formaterDate, formaterRappel } from "@/lib/taches";
 import { Priorites } from "./priorites";
 import { Alertes } from "./alertes";
 import { Conversation } from "./conversation";
-import { BoutonDeconnexion } from "./deconnexion";
+import { Objectif } from "./objectif";
+import { Bilan } from "./bilan";
 
-// Accueil : l'écran du Cerveau. Chaque section se charge à son rythme.
+// Accueil : le brief du jour du Cerveau. Chaque section se charge à son rythme.
 export default function Accueil() {
   return (
     <>
@@ -18,9 +28,19 @@ export default function Accueil() {
         <Salutation />
       </Suspense>
 
+      <Section titre="Parler au Cerveau">
+        <Conversation agent="cerveau" />
+      </Section>
+
       <Section titre="Mes 3 priorités du jour">
         <Suspense fallback={<Chargement />}>
           <SectionPriorites />
+        </Suspense>
+      </Section>
+
+      <Section titre="Aujourd'hui">
+        <Suspense fallback={<Chargement />}>
+          <SectionAujourdhui />
         </Suspense>
       </Section>
 
@@ -36,11 +56,21 @@ export default function Accueil() {
         </Suspense>
       </Section>
 
-      <Section titre="Parler au Cerveau">
-        <Conversation agent="cerveau" />
+      <Section titre="Compte à rebours">
+        <Suspense fallback={<Chargement />}>
+          <SectionDates />
+        </Suspense>
       </Section>
 
-      <BoutonDeconnexion />
+      <Section titre="Objectif 3 M$">
+        <Suspense fallback={<Chargement />}>
+          <SectionObjectif />
+        </Suspense>
+      </Section>
+
+      <Section titre="Fin de journée">
+        <Bilan />
+      </Section>
     </>
   );
 }
@@ -73,6 +103,65 @@ async function SectionPriorites() {
   return <Priorites priorites={await lirePriorites()} />;
 }
 
+// Rappels du jour et prochaines échéances (14 jours).
+async function SectionAujourdhui() {
+  const taches = await lireTachesAFaire();
+  const jour = aujourdhui();
+  const finJour = new Date(`${jour}T23:59:59-05:00`).getTime();
+  const rappels = taches
+    .filter((t) => t.rappel_le && new Date(t.rappel_le).getTime() <= finJour)
+    .sort((a, b) => a.rappel_le!.localeCompare(b.rappel_le!));
+  const echeances = taches
+    .filter((t) => t.echeance && joursAvant(jour, t.echeance) >= 0 && joursAvant(jour, t.echeance) <= 14)
+    .sort((a, b) => a.echeance!.localeCompare(b.echeance!));
+  const urgentes = taches.filter((t) => t.categorie === "urgent").length;
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Link href="/a-faire" className="flex items-center justify-between rounded-2xl bg-carte p-5 active:scale-[0.99]">
+        <span>
+          <span className="block text-4xl font-black text-orange">{taches.length}</span>
+          <span className="text-base font-semibold">
+            tâches à faire{urgentes ? ` · ${urgentes} urgentes` : ""}
+          </span>
+        </span>
+        <span className="text-base font-bold text-orange">Voir →</span>
+      </Link>
+
+      <div className="rounded-2xl bg-carte p-5">
+        <p className="text-base font-bold">⏰ Rappels d&apos;aujourd&apos;hui</p>
+        {rappels.length ? (
+          <ul className="mt-2 flex flex-col gap-2">
+            {rappels.slice(0, 8).map((t) => (
+              <li key={t.id} className="text-base">
+                <span className="font-semibold">{formaterRappel(t.rappel_le!).split(",").pop()}</span> · {t.titre}{" "}
+                <span className="text-discret">({trouverAgent(t.agent)?.court})</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-base text-discret">Aucun rappel aujourd&apos;hui.</p>
+        )}
+      </div>
+
+      <div className="rounded-2xl bg-carte p-5">
+        <p className="text-base font-bold">📌 Prochaines échéances</p>
+        {echeances.length ? (
+          <ul className="mt-2 flex flex-col gap-2">
+            {echeances.map((t) => (
+              <li key={t.id} className="text-base">
+                <span className="font-semibold">{formaterDate(t.echeance!)}</span> · {t.titre}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-base text-discret">Rien dans les 14 prochains jours.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
 async function SectionApprobations() {
   const { total, parAgent } = await lireApprobationsEnAttente();
 
@@ -83,9 +172,7 @@ async function SectionApprobations() {
   return (
     <Link href="/approbations" className="block rounded-2xl bg-carte p-5 active:scale-[0.99]">
       <p className="text-4xl font-black text-orange">{total}</p>
-      <p className="text-base font-semibold">
-        approbation{total > 1 ? "s" : ""} en attente
-      </p>
+      <p className="text-base font-semibold">approbation{total > 1 ? "s" : ""} en attente</p>
       <ul className="mt-4 flex flex-wrap gap-2">
         {AGENTS.filter((a) => parAgent[a.id]).map((a) => (
           <li key={a.id} className="rounded-full border-2 border-bordure px-3 py-1 text-sm font-semibold">
@@ -101,4 +188,53 @@ async function SectionApprobations() {
 async function SectionAlertes() {
   const [alertes, { anciennes }] = await Promise.all([lireAlertes(), lireApprobationsEnAttente()]);
   return <Alertes alertes={alertes} anciennes={anciennes} />;
+}
+
+// Compte à rebours des dates importantes + promo en cours.
+async function SectionDates() {
+  await connection(); // la date du jour se lit au moment de la requête
+  const jour = aujourdhui();
+  const promo = PROMOS.find((p) => p.debut <= jour && jour <= p.fin);
+  const prochaines = DATES_IMPORTANTES.filter((d) => joursAvant(jour, d.date) >= 0).slice(0, 6);
+
+  return (
+    <div className="flex flex-col gap-3">
+      {promo && (
+        <div className="rounded-2xl border-2 border-orange p-4">
+          <p className="text-sm font-semibold text-orange">Promo en cours</p>
+          <p className="text-lg font-bold">
+            {promo.nom} · jusqu&apos;au {formaterDate(promo.fin)} ({joursAvant(jour, promo.fin)} j)
+          </p>
+        </div>
+      )}
+      <ul className="grid grid-cols-2 gap-2">
+        {prochaines.map((d) => {
+          const n = joursAvant(jour, d.date);
+          return (
+            <li key={d.date + d.nom} className="rounded-2xl bg-carte p-4">
+              <p className="text-3xl font-black text-orange">{n === 0 ? "Auj." : `${n} j`}</p>
+              <p className="mt-1 text-sm font-semibold">{d.nom}</p>
+              <p className="text-sm text-discret">{formaterDate(d.date)}</p>
+            </li>
+          );
+        })}
+      </ul>
+      <details className="rounded-2xl bg-carte p-4">
+        <summary className="cursor-pointer text-base font-bold">📣 Calendrier des promos</summary>
+        <ul className="mt-2 flex flex-col gap-1 text-base">
+          {PROMOS.map((p) => (
+            <li key={p.nom}>
+              <strong>{p.nom}</strong> : {formaterDate(p.debut)} au {formaterDate(p.fin)}
+            </li>
+          ))}
+          <li className="text-discret">L&apos;agence termine fin novembre ; l&apos;Agent Pub prend le relais le 1er décembre.</li>
+        </ul>
+      </details>
+    </div>
+  );
+}
+
+async function SectionObjectif() {
+  const ventes = await lireVentesAnnee();
+  return <Objectif ventes={ventes?.montant ?? null} objectif={OBJECTIF_VENTES} />;
 }
