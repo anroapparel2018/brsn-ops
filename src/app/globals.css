@@ -1,23 +1,38 @@
 @import "tailwindcss";
 
-/* Guide BRSN : Encre #141414, Orange brûlé #CC5500, blanc. */
+/* Guide BRSN : Encre #141414, Orange brûlé #CC5500, blanc. Mode sombre par défaut. */
 :root {
   --encre: #141414;
   --orange: #cc5500;
+  --fond: #141414;
+  --texte: #f6f4f1;
+  --carte: #1f1f1f;
+  --bordure: #2e2e2e;
+  --discret: #a39e97;
+  color-scheme: dark;
+}
+
+/* Mode clair (choisi dans Réglages). */
+:root.clair {
   --fond: #ffffff;
   --texte: #141414;
   --carte: #f4f2ef;
   --bordure: #e2ded8;
   --discret: #6b6660;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
+@media print {
   :root {
-    --fond: #141414;
-    --texte: #f6f4f1;
-    --carte: #1f1f1f;
-    --bordure: #2e2e2e;
-    --discret: #a39e97;
+    --fond: #ffffff;
+    --texte: #141414;
+    --carte: #ffffff;
+    --bordure: #cccccc;
+    --discret: #555555;
+  }
+  nav,
+  button {
+    display: none !important;
   }
 }
 

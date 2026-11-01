@@ -5,6 +5,7 @@ import { cleDisponible, MODELES } from "@/lib/ia";
 import { lireCoutDuMois } from "@/lib/donnees";
 import { BoutonDeconnexion } from "../deconnexion";
 import { Notifications } from "./notifications";
+import { ChoixTheme } from "./theme";
 
 const BRANCHEMENTS = [
   { nom: "Supabase (base de données, connexion)", etat: "connecte" },
@@ -44,6 +45,11 @@ async function Contenu() {
         <h2 className="text-xl font-black">Mon profil</h2>
         <p className="mt-2 text-base">{user?.email}</p>
         <p className="text-sm text-discret">Connexion par mot de passe ou lien par courriel.</p>
+      </section>
+
+      <section className="mt-6 rounded-2xl bg-carte p-5">
+        <h2 className="text-xl font-black">Affichage</h2>
+        <ChoixTheme />
       </section>
 
       <section className="mt-6 rounded-2xl bg-carte p-5">
