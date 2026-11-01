@@ -9,6 +9,8 @@
   --carte: #1f1f1f;
   --bordure: #2e2e2e;
   --discret: #a39e97;
+  --alerte: #c96a5f; /* rouge doux pour les rappels */
+  --alerte-fond: #2a1c1a;
   color-scheme: dark;
 }
 
@@ -19,6 +21,8 @@
   --carte: #f4f2ef;
   --bordure: #e2ded8;
   --discret: #6b6660;
+  --alerte: #b0473c;
+  --alerte-fond: #fbefed;
   color-scheme: light;
 }
 
@@ -44,6 +48,8 @@
   --color-carte: var(--carte);
   --color-bordure: var(--bordure);
   --color-discret: var(--discret);
+  --color-alerte: var(--alerte);
+  --color-alerte-fond: var(--alerte-fond);
   --font-sans: var(--font-archivo);
 }
 

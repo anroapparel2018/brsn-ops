@@ -24,21 +24,23 @@ function Rappel({ tache }: { tache: Tache }) {
   const [enCours, demarrer] = useTransition();
   const agent = trouverAgent(tache.agent);
   return (
-    <div className={`rounded-2xl bg-red-700 p-4 text-white ${enCours ? "opacity-60" : ""}`}>
-      <p className="text-sm font-semibold opacity-90">
+    <div
+      className={`rounded-2xl border border-alerte/30 border-l-4 border-l-alerte bg-alerte-fond p-4 ${enCours ? "opacity-60" : ""}`}
+    >
+      <p className="text-sm font-semibold text-alerte">
         ⏰ Rappel · {agent?.icone} {agent?.court} · {tache.rappel_le && formaterRappel(tache.rappel_le)}
       </p>
       <p className="mt-1 text-lg font-bold">{tache.titre}</p>
       <div className="mt-3 flex gap-2">
         <button
           onClick={() => demarrer(() => terminerTache(tache.id))}
-          className="h-11 flex-1 rounded-xl bg-white text-base font-bold text-red-700"
+          className="h-11 flex-1 rounded-xl bg-alerte text-base font-bold text-white"
         >
           Fait ✅
         </button>
         <button
           onClick={() => demarrer(() => marquerRappelVu(tache.id))}
-          className="h-11 flex-1 rounded-xl border-2 border-white text-base font-bold"
+          className="h-11 flex-1 rounded-xl border-2 border-bordure text-base font-bold"
         >
           OK, vu
         </button>

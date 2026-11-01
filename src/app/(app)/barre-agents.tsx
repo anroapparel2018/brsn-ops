@@ -80,7 +80,7 @@ export function BarreAgents({ enAttente = 0 }: { enAttente?: number }) {
                   <span className="text-2xl leading-none">{o.icone}</span>
                   {o.nom}
                   {o.href === "/approbations" && enAttente > 0 && (
-                    <span className="absolute top-1 right-3 flex h-6 min-w-6 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-black text-white">
+                    <span className="absolute top-1 right-3 flex h-6 min-w-6 items-center justify-center rounded-full bg-alerte px-1 text-xs font-black text-white">
                       {enAttente}
                     </span>
                   )}
