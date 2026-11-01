@@ -113,11 +113,37 @@ export type Evenement = {
   categorie: string | null;
 };
 
+export type DemandeEvenement = {
+  id: string;
+  titre: string;
+  debut: string;
+  fin: string;
+  journee_entiere: boolean;
+  lieu: string | null;
+  invites: string[];
+  meet: boolean;
+  categorie: string;
+  description: string | null;
+  source: "manuel" | "cerveau";
+  erreur: string | null;
+};
+
+// Demandes d'événements en attente de mon approbation.
+export async function lireDemandesAgenda(): Promise<DemandeEvenement[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("agenda_demandes")
+    .select("id, titre, debut, fin, journee_entiere, lieu, invites, meet, categorie, description, source, erreur")
+    .eq("statut", "en_attente")
+    .order("debut");
+  return (data ?? []) as DemandeEvenement[];
+}
+
 // Mon agenda (copie locale de Google, lecture seule) entre deux dates ISO.
 export async function lireAgenda(debut: string, fin: string) {
   const supabase = await createClient();
   const [{ data: compte }, { data: evenements }] = await Promise.all([
-    supabase.from("google_comptes").select("derniere_synchro").maybeSingle(),
+    supabase.from("google_comptes").select("derniere_synchro, peut_ecrire").maybeSingle(),
     supabase
       .from("evenements")
       .select("google_id, debut, fin, journee_entiere, titre, lieu, meet, description, invites, lien_google, categorie_auto, categorie")
@@ -127,6 +153,7 @@ export async function lireAgenda(debut: string, fin: string) {
   ]);
   return {
     connecte: !!compte,
+    peutEcrire: !!compte?.peut_ecrire,
     derniereSynchro: (compte?.derniere_synchro as string | null) ?? null,
     evenements: (evenements ?? []) as Evenement[],
   };

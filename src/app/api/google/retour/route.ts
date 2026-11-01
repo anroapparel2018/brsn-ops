@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { chiffrer, echangerCode, PORTEE } from "@/lib/agenda";
+import { chiffrer, echangerCode, PORTEE, PORTEE_ECRITURE } from "@/lib/agenda";
 
 // Retour de Google. Peut arriver dans Safari, sans la session de l'app : la personne est retrouvée
 // grâce à l'« état » secret créé avant de partir. Les jetons sont chiffrés avant d'être gardés.
@@ -15,7 +15,9 @@ export async function GET(req: NextRequest) {
   try {
     const j = await echangerCode(p.get("code")!, req.nextUrl.origin);
     if (!j.refresh_token) return vers("jeton");
-    if (j.scope && !j.scope.split(" ").includes(PORTEE)) return vers("permission");
+    const portees = (j.scope ?? "").split(" ");
+    const peutEcrire = portees.includes(PORTEE_ECRITURE);
+    if (j.scope && !portees.includes(PORTEE) && !peutEcrire) return vers("permission");
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,6 +29,7 @@ export async function GET(req: NextRequest) {
       p_jeton_rafraichissement: chiffrer(j.refresh_token),
       p_jeton_acces: chiffrer(j.access_token),
       p_expire_le: new Date(Date.now() + j.expires_in * 1000).toISOString(),
+      p_peut_ecrire: peutEcrire,
     });
     if (error || !ok) return vers("securite");
   } catch (e) {

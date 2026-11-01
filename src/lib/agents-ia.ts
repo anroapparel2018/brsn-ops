@@ -9,7 +9,7 @@ import { CATEGORIES, formaterRappel, trierParImportance, type Tache } from "@/li
 import type { Alerte, ApprobationsEnAttente, Evenement, MessageAgent, Priorite } from "@/lib/donnees";
 import { ajouterJours, estFinDeSemaine, heure, jourDe, jourSemaine, nomJour } from "@/lib/jours";
 import { analyserJour, instantLocal } from "@/lib/agenda-analyse";
-import { infoCategorie } from "@/lib/categories-agenda";
+import { CATEGORIES_AGENDA, infoCategorie } from "@/lib/categories-agenda";
 
 // Les agents répondent et peuvent créer des tâches, rappels et notes DANS L'APP seulement.
 // Ils n'ont aucun outil vers l'extérieur (Shopify, QuickBooks, Outlook…).
@@ -61,7 +61,7 @@ Comment tu réponds :
 - Julien te parle souvent à voix haute depuis son téléphone, et ta réponse peut lui être lue : phrases simples, pas de tableaux, peu de symboles.
 - Tu peux créer des tâches, des rappels et des notes dans l'app avec tes outils quand Julien le demande ou l'accepte. Confirme ce que tu as créé.
 - Tu n'as aucun accès à l'extérieur de l'app. Ne dis jamais que tu as envoyé, payé ou publié quelque chose.
-- Tu lis l'agenda Google de Julien (lecture seule) : tu ne peux pas y ajouter ni modifier d'événement. Pour « c'est quoi ma journée / ma semaine », réponds à partir de l'agenda et des tâches, et signale les trous et les conflits.
+- Tu lis l'agenda Google de Julien. Pour y ajouter quelque chose, utilise « proposer_evenement » : ça crée une demande qu'il approuve dans l'app (rien n'est écrit sans son OK, et tu ne modifies ni ne supprimes jamais un événement). Pour « c'est quoi ma journée / ma semaine », réponds à partir de l'agenda et des tâches, et signale les trous et les conflits.
 - Julien travaille du lundi au vendredi : ne planifie jamais rien le samedi ni le dimanche (ni tâche, ni rappel, ni suggestion).
 - Le contexte du jour t'est donné avec chaque message. S'il te manque une information, dis-le au lieu d'inventer.`;
 }
@@ -115,6 +115,26 @@ const OUTILS: Anthropic.Beta.BetaToolUnion[] = [
     },
   },
   {
+    name: "proposer_evenement",
+    description:
+      "Propose un événement pour l'agenda Google de Julien. Ça crée une DEMANDE qu'il doit approuver dans l'app : rien n'est écrit dans Google avant son OK. Jamais le samedi ni le dimanche. Vérifie les conflits avec l'agenda avant de proposer.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        titre: { type: "string" },
+        debut: { type: "string", description: "Date et heure ISO 8601 avec le fuseau du Québec, ex. 2026-11-05T10:00:00-05:00." },
+        fin: { type: "string", description: "Date et heure ISO 8601 avec le fuseau du Québec." },
+        lieu: { type: ["string", "null"] },
+        meet: { type: "boolean", description: "Ajouter un lien Google Meet." },
+        categorie: { type: "string", enum: CATEGORIES_AGENDA.map((c) => c.id) },
+        description: { type: ["string", "null"] },
+      },
+      required: ["titre", "debut", "fin", "lieu", "meet", "categorie", "description"],
+    },
+  },
+  {
     name: "creer_note",
     description: "Enregistre une note dans l'app (idée, information à garder, décision prise).",
     strict: true,
@@ -151,6 +171,32 @@ async function executerOutil(nom: string, entree: Record<string, unknown>): Prom
       source: "cerveau",
     });
     return error ? `Erreur : ${error.message}` : "Tâche créée.";
+  }
+  if (nom === "proposer_evenement") {
+    const debut = new Date(String(entree.debut));
+    const fin = new Date(String(entree.fin));
+    if (isNaN(debut.getTime()) || isNaN(fin.getTime()) || fin <= debut) return "Erreur : heures invalides.";
+    if (estFinDeSemaine(jourDe(debut))) return "Refusé : Julien ne travaille pas la fin de semaine. Propose un jour du lundi au vendredi.";
+    const { data: conflits } = await supabase
+      .from("evenements")
+      .select("titre")
+      .lt("debut", fin.toISOString())
+      .gt("fin", debut.toISOString())
+      .eq("journee_entiere", false);
+    const { error } = await supabase.from("agenda_demandes").insert({
+      titre: String(entree.titre ?? "").slice(0, 300),
+      debut: debut.toISOString(),
+      fin: fin.toISOString(),
+      lieu: (entree.lieu as string) || null,
+      meet: !!entree.meet,
+      categorie: CATEGORIES_AGENDA.some((c) => c.id === entree.categorie) ? entree.categorie : "autre",
+      description: (entree.description as string) || null,
+      source: "cerveau",
+    });
+    if (error) return `Erreur : ${error.message}`;
+    return `Demande créée : Julien doit l'approuver dans l'app (Agenda ou Approbations).${
+      conflits?.length ? ` Attention, conflit avec : ${conflits.map((c) => c.titre).join(", ")}.` : ""
+    }`;
   }
   if (nom === "creer_note") {
     const { error } = await supabase

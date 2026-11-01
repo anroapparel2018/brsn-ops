@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import { lireApprobations } from "@/lib/donnees";
+import { lireApprobations, lireDemandesAgenda } from "@/lib/donnees";
 import { VueApprobations } from "./vue-approbations";
 import type { Approbation } from "./bloc-approbation";
+import { CarteDemande } from "../agenda/fiche-demande";
 
 export default function Approbations() {
   return (
@@ -16,6 +17,20 @@ export default function Approbations() {
 }
 
 async function Liste() {
-  const { enAttente, historique } = await lireApprobations();
-  return <VueApprobations enAttente={enAttente as Approbation[]} historique={historique as Approbation[]} />;
+  const [{ enAttente, historique }, demandes] = await Promise.all([lireApprobations(), lireDemandesAgenda()]);
+  return (
+    <>
+      {demandes.length > 0 && (
+        <section className="mt-6">
+          <h2 className="mb-3 text-xl font-black">📅 Demandes d&apos;agenda ({demandes.length})</h2>
+          <div className="flex flex-col gap-3">
+            {demandes.map((d) => (
+              <CarteDemande key={d.id} d={d} />
+            ))}
+          </div>
+        </section>
+      )}
+      <VueApprobations enAttente={enAttente as Approbation[]} historique={historique as Approbation[]} />
+    </>
+  );
 }

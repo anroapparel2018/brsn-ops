@@ -1,170 +1,188 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { infoCategorie } from "@/lib/categories-agenda";
-import { ajouterJours, estFinDeSemaine, heure, jourDe, lundiDe, nomJour } from "@/lib/jours";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { ajouterJours, jourDe, lundiDe, nomJour } from "@/lib/jours";
+import { minutesLocales } from "@/lib/agenda-grille";
 import { analyserJour } from "@/lib/agenda-analyse";
-import type { Evenement } from "@/lib/donnees";
+import type { DemandeEvenement, Evenement } from "@/lib/donnees";
 import { FicheEvenement } from "./fiche-evenement";
+import { FicheDemande, CarteDemande } from "./fiche-demande";
+import { FormulaireDemande } from "./formulaire-demande";
+import { Grille, type Element } from "./grille";
+import { Mois } from "./mois";
 import { synchroniserMaintenant } from "./actions";
 
-const duJour = (evs: Evenement[], jour: string) =>
-  evs.filter((e) =>
-    e.journee_entiere ? jourDe(e.debut) <= jour && jour < jourDe(e.fin) : jourDe(e.debut) === jour,
-  );
+type Vue = "jour" | "semaine" | "mois";
 
-export function VueAgenda({ evenements, aujourdhui }: { evenements: Evenement[]; aujourdhui: string }) {
-  const [vue, setVue] = useState<"jour" | "semaine">("jour");
+const nomMois = (mois: string) =>
+  new Intl.DateTimeFormat("fr-CA", { timeZone: "UTC", month: "long", year: "numeric" }).format(new Date(`${mois}-15T12:00:00Z`));
+
+function moisVoisin(mois: string, n: number) {
+  const d = new Date(`${mois}-15T12:00:00Z`);
+  d.setUTCMonth(d.getUTCMonth() + n);
+  return d.toISOString().slice(0, 7);
+}
+
+// L'agenda : vues Jour, Semaine et Mois comme Google Agenda, demandes en pointillé, bouton +.
+export function VueAgenda({
+  evenements,
+  demandes,
+  aujourdhui,
+  maintenant: maintenantInitial,
+  peutEcrire,
+}: {
+  evenements: Evenement[];
+  demandes: DemandeEvenement[];
+  aujourdhui: string;
+  maintenant: string;
+  peutEcrire: boolean;
+}) {
+  const [vue, setVue] = useState<Vue>("jour");
   const [jour, setJour] = useState(aujourdhui);
-  const [ouvert, setOuvert] = useState<Evenement | null>(null);
+  const [ouvert, setOuvert] = useState<Element | null>(null);
+  const [creation, setCreation] = useState<{ jour: string; minutes: number } | null>(null);
+  const [maintenant, setMaintenant] = useState(maintenantInitial);
   const [synchro, demarrer] = useTransition();
+  const toucher = useRef<number | null>(null);
+
+  // La ligne « maintenant » avance chaque minute.
+  useEffect(() => {
+    const t = setInterval(() => setMaintenant(new Date().toISOString()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+
+  const elements: Element[] = [
+    ...evenements.map((e) => ({ type: "evenement" as const, e, debut: e.debut, fin: e.fin })),
+    ...demandes.map((d) => ({ type: "demande" as const, d, debut: d.debut, fin: d.fin })),
+  ];
+
+  const deplacer = (sens: 1 | -1) => {
+    if (vue === "jour") setJour(ajouterJours(jour, sens));
+    else if (vue === "semaine") setJour(ajouterJours(jour, 7 * sens));
+    else setJour(`${moisVoisin(jour.slice(0, 7), sens)}-01`);
+  };
+  const ouvrirJour = (j: string) => {
+    setJour(j);
+    setVue("jour");
+  };
+  const creerA = (j: string, minutes: number) => setCreation({ jour: j, minutes });
+
   const lundi = lundiDe(jour);
+  const titre =
+    vue === "jour" ? nomJour(jour) : vue === "semaine" ? `Semaine du ${nomJour(lundi, false)}` : nomMois(jour.slice(0, 7));
+  const { conflits, trous } = analyserJour(evenements, jour);
 
   return (
     <>
-      <div className="mt-6 grid grid-cols-2 gap-2 rounded-2xl bg-carte p-1">
+      {demandes.length > 0 && (
+        <details className="mt-4 rounded-2xl bg-carte p-4" open={demandes.length <= 2}>
+          <summary className="cursor-pointer text-base font-bold">⏳ {demandes.length} demande(s) attendent ton OK</summary>
+          <div className="mt-3 flex flex-col gap-3">
+            {demandes.map((d) => (
+              <CarteDemande key={d.id} d={d} />
+            ))}
+          </div>
+        </details>
+      )}
+
+      <div className="mt-4 grid grid-cols-3 gap-1 rounded-2xl bg-carte p-1">
         {(
           [
             ["jour", "Jour"],
             ["semaine", "Semaine"],
+            ["mois", "Mois"],
           ] as const
         ).map(([id, nom]) => (
           <button
             key={id}
             onClick={() => setVue(id)}
-            className={`h-12 rounded-xl text-base font-bold ${vue === id ? "bg-orange text-white" : ""}`}
+            className={`h-11 rounded-xl text-base font-bold ${vue === id ? "bg-orange text-white" : ""}`}
           >
             {nom}
           </button>
         ))}
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2">
-        <button
-          onClick={() => setJour(ajouterJours(jour, vue === "jour" ? -1 : -7))}
-          aria-label="Précédent"
-          className="size-12 shrink-0 rounded-xl border-2 border-bordure text-xl font-black"
-        >
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <button onClick={() => deplacer(-1)} aria-label="Précédent" className="size-11 shrink-0 rounded-xl border-2 border-bordure text-xl font-black">
           ‹
         </button>
         <button onClick={() => setJour(aujourdhui)} className="min-w-0 text-center">
-          <p className="truncate text-lg font-black first-letter:uppercase">
-            {vue === "jour" ? nomJour(jour) : `Semaine du ${nomJour(lundi, false)}`}
-          </p>
-          {jour !== aujourdhui && <p className="text-sm font-semibold text-orange">Revenir à aujourd&apos;hui</p>}
+          <p className="truncate text-lg font-black first-letter:uppercase">{titre}</p>
+          {jourDe(`${jour}T12:00:00Z`) !== aujourdhui && <p className="text-sm font-semibold text-orange">Aujourd&apos;hui</p>}
         </button>
-        <button
-          onClick={() => setJour(ajouterJours(jour, vue === "jour" ? 1 : 7))}
-          aria-label="Suivant"
-          className="size-12 shrink-0 rounded-xl border-2 border-bordure text-xl font-black"
-        >
+        <button onClick={() => deplacer(1)} aria-label="Suivant" className="size-11 shrink-0 rounded-xl border-2 border-bordure text-xl font-black">
           ›
         </button>
       </div>
 
-      {vue === "jour" ? (
-        <Jour evenements={duJour(evenements, jour)} tous={evenements} jour={jour} ouvrir={setOuvert} />
-      ) : (
-        <div className="mt-4 flex flex-col gap-4">
-          {Array.from({ length: 7 }, (_, i) => ajouterJours(lundi, i)).map((j) => {
-            const evs = duJour(evenements, j);
-            return (
-              <section key={j} className={estFinDeSemaine(j) ? "opacity-60" : ""}>
-                <button onClick={() => { setJour(j); setVue("jour"); }} className="mb-2 flex w-full items-baseline justify-between">
-                  <h2 className={`text-base font-black first-letter:uppercase ${j === aujourdhui ? "text-orange" : ""}`}>
-                    {nomJour(j)}
-                  </h2>
-                  <span className="text-sm text-discret">{evs.length ? `${evs.length} év.` : "libre"}</span>
-                </button>
-                <ul className="flex flex-col gap-2">
-                  {evs.map((e) => (
-                    <Ligne key={e.google_id} e={e} ouvrir={setOuvert} compact />
-                  ))}
-                </ul>
-              </section>
-            );
-          })}
+      {/* Glisser à gauche / à droite pour changer de période */}
+      <div
+        onTouchStart={(e) => (toucher.current = e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (toucher.current === null) return;
+          const dx = e.changedTouches[0].clientX - toucher.current;
+          toucher.current = null;
+          if (Math.abs(dx) > 70) deplacer(dx < 0 ? 1 : -1);
+        }}
+      >
+        {vue === "mois" ? (
+          <Mois mois={jour.slice(0, 7)} elements={elements} aujourdhui={aujourdhui} choisirJour={ouvrirJour} ouvrir={setOuvert} />
+        ) : (
+          <Grille
+            jours={vue === "jour" ? [jour] : Array.from({ length: 7 }, (_, i) => ajouterJours(lundi, i))}
+            elements={elements}
+            aujourdhui={aujourdhui}
+            maintenant={maintenant}
+            ouvrir={setOuvert}
+            creerA={creerA}
+            choisirJour={ouvrirJour}
+          />
+        )}
+      </div>
+
+      {vue === "jour" && (conflits.length > 0 || trous.length > 0) && (
+        <div className="mt-3 flex flex-col gap-2">
+          {conflits.map(([a, b]) => (
+            <p key={a + b} className="rounded-xl border-l-4 border-l-alerte bg-alerte-fond p-3 text-base">
+              ⚠️ « {a} » et « {b} » se chevauchent.
+            </p>
+          ))}
+          {trous.length > 0 && (
+            <p className="rounded-xl bg-carte p-3 text-base">
+              🕳️ Libre : {trous.map((t) => `${t.de}–${t.a}`).join(", ")}
+            </p>
+          )}
         </div>
+      )}
+
+      {!peutEcrire && (
+        <p className="mt-3 rounded-xl bg-carte p-3 text-sm text-discret">
+          Pour créer des événements, rebranche ton agenda (Réglages → Google Agenda) afin d&apos;accorder la
+          permission « créer des événements ».
+        </p>
       )}
 
       <button
         onClick={() => demarrer(async () => void (await synchroniserMaintenant()))}
         disabled={synchro}
-        className="mt-8 h-12 w-full rounded-xl border-2 border-bordure text-base font-bold disabled:opacity-60"
+        className="mt-4 h-12 w-full rounded-xl border-2 border-bordure text-base font-bold disabled:opacity-60"
       >
         {synchro ? "Mise à jour…" : "🔄 Mettre à jour depuis Google"}
       </button>
 
-      {ouvert && <FicheEvenement e={ouvert} fermer={() => setOuvert(null)} />}
-    </>
-  );
-}
-
-function Jour({
-  evenements,
-  tous,
-  jour,
-  ouvrir,
-}: {
-  evenements: Evenement[];
-  tous: Evenement[];
-  jour: string;
-  ouvrir: (e: Evenement) => void;
-}) {
-  const { conflits, trous } = analyserJour(tous, jour);
-  return (
-    <div className="mt-4 flex flex-col gap-3">
-      {estFinDeSemaine(jour) && (
-        <p className="rounded-xl bg-carte p-3 text-base text-discret">Fin de semaine : rien n&apos;est planifié par le Cerveau.</p>
-      )}
-      {evenements.length === 0 && <p className="rounded-2xl bg-carte p-6 text-lg">Rien à l&apos;agenda. 🌤️</p>}
-      <ul className="flex flex-col gap-2">
-        {evenements.map((e) => (
-          <Ligne key={e.google_id} e={e} ouvrir={ouvrir} />
-        ))}
-      </ul>
-      {conflits.length > 0 && (
-        <div className="rounded-2xl border-l-4 border-l-alerte bg-alerte-fond p-4 text-base">
-          <p className="font-bold text-alerte">⚠️ Conflits d&apos;horaire</p>
-          {conflits.map(([a, b]) => (
-            <p key={a + b}>
-              « {a} » et « {b} » se chevauchent.
-            </p>
-          ))}
-        </div>
-      )}
-      {trous.length > 0 && (
-        <div className="rounded-2xl bg-carte p-4 text-base">
-          <p className="font-bold">🕳️ Plages libres (9 h à 17 h)</p>
-          {trous.map((t) => (
-            <p key={t.de}>
-              {t.de} à {t.a} <span className="text-discret">({t.minutes} min)</span>
-            </p>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Ligne({ e, ouvrir, compact = false }: { e: Evenement; ouvrir: (e: Evenement) => void; compact?: boolean }) {
-  const cat = infoCategorie(e.categorie ?? e.categorie_auto);
-  return (
-    <li>
+      {/* Bouton + (au-dessus du bouton Note) */}
       <button
-        onClick={() => ouvrir(e)}
-        className={`flex w-full gap-3 rounded-2xl bg-carte text-left active:scale-[0.99] ${compact ? "p-3" : "p-4"}`}
+        onClick={() => creerA(jour, Math.max(8 * 60, Math.ceil(minutesLocales(maintenant) / 30) * 30))}
+        aria-label="Nouvelle demande d'événement"
+        className="fixed right-4 bottom-[calc(11rem+env(safe-area-inset-bottom))] z-20 flex size-16 items-center justify-center rounded-full bg-texte text-3xl font-black text-fond shadow-lg active:scale-95"
       >
-        <span className="w-1.5 shrink-0 rounded-full" style={{ background: cat.couleur }} />
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold text-discret">
-            {e.journee_entiere ? "Toute la journée" : `${heure(e.debut)} – ${heure(e.fin)}`}
-            {e.meet ? " · 🎥 Meet" : ""}
-          </span>
-          <span className={`block font-bold ${compact ? "text-base" : "text-lg"}`}>{e.titre}</span>
-          {!compact && e.lieu && <span className="block truncate text-sm text-discret">📍 {e.lieu}</span>}
-        </span>
+        +
       </button>
-    </li>
+
+      {creation && <FormulaireDemande jour={creation.jour} minutes={creation.minutes} fermer={() => setCreation(null)} />}
+      {ouvert?.type === "evenement" && <FicheEvenement e={ouvert.e} fermer={() => setOuvert(null)} />}
+      {ouvert?.type === "demande" && <FicheDemande d={ouvert.d} fermer={() => setOuvert(null)} />}
+    </>
   );
 }

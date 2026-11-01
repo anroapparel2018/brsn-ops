@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { lireApprobationsEnAttente, lireRappelsDus } from "@/lib/donnees";
+import { lireApprobationsEnAttente, lireDemandesAgenda, lireRappelsDus } from "@/lib/donnees";
 import { BarreAgents } from "./barre-agents";
 import { BanniereRappels } from "./banniere-rappels";
 import { BoutonNote } from "./bouton-note";
@@ -29,6 +29,6 @@ async function Rappels() {
 }
 
 async function Barre() {
-  const { total } = await lireApprobationsEnAttente();
-  return <BarreAgents enAttente={total} />;
+  const [{ total }, demandes] = await Promise.all([lireApprobationsEnAttente(), lireDemandesAgenda()]);
+  return <BarreAgents enAttente={total + demandes.length} />;
 }

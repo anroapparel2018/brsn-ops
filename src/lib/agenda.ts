@@ -2,10 +2,12 @@ import "server-only";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { categoriser } from "@/lib/categories-agenda";
 
-// Google Agenda en LECTURE SEULE (permission calendar.readonly). L'app ne crée, ne modifie et ne
-// supprime jamais rien dans Google. Les jetons sont chiffrés (AES-256-GCM) avec JETONS_CLE.
+// Google Agenda : lecture, et création d'événements SEULEMENT après l'approbation de Julien
+// (une demande approuvée dans l'app). L'app ne modifie et ne supprime jamais un événement existant.
+// Les jetons sont chiffrés (AES-256-GCM) avec JETONS_CLE.
 
 export const PORTEE = "https://www.googleapis.com/auth/calendar.readonly";
+export const PORTEE_ECRITURE = "https://www.googleapis.com/auth/calendar.events";
 
 export function googlePret() {
   return !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.JETONS_CLE);
@@ -36,7 +38,7 @@ export function urlConnexion(origine: string, etat: string) {
     client_id: process.env.GOOGLE_CLIENT_ID!,
     redirect_uri: `${origine}/api/google/retour`,
     response_type: "code",
-    scope: PORTEE,
+    scope: `${PORTEE} ${PORTEE_ECRITURE}`,
     access_type: "offline",
     prompt: "consent",
     include_granted_scopes: "false",
@@ -83,12 +85,51 @@ export async function jetonValide(compte: {
   };
 }
 
-// Période synchronisée : d'hier à dans 4 semaines.
+// Période synchronisée : 5 semaines en arrière, 4 mois en avant (pour la vue Mois).
 export function periode() {
-  const debut = new Date(Date.now() - 86_400_000);
+  const debut = new Date(Date.now() - 35 * 86_400_000);
   debut.setUTCHours(0, 0, 0, 0);
-  const fin = new Date(debut.getTime() + 30 * 86_400_000);
+  const fin = new Date(debut.getTime() + 155 * 86_400_000);
   return { debut: debut.toISOString(), fin: fin.toISOString() };
+}
+
+export type DemandeAgenda = {
+  titre: string;
+  debut: string;
+  fin: string;
+  journee_entiere: boolean;
+  lieu: string | null;
+  invites: string[];
+  meet: boolean;
+  description: string | null;
+};
+
+// Crée l'événement dans Google Agenda. Appelée UNIQUEMENT quand Julien approuve une demande.
+export async function creerEvenementGoogle(acces: string, d: DemandeAgenda, idDemande: string) {
+  const jour = (iso: string) => new Intl.DateTimeFormat("en-CA", { timeZone: "America/Montreal" }).format(new Date(iso));
+  const corps = {
+    summary: d.titre,
+    location: d.lieu ?? undefined,
+    description: d.description ?? undefined,
+    start: d.journee_entiere ? { date: jour(d.debut) } : { dateTime: d.debut, timeZone: "America/Montreal" },
+    end: d.journee_entiere ? { date: jour(d.fin) } : { dateTime: d.fin, timeZone: "America/Montreal" },
+    attendees: d.invites.length ? d.invites.map((email) => ({ email })) : undefined,
+    conferenceData: d.meet
+      ? { createRequest: { requestId: idDemande, conferenceSolutionKey: { type: "hangoutsMeet" } } }
+      : undefined,
+  };
+  const p = new URLSearchParams({
+    conferenceDataVersion: d.meet ? "1" : "0",
+    sendUpdates: d.invites.length ? "all" : "none",
+  });
+  const r = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?${p}`, {
+    method: "POST",
+    headers: { authorization: `Bearer ${acces}`, "content-type": "application/json" },
+    body: JSON.stringify(corps),
+  });
+  if (r.status === 403) throw new Error("permission");
+  if (!r.ok) throw new Error(`Google a refusé (${r.status})`);
+  return ((await r.json()) as { id: string }).id;
 }
 
 type EvenementGoogle = {

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { lireAgenda } from "@/lib/donnees";
-import { aujourdhui } from "@/lib/date";
+import { lireAgenda, lireDemandesAgenda } from "@/lib/donnees";
+import { aujourdhui, heureActuelle } from "@/lib/date";
 import { googlePret } from "@/lib/agenda";
 import { VueAgenda } from "./vue-agenda";
 
@@ -30,9 +30,12 @@ async function Contenu({ searchParams }: { searchParams: PageProps<"/agenda">["s
   const p = await searchParams;
   const jour = aujourdhui();
   const debut = new Date(`${jour}T00:00:00-05:00`);
-  debut.setUTCDate(debut.getUTCDate() - 8);
-  const fin = new Date(debut.getTime() + 40 * 86_400_000);
-  const { connecte, evenements } = await lireAgenda(debut.toISOString(), fin.toISOString());
+  debut.setUTCDate(debut.getUTCDate() - 40);
+  const fin = new Date(debut.getTime() + 165 * 86_400_000);
+  const [{ connecte, peutEcrire, evenements }, demandes] = await Promise.all([
+    lireAgenda(debut.toISOString(), fin.toISOString()),
+    lireDemandesAgenda(),
+  ]);
   const erreur = typeof p.erreur === "string" ? ERREURS[p.erreur] : null;
 
   if (!connecte) {
@@ -42,8 +45,8 @@ async function Contenu({ searchParams }: { searchParams: PageProps<"/agenda">["s
         <div className="rounded-2xl bg-carte p-6">
           <p className="text-lg font-bold">Branche ton Google Agenda</p>
           <p className="mt-2 text-base text-discret">
-            L&apos;app lit tes événements (lecture seule : elle ne crée, ne modifie et ne supprime jamais rien), les
-            affiche avec ton code de couleurs, et le Cerveau s&apos;en sert pour tes briefings.
+            L&apos;app lit tes événements, les affiche avec ton code de couleurs, et le Cerveau s&apos;en sert pour tes
+            briefings. Elle ne crée un événement qu&apos;après ton OK, et ne modifie ni ne supprime jamais rien.
           </p>
           {googlePret() ? (
              
@@ -70,7 +73,13 @@ async function Contenu({ searchParams }: { searchParams: PageProps<"/agenda">["s
   return (
     <>
       {p.connecte && <p className="mt-4 rounded-xl bg-carte p-3 text-base">✅ Ton agenda est branché.</p>}
-      <VueAgenda evenements={evenements} aujourdhui={jour} />
+      <VueAgenda
+        evenements={evenements}
+        demandes={demandes}
+        aujourdhui={jour}
+        maintenant={new Date(heureActuelle()).toISOString()}
+        peutEcrire={peutEcrire}
+      />
     </>
   );
 }
