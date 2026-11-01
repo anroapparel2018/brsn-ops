@@ -61,15 +61,16 @@ export async function lireAlertes(): Promise<Alerte[]> {
   return (data ?? []) as Alerte[];
 }
 
-export type MessageCerveau = { id: string; role: "user" | "assistant"; contenu: string };
+export type MessageAgent = { id: string; role: "user" | "assistant"; contenu: string };
 
-// Les derniers messages, du plus ancien au plus récent.
-export async function lireMessagesCerveau(nombre = 20): Promise<MessageCerveau[]> {
+// Les derniers messages échangés avec un agent, du plus ancien au plus récent.
+export async function lireMessages(agent: AgentId, nombre = 20): Promise<MessageAgent[]> {
   const supabase = await createClient();
   const { data } = await supabase
-    .from("messages_cerveau")
+    .from("messages_agents")
     .select("id, role, contenu")
+    .eq("agent", agent)
     .order("cree_le", { ascending: false })
     .limit(nombre);
-  return ((data ?? []) as MessageCerveau[]).reverse();
+  return ((data ?? []) as MessageAgent[]).reverse();
 }

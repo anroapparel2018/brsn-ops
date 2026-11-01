@@ -4,11 +4,12 @@ import { refresh } from "next/cache";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { aujourdhui } from "@/lib/date";
-import { demanderAuCerveau } from "@/lib/cerveau";
+import { demanderAUnAgent } from "@/lib/agents-ia";
+import { trouverAgent } from "@/lib/agents";
 import {
   lireAlertes,
   lireApprobationsEnAttente,
-  lireMessagesCerveau,
+  lireMessages,
   lirePriorites,
 } from "@/lib/donnees";
 
@@ -54,18 +55,25 @@ export async function marquerAlerteVue(id: string) {
   refresh();
 }
 
-export type EtatCerveau = { erreur?: string };
+export type EtatConversation = { erreur?: string; derniereReponse?: string };
 
-export async function ecrireAuCerveau(_etat: EtatCerveau, form: FormData): Promise<EtatCerveau> {
+// Envoie un message (tapé ou dicté) à un agent et enregistre la réponse.
+export async function ecrireAUnAgent(
+  agentId: string,
+  _etat: EtatConversation,
+  form: FormData,
+): Promise<EtatConversation> {
+  const agent = trouverAgent(agentId);
+  if (!agent) return { erreur: "Agent inconnu." };
   const message = String(form.get("message") ?? "").trim().slice(0, 4000);
   if (!message) return {};
   if (!process.env.ANTHROPIC_API_KEY) {
-    return { erreur: "Le Cerveau n'est pas encore branché : la clé Anthropic manque." };
+    return { erreur: `${agent.nom} n'est pas encore branché : la clé Anthropic manque.` };
   }
 
   const { supabase } = await utilisateurConnecte();
   const [historique, priorites, approbations, alertes] = await Promise.all([
-    lireMessagesCerveau(20),
+    lireMessages(agent.id, 20),
     lirePriorites(),
     lireApprobationsEnAttente(),
     lireAlertes(),
@@ -73,24 +81,33 @@ export async function ecrireAuCerveau(_etat: EtatCerveau, form: FormData): Promi
 
   let reponse: string;
   try {
-    reponse = await demanderAuCerveau(historique, message, { priorites, approbations, alertes });
+    reponse = await demanderAUnAgent(agent.id, historique, message, {
+      priorites,
+      approbations,
+      alertes,
+    });
   } catch (e) {
     if (e instanceof Anthropic.AuthenticationError) {
       return { erreur: "La clé Anthropic est refusée. Vérifie-la dans .env.local." };
     }
     if (e instanceof Anthropic.RateLimitError) {
-      return { erreur: "Le Cerveau est très occupé. Réessaie dans une minute." };
+      return { erreur: `${agent.nom} est très occupé. Réessaie dans une minute.` };
     }
-    console.error("Cerveau :", e);
-    return { erreur: "Le Cerveau n'a pas pu répondre. Réessaie dans un moment." };
+    console.error(`${agent.nom} :`, e);
+    return { erreur: `${agent.nom} n'a pas pu répondre. Réessaie dans un moment.` };
   }
 
   // Heures distinctes pour garder l'ordre question → réponse.
   const maintenant = Date.now();
-  await supabase.from("messages_cerveau").insert([
-    { role: "user", contenu: message, cree_le: new Date(maintenant).toISOString() },
-    { role: "assistant", contenu: reponse, cree_le: new Date(maintenant + 1).toISOString() },
+  await supabase.from("messages_agents").insert([
+    { agent: agent.id, role: "user", contenu: message, cree_le: new Date(maintenant).toISOString() },
+    {
+      agent: agent.id,
+      role: "assistant",
+      contenu: reponse,
+      cree_le: new Date(maintenant + 1).toISOString(),
+    },
   ]);
   refresh();
-  return {};
+  return { derniereReponse: reponse };
 }

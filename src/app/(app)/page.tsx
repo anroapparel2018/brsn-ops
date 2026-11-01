@@ -3,15 +3,10 @@ import Link from "next/link";
 import { getUser } from "@/lib/supabase/server";
 import { AGENTS } from "@/lib/agents";
 import { jourEnLettres } from "@/lib/date";
-import {
-  lireAlertes,
-  lireApprobationsEnAttente,
-  lireMessagesCerveau,
-  lirePriorites,
-} from "@/lib/donnees";
+import { lireAlertes, lireApprobationsEnAttente, lirePriorites } from "@/lib/donnees";
 import { Priorites } from "./priorites";
 import { Alertes } from "./alertes";
-import { BoiteCerveau } from "./boite-cerveau";
+import { Conversation } from "./conversation";
 import { BoutonDeconnexion } from "./deconnexion";
 
 // Accueil : l'écran du Cerveau. Chaque section se charge à son rythme.
@@ -41,10 +36,8 @@ export default function Accueil() {
         </Suspense>
       </Section>
 
-      <Section titre="Écrire au Cerveau">
-        <Suspense fallback={<Chargement />}>
-          <SectionCerveau />
-        </Suspense>
+      <Section titre="Parler au Cerveau">
+        <Conversation agent="cerveau" />
       </Section>
 
       <BoutonDeconnexion />
@@ -108,8 +101,4 @@ async function SectionApprobations() {
 async function SectionAlertes() {
   const [alertes, { anciennes }] = await Promise.all([lireAlertes(), lireApprobationsEnAttente()]);
   return <Alertes alertes={alertes} anciennes={anciennes} />;
-}
-
-async function SectionCerveau() {
-  return <BoiteCerveau messages={await lireMessagesCerveau(10)} />;
 }
