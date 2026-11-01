@@ -12,11 +12,14 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient();
   let ok = false;
 
-  if (code) {
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    ok = !error;
-  } else if (tokenHash && type) {
+  // token_hash : fonctionne même si le lien s'ouvre dans un autre navigateur (ex. l'app Courriel du téléphone).
+  if (tokenHash && type) {
     const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
+    if (error) console.error("Connexion (token_hash) :", error.message);
+    ok = !error;
+  } else if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) console.error("Connexion (code) :", error.message);
     ok = !error;
   }
 
