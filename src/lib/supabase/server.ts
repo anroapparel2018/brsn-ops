@@ -1,9 +1,12 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 
 // Client Supabase côté serveur (pages, actions, routes). Lit la session dans les témoins.
 export async function createClient() {
+  // Toujours au moment de la requête : Supabase lit l'heure (Date.now) pour valider la session.
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient(
