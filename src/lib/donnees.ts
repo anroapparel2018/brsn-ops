@@ -98,6 +98,40 @@ export async function lireApprobationsEnAttente(): Promise<ApprobationsEnAttente
   return resultat;
 }
 
+export type Evenement = {
+  google_id: string;
+  debut: string;
+  fin: string;
+  journee_entiere: boolean;
+  titre: string;
+  lieu: string | null;
+  meet: string | null;
+  description: string | null;
+  invites: { nom: string; reponse?: string }[];
+  lien_google: string | null;
+  categorie_auto: string;
+  categorie: string | null;
+};
+
+// Mon agenda (copie locale de Google, lecture seule) entre deux dates ISO.
+export async function lireAgenda(debut: string, fin: string) {
+  const supabase = await createClient();
+  const [{ data: compte }, { data: evenements }] = await Promise.all([
+    supabase.from("google_comptes").select("derniere_synchro").maybeSingle(),
+    supabase
+      .from("evenements")
+      .select("google_id, debut, fin, journee_entiere, titre, lieu, meet, description, invites, lien_google, categorie_auto, categorie")
+      .lt("debut", fin)
+      .gt("fin", debut)
+      .order("debut"),
+  ]);
+  return {
+    connecte: !!compte,
+    derniereSynchro: (compte?.derniere_synchro as string | null) ?? null,
+    evenements: (evenements ?? []) as Evenement[],
+  };
+}
+
 export async function lireFiches(types: string[]) {
   const supabase = await createClient();
   const { data } = await supabase

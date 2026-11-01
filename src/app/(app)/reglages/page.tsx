@@ -2,7 +2,8 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { getUser } from "@/lib/supabase/server";
 import { cleDisponible, MODELES } from "@/lib/ia";
-import { lireCoutDuMois } from "@/lib/donnees";
+import { lireAgenda, lireCoutDuMois } from "@/lib/donnees";
+import { ReglageGoogle } from "./google";
 import { BoutonDeconnexion } from "../deconnexion";
 import { Notifications } from "./notifications";
 import { ChoixTheme } from "./theme";
@@ -34,7 +35,9 @@ export default function Reglages() {
 }
 
 async function Contenu() {
-  const [user, cout] = await Promise.all([getUser(), lireCoutDuMois()]);
+  const user = await getUser();
+  const maintenant = new Date().toISOString();
+  const [cout, agenda] = await Promise.all([lireCoutDuMois(), lireAgenda(maintenant, maintenant)]);
   const cle = cleDisponible();
   const argent = (n: number) =>
     new Intl.NumberFormat("fr-CA", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(n);
@@ -62,6 +65,11 @@ async function Contenu() {
           Modèles : {MODELES.complet} (conversations), {MODELES.rapide} (petites tâches). Mise en cache des
           instructions activée. Limite de dépenses : 50 $ US par mois dans la console Anthropic.
         </p>
+      </section>
+
+      <section className="mt-6 rounded-2xl bg-carte p-5">
+        <h2 className="text-xl font-black">Google Agenda</h2>
+        <ReglageGoogle connecte={agenda.connecte} derniereSynchro={agenda.derniereSynchro} />
       </section>
 
       <section className="mt-6 rounded-2xl bg-carte p-5">

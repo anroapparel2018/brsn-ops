@@ -26,18 +26,20 @@ export async function GET(req: NextRequest) {
   if (error) return NextResponse.json({ erreur: "Lecture impossible" }, { status: 500 });
 
   const rappels = (data?.rappels ?? []) as { titre: string; rappel_le: string }[];
-  if (!rappels.length || !data?.abonnements?.length) return NextResponse.json({ envoyes: 0 });
+  const evenements = (data?.evenements ?? []) as { titre: string; debut: string; journee_entiere: boolean }[];
+  if ((!rappels.length && !evenements.length) || !data?.abonnements?.length) return NextResponse.json({ envoyes: 0 });
 
   const heure = (iso: string) =>
     new Intl.DateTimeFormat("fr-CA", { timeZone: "America/Montreal", hour: "numeric", minute: "2-digit" }).format(
       new Date(iso),
     );
+  const lignes = [
+    ...evenements.slice(0, 5).map((e) => `📅 ${e.journee_entiere ? "Journée" : heure(e.debut)} · ${e.titre}`),
+    ...rappels.slice(0, 5).map((r) => `⏰ ${heure(r.rappel_le)} · ${r.titre}`),
+  ];
   const { envoyes } = await envoyerPush(data.abonnements, {
-    titre: `⏰ ${rappels.length} rappel${rappels.length > 1 ? "s" : ""} aujourd'hui`,
-    texte: rappels
-      .slice(0, 5)
-      .map((r) => `${heure(r.rappel_le)} · ${r.titre}`)
-      .join("\n"),
+    titre: `Ta journée : ${evenements.length} événement${evenements.length > 1 ? "s" : ""}, ${rappels.length} rappel${rappels.length > 1 ? "s" : ""}`,
+    texte: lignes.join("\n"),
     url: "/a-faire",
     tag: `rappels-${jour}`,
   });

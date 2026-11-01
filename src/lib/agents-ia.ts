@@ -6,7 +6,10 @@ import { jourEnLettres } from "@/lib/date";
 import { appelerClaude, texteDe } from "@/lib/ia";
 import { instructionsAgent } from "@/lib/instructions";
 import { CATEGORIES, formaterRappel, trierParImportance, type Tache } from "@/lib/taches";
-import type { Alerte, ApprobationsEnAttente, MessageAgent, Priorite } from "@/lib/donnees";
+import type { Alerte, ApprobationsEnAttente, Evenement, MessageAgent, Priorite } from "@/lib/donnees";
+import { ajouterJours, estFinDeSemaine, heure, jourDe, jourSemaine, nomJour } from "@/lib/jours";
+import { analyserJour, instantLocal } from "@/lib/agenda-analyse";
+import { infoCategorie } from "@/lib/categories-agenda";
 
 // Les agents répondent et peuvent créer des tâches, rappels et notes DANS L'APP seulement.
 // Ils n'ont aucun outil vers l'extérieur (Shopify, QuickBooks, Outlook…).
@@ -16,7 +19,31 @@ export type Contexte = {
   approbations: ApprobationsEnAttente;
   alertes: Alerte[];
   taches: Tache[];
+  agenda?: { connecte: boolean; evenements: Evenement[] };
 };
+
+// Agenda de la semaine (lecture seule) : événements, trous et conflits d'aujourd'hui.
+function decrireAgenda(agenda: Contexte["agenda"]) {
+  if (!agenda?.connecte) return "Agenda Google : pas encore branché.";
+  const auj = jourDe(Date.now());
+  const l = ["Agenda (Google, lecture seule) — Julien travaille du lundi au vendredi :"];
+  for (let i = 0; i < 7; i++) {
+    const j = ajouterJours(auj, i);
+    const evs = agenda.evenements.filter((e) =>
+      e.journee_entiere ? jourDe(e.debut) <= j && j < jourDe(e.fin) : jourDe(e.debut) === j,
+    );
+    l.push(`${nomJour(j)}${estFinDeSemaine(j) ? " (fin de semaine)" : ""} :`);
+    if (!evs.length) l.push("- (rien)");
+    for (const e of evs) {
+      const quand = e.journee_entiere ? "toute la journée" : `${heure(e.debut)}-${heure(e.fin)}`;
+      l.push(`- ${quand} ${e.titre} [${infoCategorie(e.categorie ?? e.categorie_auto).nom}]${e.lieu ? ` @ ${e.lieu}` : ""}`);
+    }
+  }
+  const { conflits, trous } = analyserJour(agenda.evenements, auj);
+  if (conflits.length) l.push(`Conflits aujourd'hui : ${conflits.map(([a, b]) => `« ${a} » / « ${b} »`).join(" ; ")}`);
+  if (trous.length) l.push(`Plages libres aujourd'hui (9 h-17 h) : ${trous.map((t) => `${t.de}-${t.a}`).join(", ")}`);
+  return l.join("\n");
+}
 
 async function systeme(agentId: AgentId) {
   const agent = AGENTS.find((a) => a.id === agentId)!;
@@ -34,10 +61,12 @@ Comment tu réponds :
 - Julien te parle souvent à voix haute depuis son téléphone, et ta réponse peut lui être lue : phrases simples, pas de tableaux, peu de symboles.
 - Tu peux créer des tâches, des rappels et des notes dans l'app avec tes outils quand Julien le demande ou l'accepte. Confirme ce que tu as créé.
 - Tu n'as aucun accès à l'extérieur de l'app. Ne dis jamais que tu as envoyé, payé ou publié quelque chose.
+- Tu lis l'agenda Google de Julien (lecture seule) : tu ne peux pas y ajouter ni modifier d'événement. Pour « c'est quoi ma journée / ma semaine », réponds à partir de l'agenda et des tâches, et signale les trous et les conflits.
+- Julien travaille du lundi au vendredi : ne planifie jamais rien le samedi ni le dimanche (ni tâche, ni rappel, ni suggestion).
 - Le contexte du jour t'est donné avec chaque message. S'il te manque une information, dis-le au lieu d'inventer.`;
 }
 
-function decrireContexte({ priorites, approbations, alertes, taches }: Contexte) {
+function decrireContexte({ priorites, approbations, alertes, taches, agenda }: Contexte) {
   const nomAgent = (id: string) => AGENTS.find((a) => a.id === id)?.nom ?? id;
   const l = [`Date : ${jourEnLettres()}`, "", "Priorités du jour de Julien :"];
   if (!priorites.length) l.push("- (aucune écrite)");
@@ -57,6 +86,8 @@ function decrireContexte({ priorites, approbations, alertes, taches }: Contexte)
   l.push("", "Alertes non vues :");
   if (!alertes.length) l.push("- (aucune)");
   for (const a of alertes) l.push(`- [${a.niveau}] ${nomAgent(a.agent)} : ${a.titre}`);
+
+  l.push("", decrireAgenda(agenda));
   return l.join("\n");
 }
 
@@ -99,9 +130,17 @@ const OUTILS: Anthropic.Beta.BetaToolUnion[] = [
 async function executerOutil(nom: string, entree: Record<string, unknown>): Promise<string> {
   const supabase = await createClient();
   if (nom === "creer_tache") {
-    const rappel = typeof entree.rappel_le === "string" && !isNaN(Date.parse(entree.rappel_le))
+    let rappel = typeof entree.rappel_le === "string" && !isNaN(Date.parse(entree.rappel_le))
       ? new Date(entree.rappel_le).toISOString()
       : null;
+    // Jamais la fin de semaine : on reporte au lundi (9 h pour un rappel).
+    if (rappel && estFinDeSemaine(jourDe(rappel))) {
+      const lundi = ajouterJours(jourDe(rappel), jourSemaine(jourDe(rappel)) === 6 ? 2 : 1);
+      rappel = new Date(instantLocal(lundi, 9)).toISOString();
+    }
+    if (typeof entree.echeance === "string" && /^\d{4}-\d{2}-\d{2}$/.test(entree.echeance) && estFinDeSemaine(entree.echeance)) {
+      entree.echeance = ajouterJours(entree.echeance, jourSemaine(entree.echeance) === 6 ? 2 : 1);
+    }
     const { error } = await supabase.from("taches").insert({
       titre: String(entree.titre ?? "").slice(0, 500),
       details: (entree.details as string) || null,

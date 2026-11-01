@@ -8,7 +8,8 @@ import { AGENTS, lienAgent } from "@/lib/agents";
 const ONGLETS = [
   { href: "/", icone: "🧠", nom: "Accueil" },
   { href: "/a-faire", icone: "✅", nom: "À faire" },
-  { href: "/approbations", icone: "📥", nom: "Approbations" },
+  { href: "/agenda", icone: "📅", nom: "Agenda" },
+  { href: "/approbations", icone: "📥", nom: "Approb." },
 ];
 
 // Barre du bas : Accueil, À faire, Approbations et le menu des agents (2 touches maximum).
@@ -64,7 +65,7 @@ export function BarreAgents({ enAttente = 0 }: { enAttente?: number }) {
         aria-label="Navigation"
         className="fixed inset-x-0 bottom-0 z-40 border-t border-bordure bg-fond/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
       >
-        <ul className="mx-auto grid max-w-2xl grid-cols-4 gap-1 px-2 py-2">
+        <ul className="mx-auto grid max-w-2xl grid-cols-5 gap-1 px-2 py-2">
           {ONGLETS.map((o) => {
             const actif = chemin === o.href && !menu;
             return (

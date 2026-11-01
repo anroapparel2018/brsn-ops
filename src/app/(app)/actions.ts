@@ -7,6 +7,7 @@ import { bilanDeLaJournee, demanderAUnAgent } from "@/lib/agents-ia";
 import { messageErreurIA } from "@/lib/ia";
 import { trouverAgent } from "@/lib/agents";
 import {
+  lireAgenda,
   lireAlertes,
   lireApprobationsEnAttente,
   lireMessages,
@@ -99,13 +100,16 @@ export async function ecrireAUnAgent(
 }
 
 async function lireContexte() {
-  const [priorites, approbations, alertes, taches] = await Promise.all([
+  const debut = new Date(Date.now() - 86_400_000).toISOString();
+  const fin = new Date(Date.now() + 8 * 86_400_000).toISOString();
+  const [priorites, approbations, alertes, taches, agenda] = await Promise.all([
     lirePriorites(),
     lireApprobationsEnAttente(),
     lireAlertes(),
     lireTachesAFaire(),
+    lireAgenda(debut, fin),
   ]);
-  return { priorites, approbations, alertes, taches };
+  return { priorites, approbations, alertes, taches, agenda };
 }
 
 // Bilan de fin de journée généré par le Cerveau (sur demande).

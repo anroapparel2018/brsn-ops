@@ -18,6 +18,7 @@ import { Alertes } from "./alertes";
 import { Conversation } from "./conversation";
 import { Objectif } from "./objectif";
 import { Bilan } from "./bilan";
+import { AgendaDuJour } from "./agenda-du-jour";
 
 // Accueil : le brief du jour du Cerveau. Chaque section se charge à son rythme.
 export default function Accueil() {
@@ -27,6 +28,12 @@ export default function Accueil() {
       <Suspense fallback={<h1 className="mt-2 text-3xl font-black">Salut&nbsp;!</h1>}>
         <Salutation />
       </Suspense>
+
+      <Section titre="Ton agenda aujourd'hui">
+        <Suspense fallback={<Chargement />}>
+          <AgendaDuJour />
+        </Suspense>
+      </Section>
 
       <Section titre="Parler au Cerveau">
         <Conversation agent="cerveau" />

@@ -3,7 +3,13 @@ import { NextResponse, type NextRequest } from "next/server";
 
 // Pages accessibles sans être connecté.
 // (/api/push/rappels : tâche planifiée de Vercel, protégée par son propre secret.)
-const PAGES_PUBLIQUES = ["/connexion", "/auth/confirm", "/auth/callback", "/api/push/rappels"];
+const PAGES_PUBLIQUES = [
+  "/connexion",
+  "/auth/confirm",
+  "/auth/callback",
+  "/api/push/rappels",
+  "/api/agenda/synchro", // synchro planifiée, protégée par son jeton
+];
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
