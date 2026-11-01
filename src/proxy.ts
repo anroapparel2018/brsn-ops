@@ -9,13 +9,16 @@ const PAGES_PUBLIQUES = [
   "/auth/callback",
   "/api/push/rappels",
   "/api/agenda/synchro", // synchro planifiée, protégée par son jeton
+  "/api/google/retour", // retour de Google (souvent dans Safari), protégé par l'état secret
+  "/google-branche",
 ];
 
 export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
   // Un lien de Supabase qui arrive ailleurs que prévu (ex. la page d'accueil) : on le redirige vers la confirmation.
-  if (searchParams.has("code") && pathname !== "/auth/confirm") {
+  // (Le retour de Google Agenda a aussi un « code », mais il a sa propre route.)
+  if (searchParams.has("code") && pathname !== "/auth/confirm" && !pathname.startsWith("/api/google/")) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/confirm";
     return NextResponse.redirect(url);
