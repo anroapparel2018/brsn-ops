@@ -2,6 +2,42 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { aujourdhui } from "@/lib/date";
 import type { AgentId } from "@/lib/agents";
+import { COLONNES_TACHE, type Tache } from "@/lib/taches";
+
+export async function lireTachesAFaire(): Promise<Tache[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("taches")
+    .select(COLONNES_TACHE)
+    .eq("statut", "a_faire")
+    .order("cree_le");
+  return (data ?? []) as Tache[];
+}
+
+export async function lireTachesFaitesRecemment(): Promise<Tache[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("taches")
+    .select(COLONNES_TACHE)
+    .eq("statut", "fait")
+    .gte("fait_le", new Date(Date.now() - 2 * 86_400_000).toISOString())
+    .order("fait_le", { ascending: false })
+    .limit(20);
+  return (data ?? []) as Tache[];
+}
+
+// Rappels arrivés à échéance et pas encore vus.
+export async function lireRappelsDus(): Promise<Tache[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("taches")
+    .select(COLONNES_TACHE)
+    .eq("statut", "a_faire")
+    .eq("rappel_vu", false)
+    .lte("rappel_le", new Date().toISOString())
+    .order("rappel_le");
+  return (data ?? []) as Tache[];
+}
 
 // Lectures pour l'Accueil. La sécurité (RLS) de Supabase limite déjà ce que chacun voit.
 

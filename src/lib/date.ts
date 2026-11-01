@@ -1,3 +1,8 @@
+// Heure actuelle (à appeler côté serveur, au moment de la requête).
+export function heureActuelle() {
+  return Date.now();
+}
+
 // Date du jour à l'heure du Québec, au format AAAA-MM-JJ.
 export function aujourdhui() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Montreal" }).format(new Date());

@@ -1,11 +1,32 @@
+import { Suspense } from "react";
+import { lireApprobationsEnAttente, lireRappelsDus } from "@/lib/donnees";
 import { BarreAgents } from "./barre-agents";
+import { BanniereRappels } from "./banniere-rappels";
+import { BoutonNote } from "./bouton-note";
 
 // Écrans réservés aux personnes connectées (le proxy redirige les autres vers /connexion).
 export default function LayoutApp({ children }: LayoutProps<"/">) {
   return (
     <>
-      <main className="mx-auto w-full max-w-2xl flex-1 px-5 pt-8 pb-32">{children}</main>
-      <BarreAgents />
+      <main className="mx-auto w-full max-w-2xl flex-1 px-5 pt-[calc(2rem+env(safe-area-inset-top))] pb-48">
+        <Suspense>
+          <Rappels />
+        </Suspense>
+        {children}
+      </main>
+      <BoutonNote />
+      <Suspense fallback={<BarreAgents />}>
+        <Barre />
+      </Suspense>
     </>
   );
+}
+
+async function Rappels() {
+  return <BanniereRappels rappels={await lireRappelsDus()} />;
+}
+
+async function Barre() {
+  const { total } = await lireApprobationsEnAttente();
+  return <BarreAgents enAttente={total} />;
 }
