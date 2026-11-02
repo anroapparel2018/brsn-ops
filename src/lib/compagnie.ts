@@ -36,6 +36,8 @@ const TABLES_COMPAGNIE = new Set([
   "notifications",
   "agents",
   "journal_activite",
+  "historique_tri",
+  "tri_clickup",
 ]);
 
 // Mes compagnies (celles que la sécurité me laisse voir), une fois par requête.

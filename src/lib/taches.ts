@@ -32,11 +32,14 @@ export type Tache = {
   recurrence: Recurrence | null;
   statut: "a_faire" | "fait";
   fait_le: string | null;
+  reporte_au: string | null; // revient ce jour-là
+  accepte_le: string | null; // Julien s'en occupe
+  clickup_id: string | null;
   cree_le: string;
 };
 
 export const COLONNES_TACHE =
-  "id, titre, details, agent, categorie, echeance, rappel_le, rappel_vu, recurrence, statut, fait_le, cree_le";
+  "id, titre, details, agent, categorie, echeance, rappel_le, rappel_vu, recurrence, statut, fait_le, reporte_au, accepte_le, clickup_id, cree_le";
 
 // Prochaine date d'un rappel récurrent.
 export function prochaineOccurrence(depuis: Date, recurrence: Recurrence): Date {

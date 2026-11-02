@@ -4,12 +4,15 @@ import { aujourdhui } from "@/lib/date";
 import type { AgentId } from "@/lib/agents";
 import { COLONNES_TACHE, type Tache } from "@/lib/taches";
 
+// Tâches à faire, sans les archivées ni celles reportées à un jour qui n'est pas encore arrivé.
 export async function lireTachesAFaire(): Promise<Tache[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("taches")
     .select(COLONNES_TACHE)
     .eq("statut", "a_faire")
+    .is("archive_le", null)
+    .or(`reporte_au.is.null,reporte_au.lte.${aujourdhui()}`)
     .order("cree_le");
   return (data ?? []) as Tache[];
 }
@@ -85,7 +88,9 @@ export async function lireApprobationsEnAttente(): Promise<ApprobationsEnAttente
   const { data } = await supabase
     .from("approbations")
     .select("agent, cree_le")
-    .eq("statut", "en_attente");
+    .eq("statut", "en_attente")
+    .is("archive_le", null)
+    .or(`reporte_au.is.null,reporte_au.lte.${aujourdhui()}`);
 
   const limite = Date.now() - 48 * 60 * 60 * 1000;
   const resultat: ApprobationsEnAttente = { total: 0, parAgent: {}, anciennes: 0 };
@@ -169,11 +174,17 @@ export async function lireFiches(types: string[]) {
   return data ?? [];
 }
 
-const COLONNES_APPROBATION = "id, compagnie_id, agent, titre, details, statut, commentaire, photo, cree_le, decide_le";
+const COLONNES_APPROBATION =
+  "id, compagnie_id, agent, titre, details, type, statut, commentaire, photo, reporte_au, cree_le, decide_le";
 
 export async function lireApprobations(agent?: AgentId) {
   const supabase = await createClient();
-  let attente = supabase.from("approbations").select(COLONNES_APPROBATION).eq("statut", "en_attente");
+  let attente = supabase
+    .from("approbations")
+    .select(COLONNES_APPROBATION)
+    .eq("statut", "en_attente")
+    .is("archive_le", null)
+    .or(`reporte_au.is.null,reporte_au.lte.${aujourdhui()}`);
   let faites = supabase.from("approbations").select(COLONNES_APPROBATION).neq("statut", "en_attente");
   if (agent) {
     attente = attente.eq("agent", agent);
@@ -191,7 +202,10 @@ export type Alerte = {
   agent: AgentId;
   titre: string;
   details: string | null;
+  pourquoi: string | null;
+  action: string | null;
   niveau: "info" | "important" | "urgent";
+  reporte_au: string | null;
   cree_le: string;
 };
 
@@ -199,8 +213,11 @@ export async function lireAlertes(): Promise<Alerte[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("alertes")
-    .select("id, agent, titre, details, niveau, cree_le")
+    .select("id, agent, titre, details, pourquoi, action, niveau, reporte_au, cree_le")
     .is("vue_le", null)
+    .is("accepte_le", null)
+    .is("archive_le", null)
+    .or(`reporte_au.is.null,reporte_au.lte.${aujourdhui()}`)
     .order("cree_le", { ascending: false })
     .limit(20);
   return (data ?? []) as Alerte[];
