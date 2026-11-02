@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 
 // Fichiers des anciens outils (photos, guides, pièces jointes) dans Supabase Storage, dossier privé.
 // POST : prépare un envoi direct du navigateur vers Supabase (pas de limite de taille de Vercel).
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   if (!corps || !NOM.test(corps.outil)) return erreur("Requête invalide");
 
   const nom = String(corps.nom || "fichier").normalize("NFD").replace(/[^\w.-]+/g, "_").slice(-80);
-  const id = `${corps.outil}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${nom}`;
+  const id = `${supabase.compagnie.id}/${corps.outil}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${nom}`;
   const { data, error } = await supabase.storage.from(SEAU).createSignedUploadUrl(id);
   if (error || !data) return erreur("Envoi impossible", 500);
   return NextResponse.json({ id, url: `/api/outils/fichiers?id=${encodeURIComponent(id)}`, envoi: data.signedUrl });

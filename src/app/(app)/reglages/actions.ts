@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { envoyerPush, pushDisponible } from "@/lib/push";
 
 async function connecte() {

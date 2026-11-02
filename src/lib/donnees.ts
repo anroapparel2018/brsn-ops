@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { aujourdhui } from "@/lib/date";
 import type { AgentId } from "@/lib/agents";
 import { COLONNES_TACHE, type Tache } from "@/lib/taches";
@@ -169,7 +169,7 @@ export async function lireFiches(types: string[]) {
   return data ?? [];
 }
 
-const COLONNES_APPROBATION = "id, agent, titre, details, statut, commentaire, photo, cree_le, decide_le";
+const COLONNES_APPROBATION = "id, compagnie_id, agent, titre, details, statut, commentaire, photo, cree_le, decide_le";
 
 export async function lireApprobations(agent?: AgentId) {
   const supabase = await createClient();

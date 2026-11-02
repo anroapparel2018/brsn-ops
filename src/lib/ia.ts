@@ -1,6 +1,6 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 
 // Point unique d'appel à l'API Claude, côté serveur seulement.
 // - Sonnet 5.5 pour les conversations et analyses, Haiku 5.5 pour les petites tâches.

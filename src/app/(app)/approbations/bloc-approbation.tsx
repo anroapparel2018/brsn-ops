@@ -7,6 +7,7 @@ import { decider } from "./actions";
 
 export type Approbation = {
   id: string;
+  compagnie_id: string;
   agent: string;
   titre: string;
   details: string | null;
@@ -41,7 +42,7 @@ export function BlocApprobation({ a }: { a: Approbation }) {
     setTeleversement(true);
     setMessage(null);
     const ext = (f.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const chemin = `${a.id}/${Date.now()}.${ext || "jpg"}`;
+    const chemin = `${a.compagnie_id}/${a.id}/${Date.now()}.${ext || "jpg"}`;
     const { error } = await createClient()
       .storage.from("photos-approbations")
       .upload(chemin, f, { contentType: f.type || "image/jpeg" });

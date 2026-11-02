@@ -41,7 +41,14 @@ export function BarreAgents({ enAttente = 0 }: { enAttente?: number }) {
                 </li>
               ))}
             </ul>
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              <Link
+                href="/outils"
+                onClick={() => setMenu(false)}
+                className="flex h-14 items-center justify-center rounded-2xl border-2 border-bordure text-base font-bold"
+              >
+                🧰 Outils
+              </Link>
               <Link
                 href="/recherche"
                 onClick={() => setMenu(false)}

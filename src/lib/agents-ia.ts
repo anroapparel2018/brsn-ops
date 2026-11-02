@@ -1,6 +1,6 @@
 import "server-only";
 import type Anthropic from "@anthropic-ai/sdk";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { AGENTS, type AgentId } from "@/lib/agents";
 import { jourEnLettres } from "@/lib/date";
 import { appelerClaude, texteDe } from "@/lib/ia";

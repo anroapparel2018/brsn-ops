@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClientCompagnie as createClient } from "@/lib/compagnie";
 
 // Base de données des anciens outils (remplace le « db » des artefacts Claude).
 // Un document = (outil, chemin) ; une collection = les documents directement sous un chemin.

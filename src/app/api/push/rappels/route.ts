@@ -3,13 +3,14 @@ import { createClient } from "@supabase/supabase-js";
 import { envoyerPush, pushDisponible } from "@/lib/push";
 import { aujourdhui } from "@/lib/date";
 
-// Tâche planifiée de Vercel (chaque matin) : envoie la liste des rappels du jour sur le téléphone.
-// Protégée par CRON_SECRET (Vercel l'envoie dans l'en-tête Authorization).
+// Tâche planifiée de Vercel (chaque matin) : chaque appareil reçoit SES rappels et événements du jour.
+// Protégée par CRON_SECRET. Désactivée tant que PUSH_ACTIF n'est pas « 1 » (approbation de Julien).
 export async function GET(req: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ erreur: "Accès refusé" }, { status: 401 });
   }
+  if (process.env.PUSH_ACTIF !== "1") return NextResponse.json({ envoyes: 0, raison: "push désactivé" });
   if (!pushDisponible()) return NextResponse.json({ erreur: "Clés de notification manquantes" }, { status: 503 });
 
   const supabase = createClient(
@@ -25,23 +26,30 @@ export async function GET(req: NextRequest) {
   });
   if (error) return NextResponse.json({ erreur: "Lecture impossible" }, { status: 500 });
 
-  const rappels = (data?.rappels ?? []) as { titre: string; rappel_le: string }[];
-  const evenements = (data?.evenements ?? []) as { titre: string; debut: string; journee_entiere: boolean }[];
-  if ((!rappels.length && !evenements.length) || !data?.abonnements?.length) return NextResponse.json({ envoyes: 0 });
-
   const heure = (iso: string) =>
     new Intl.DateTimeFormat("fr-CA", { timeZone: "America/Montreal", hour: "numeric", minute: "2-digit" }).format(
       new Date(iso),
     );
-  const lignes = [
-    ...evenements.slice(0, 5).map((e) => `📅 ${e.journee_entiere ? "Journée" : heure(e.debut)} · ${e.titre}`),
-    ...rappels.slice(0, 5).map((r) => `⏰ ${heure(r.rappel_le)} · ${r.titre}`),
-  ];
-  const { envoyes } = await envoyerPush(data.abonnements, {
-    titre: `Ta journée : ${evenements.length} événement${evenements.length > 1 ? "s" : ""}, ${rappels.length} rappel${rappels.length > 1 ? "s" : ""}`,
-    texte: lignes.join("\n"),
-    url: "/a-faire",
-    tag: `rappels-${jour}`,
-  });
+  type Ligne = {
+    abonnement: { endpoint: string; abonnement: Parameters<typeof envoyerPush>[0][number]["abonnement"] };
+    rappels: { titre: string; rappel_le: string }[];
+    evenements: { titre: string; debut: string; journee_entiere: boolean }[];
+  };
+
+  let envoyes = 0;
+  for (const l of (data ?? []) as Ligne[]) {
+    if (!l.rappels.length && !l.evenements.length) continue;
+    const lignes = [
+      ...l.evenements.slice(0, 5).map((e) => `📅 ${e.journee_entiere ? "Journée" : heure(e.debut)} · ${e.titre}`),
+      ...l.rappels.slice(0, 5).map((r) => `⏰ ${heure(r.rappel_le)} · ${r.titre}`),
+    ];
+    const r = await envoyerPush([l.abonnement], {
+      titre: `Ta journée : ${l.evenements.length} événement(s), ${l.rappels.length} rappel(s)`,
+      texte: lignes.join("\n"),
+      url: "/a-faire",
+      tag: `rappels-${jour}`,
+    });
+    envoyes += r.envoyes;
+  }
   return NextResponse.json({ envoyes });
 }
