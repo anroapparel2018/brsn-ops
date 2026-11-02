@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from "react";
 import { createClientCompagnie as createClient } from "@/lib/compagnie";
 import { aujourdhui } from "@/lib/date";
 import { trouverAgent } from "@/lib/agents";
@@ -176,7 +177,8 @@ function carteClickUp(t: TacheClickUp, tri: TriClickUp | undefined, jour: string
   };
 }
 
-export async function lireAccueil() {
+// Une seule lecture par requête, partagée par toutes les sections de l'Accueil.
+export const lireAccueil = cache(async () => {
   const supabase = await createClient();
   const jour = aujourdhui();
   const visibleOu = `reporte_au.is.null,reporte_au.lte.${jour}`;
@@ -217,7 +219,7 @@ export async function lireAccueil() {
   ];
 
   // Revenus aujourd'hui (reportés) : tout en haut, une seule fois.
-  const reportes = cartes.filter((c) => c.reporte);
+  const reportes = cartes.filter((c) => c.reporte).map((c) => ({ ...c, pourquoi: "Tu l'avais reportée à aujourd'hui." }));
   const autres = cartes.filter((c) => !c.reporte).sort((a, b) => b.score - a.score);
   const priorites = autres.slice(0, 3);
 
@@ -234,4 +236,4 @@ export async function lireAccueil() {
     urgentes,
     clickupBranche: anro && pool !== null,
   };
-}
+});

@@ -2,24 +2,22 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
 import { getUser } from "@/lib/supabase/server";
-import { AGENTS, trouverAgent } from "@/lib/agents";
+import { trouverAgent } from "@/lib/agents";
 import { aujourdhui, jourEnLettres } from "@/lib/date";
-import {
-  lireAlertes,
-  lireApprobationsEnAttente,
-  lireArrivesDeClaude,
-  lirePriorites,
-  lireTachesAFaire,
-  lireVentesAnnee,
-} from "@/lib/donnees";
+import { lireAccueil } from "@/lib/accueil";
+import { lireAlertes, lireApprobations, lireArrivesDeClaude, lireVentesAnnee } from "@/lib/donnees";
 import { DATES_IMPORTANTES, joursAvant, OBJECTIF_VENTES, PROMOS } from "@/lib/promos";
-import { formaterDate, formaterRappel } from "@/lib/taches";
-import { Priorites } from "./priorites";
-import { Alertes } from "./alertes";
+import { formaterDate, type Tache } from "@/lib/taches";
+import { jourDe } from "@/lib/tri";
 import { Objectif } from "./objectif";
 import { AgendaDuJour } from "./agenda-du-jour";
+import { BoutonsTri } from "./boutons-tri";
+import { CartePriorite, TONS, fondTeinte } from "./_accueil/cartes";
+import { AlertesAccueil } from "./_accueil/alertes-accueil";
+import { AttendOk } from "./_accueil/attend-ok";
+import type { Approbation } from "./approbations/bloc-approbation";
 
-// Accueil : le brief du jour. Chaque section se charge à son rythme.
+// Accueil : le bras droit de Julien. Rien ne se perd, tout se trie (Accepter, Reporter, Supprimer).
 export default function Accueil() {
   return (
     <>
@@ -27,9 +25,37 @@ export default function Accueil() {
         <Salutation />
       </Suspense>
 
-      <Section titre="Ton agenda aujourd'hui">
+      <Section titre="Ton agenda aujourd'hui" icone="📅">
         <Suspense fallback={<Chargement />}>
           <AgendaDuJour />
+        </Suspense>
+      </Section>
+
+      <Suspense fallback={null}>
+        <SectionReportes />
+      </Suspense>
+
+      <Section titre="Mes 3 priorités du jour" icone="🎯" couleur={TONS.argent.couleur}>
+        <Suspense fallback={<Chargement />}>
+          <SectionPriorites />
+        </Suspense>
+      </Section>
+
+      <Section titre="Tâches urgentes" icone="🔥" couleur={TONS.urgent.couleur}>
+        <Suspense fallback={<Chargement />}>
+          <SectionUrgentes />
+        </Suspense>
+      </Section>
+
+      <Section titre="Ce qui attend ton OK" icone="📥" couleur={TONS.argent.couleur} ancre="ok">
+        <Suspense fallback={<Chargement />}>
+          <SectionOk />
+        </Suspense>
+      </Section>
+
+      <Section titre="Alertes" icone="🚨" couleur={TONS.urgent.couleur} ancre="alertes">
+        <Suspense fallback={<Chargement />}>
+          <SectionAlertes />
         </Suspense>
       </Section>
 
@@ -37,49 +63,51 @@ export default function Accueil() {
         <SectionClaude />
       </Suspense>
 
-      <Section titre="Mes 3 priorités du jour">
-        <Suspense fallback={<Chargement />}>
-          <SectionPriorites />
-        </Suspense>
-      </Section>
-
-      <Section titre="Aujourd'hui">
-        <Suspense fallback={<Chargement />}>
-          <SectionAujourdhui />
-        </Suspense>
-      </Section>
-
-      <Section titre="Ce qui attend ton OK">
-        <Suspense fallback={<Chargement />}>
-          <SectionApprobations />
-        </Suspense>
-      </Section>
-
-      <Section titre="Alertes">
-        <Suspense fallback={<Chargement />}>
-          <SectionAlertes />
-        </Suspense>
-      </Section>
-
-      <Section titre="Compte à rebours">
+      <Section titre="Compte à rebours" icone="⏳">
         <Suspense fallback={<Chargement />}>
           <SectionDates />
         </Suspense>
       </Section>
 
-      <Section titre="Objectif 3 M$">
+      <Section titre="Objectif 3 M$" icone="📈">
         <Suspense fallback={<Chargement />}>
           <SectionObjectif />
         </Suspense>
       </Section>
+
+      <p className="mt-10 text-center">
+        <Link href="/historique" className="text-base font-bold text-orange">
+          🗂️ Historique : ce que tu as accepté, reporté ou supprimé →
+        </Link>
+      </p>
     </>
   );
 }
 
-function Section({ titre, children }: { titre: string; children: React.ReactNode }) {
+function Section({
+  titre,
+  icone,
+  couleur,
+  ancre,
+  children,
+}: {
+  titre: string;
+  icone: string;
+  couleur?: string;
+  ancre?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <section className="mt-10">
-      <h2 className="mb-4 text-xl font-black">{titre}</h2>
+    <section id={ancre} className="mt-9 scroll-mt-20">
+      <h2 className="mb-3 flex items-center gap-2 text-xl font-black">
+        <span
+          className="flex size-8 items-center justify-center rounded-lg text-lg"
+          style={{ background: couleur ? `color-mix(in srgb, ${couleur} 22%, transparent)` : "var(--carte)" }}
+        >
+          {icone}
+        </span>
+        {titre}
+      </h2>
       {children}
     </section>
   );
@@ -100,6 +128,113 @@ async function Salutation() {
   );
 }
 
+// Ce qui revient aujourd'hui après un report : tout en haut, marqué « Reporté ».
+async function SectionReportes() {
+  const { reportes } = await lireAccueil();
+  if (!reportes.length) return null;
+  return (
+    <Section titre="Revenu aujourd'hui" icone="⏰" couleur="#141414">
+      <ul className="flex flex-col gap-3">
+        {reportes.map((c) => (
+          <CartePriorite key={c.cle} c={c} />
+        ))}
+      </ul>
+    </Section>
+  );
+}
+
+// Les 3 vraies priorités, calculées à partir de tout ce qui est ouvert.
+async function SectionPriorites() {
+  const { priorites, suivantes } = await lireAccueil();
+  if (!priorites.length) {
+    return <p className="rounded-2xl bg-carte p-5 text-base text-discret">Rien d&apos;ouvert. Profites-en. 🎉</p>;
+  }
+  return (
+    <>
+      <ol className="flex flex-col gap-3">
+        {priorites.map((c, i) => (
+          <CartePriorite key={c.cle} c={c} rang={i + 1} />
+        ))}
+      </ol>
+      {suivantes > 0 && (
+        <p className="mt-2 text-sm text-discret">
+          Quand tu en tries une, la suivante prend sa place.
+        </p>
+      )}
+    </>
+  );
+}
+
+// Seulement les vraies urgences (marquées urgentes ou échéance arrivée), triées par date.
+async function SectionUrgentes() {
+  const { urgentes, jour } = await lireAccueil();
+  if (!urgentes.length) {
+    return <p className="rounded-2xl bg-carte p-5 text-base text-discret">Aucune tâche urgente. 👍</p>;
+  }
+  return (
+    <>
+      <p className="mb-3 text-base font-semibold">
+        <span className="text-2xl font-black" style={{ color: TONS.urgent.couleur }}>
+          {urgentes.length}
+        </span>{" "}
+        tâche{urgentes.length > 1 ? "s" : ""} urgente{urgentes.length > 1 ? "s" : ""}
+      </p>
+      <ul className="flex flex-col gap-3">
+        {urgentes.map((t) => (
+          <LigneUrgente key={t.id} t={t} jour={jour} />
+        ))}
+      </ul>
+      <Link href="/a-faire" className="mt-3 block text-base font-bold text-orange">
+        Toutes mes tâches →
+      </Link>
+    </>
+  );
+}
+
+function quandTache(t: Tache, jour: string) {
+  if (t.echeance) {
+    const n = joursAvant(jour, t.echeance);
+    if (n < 0) return `En retard de ${-n} j`;
+    if (n === 0) return "Aujourd'hui";
+    return `Pour le ${formaterDate(t.echeance)}`;
+  }
+  // Le rappel n'est mentionné que s'il tombe aujourd'hui.
+  if (t.rappel_le && jourDe(new Date(t.rappel_le)) === jour) {
+    const heure = new Intl.DateTimeFormat("fr-CA", { timeZone: "America/Montreal", hour: "numeric", minute: "2-digit" }).format(
+      new Date(t.rappel_le),
+    );
+    return `Rappel à ${heure}`;
+  }
+  return "Sans date";
+}
+
+function LigneUrgente({ t, jour }: { t: Tache; jour: string }) {
+  const agent = trouverAgent(t.agent);
+  return (
+    <li className="rounded-2xl border-l-[6px] p-4" style={fondTeinte(TONS.urgent.couleur, 10)}>
+      <p className="flex items-center gap-2 text-xs font-black tracking-wide uppercase">
+        <span style={{ color: TONS.urgent.couleur }}>{quandTache(t, jour)}</span>
+        <span className="ml-auto truncate font-semibold tracking-normal text-discret normal-case">
+          {agent?.icone} {agent?.court}
+        </span>
+      </p>
+      <p className="mt-1 text-lg leading-snug font-black">{t.titre}</p>
+      <BoutonsTri cible="tache" id={t.id} titre={t.titre} />
+    </li>
+  );
+}
+
+async function SectionOk() {
+  const { enAttente } = await lireApprobations();
+  // Les demandes revenues d'un report sont en haut de la page (« Revenu aujourd'hui ») jusqu'à ce que tu les acceptes.
+  const liste = enAttente as (Approbation & { reporte_au: string | null })[];
+  return <AttendOk enAttente={liste.filter((a) => !a.reporte_au)} />;
+}
+
+async function SectionAlertes() {
+  return <AlertesAccueil alertes={(await lireAlertes()).filter((a) => !a.reporte_au)} />;
+}
+
 const TYPES_CLAUDE = {
   tache: { icone: "✅", nom: "Tâche", lien: "/a-faire" },
   rappel: { icone: "⏰", nom: "Rappel", lien: "/a-faire" },
@@ -113,7 +248,7 @@ async function SectionClaude() {
   const cartes = await lireArrivesDeClaude();
   if (!cartes.length) return null;
   return (
-    <Section titre="Arrivé de Claude">
+    <Section titre="Arrivé de Claude" icone="✨">
       <ul className="flex flex-col gap-2">
         {cartes.map((c) => {
           const t = TYPES_CLAUDE[c.type];
@@ -146,97 +281,6 @@ function formaterQuand(iso: string) {
   });
 }
 
-async function SectionPriorites() {
-  return <Priorites priorites={await lirePriorites()} />;
-}
-
-// Rappels du jour et prochaines échéances (14 jours).
-async function SectionAujourdhui() {
-  const taches = await lireTachesAFaire();
-  const jour = aujourdhui();
-  const finJour = new Date(`${jour}T23:59:59-05:00`).getTime();
-  const rappels = taches
-    .filter((t) => t.rappel_le && new Date(t.rappel_le).getTime() <= finJour)
-    .sort((a, b) => a.rappel_le!.localeCompare(b.rappel_le!));
-  const echeances = taches
-    .filter((t) => t.echeance && joursAvant(jour, t.echeance) >= 0 && joursAvant(jour, t.echeance) <= 14)
-    .sort((a, b) => a.echeance!.localeCompare(b.echeance!));
-  const urgentes = taches.filter((t) => t.categorie === "urgent").length;
-
-  return (
-    <div className="flex flex-col gap-3">
-      <Link href="/a-faire" className="flex items-center justify-between rounded-2xl bg-carte p-5 active:scale-[0.99]">
-        <span>
-          <span className="block text-4xl font-black text-orange">{taches.length}</span>
-          <span className="text-base font-semibold">
-            tâches à faire{urgentes ? ` · ${urgentes} urgentes` : ""}
-          </span>
-        </span>
-        <span className="text-base font-bold text-orange">Voir →</span>
-      </Link>
-
-      <div className="rounded-2xl bg-carte p-5">
-        <p className="text-base font-bold">⏰ Rappels d&apos;aujourd&apos;hui</p>
-        {rappels.length ? (
-          <ul className="mt-2 flex flex-col gap-2">
-            {rappels.slice(0, 8).map((t) => (
-              <li key={t.id} className="text-base">
-                <span className="font-semibold">{formaterRappel(t.rappel_le!).split(",").pop()}</span> · {t.titre}{" "}
-                <span className="text-discret">({trouverAgent(t.agent)?.court})</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-base text-discret">Aucun rappel aujourd&apos;hui.</p>
-        )}
-      </div>
-
-      <div className="rounded-2xl bg-carte p-5">
-        <p className="text-base font-bold">📌 Prochaines échéances</p>
-        {echeances.length ? (
-          <ul className="mt-2 flex flex-col gap-2">
-            {echeances.map((t) => (
-              <li key={t.id} className="text-base">
-                <span className="font-semibold">{formaterDate(t.echeance!)}</span> · {t.titre}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-base text-discret">Rien dans les 14 prochains jours.</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-async function SectionApprobations() {
-  const { total, parAgent } = await lireApprobationsEnAttente();
-
-  if (total === 0) {
-    return <p className="rounded-2xl bg-carte p-5 text-base text-discret">Rien n&apos;attend ton OK. 🎉</p>;
-  }
-
-  return (
-    <Link href="/approbations" className="block rounded-2xl bg-carte p-5 active:scale-[0.99]">
-      <p className="text-4xl font-black text-orange">{total}</p>
-      <p className="text-base font-semibold">approbation{total > 1 ? "s" : ""} en attente</p>
-      <ul className="mt-4 flex flex-wrap gap-2">
-        {AGENTS.filter((a) => parAgent[a.id]).map((a) => (
-          <li key={a.id} className="rounded-full border-2 border-bordure px-3 py-1 text-sm font-semibold">
-            {a.icone} {a.court} · {parAgent[a.id]}
-          </li>
-        ))}
-      </ul>
-      <p className="mt-4 text-base font-bold text-orange">Voir et décider →</p>
-    </Link>
-  );
-}
-
-async function SectionAlertes() {
-  const [alertes, { anciennes }] = await Promise.all([lireAlertes(), lireApprobationsEnAttente()]);
-  return <Alertes alertes={alertes} anciennes={anciennes} />;
-}
-
 // Compte à rebours des dates importantes + promo en cours.
 async function SectionDates() {
   await connection(); // la date du jour se lit au moment de la requête
@@ -247,19 +291,23 @@ async function SectionDates() {
   return (
     <div className="flex flex-col gap-3">
       {promo && (
-        <div className="rounded-2xl border-2 border-orange p-4">
-          <p className="text-sm font-semibold text-orange">Promo en cours</p>
-          <p className="text-lg font-bold">
+        <div className="rounded-2xl border-l-[6px] p-4" style={fondTeinte(TONS.argent.couleur)}>
+          <p className="text-xs font-black tracking-wide uppercase" style={{ color: TONS.argent.couleur }}>
+            Promo en cours
+          </p>
+          <p className="mt-1 text-lg font-black">
             {promo.nom} · jusqu&apos;au {formaterDate(promo.fin)} ({joursAvant(jour, promo.fin)} j)
           </p>
         </div>
       )}
-      <ul className="grid grid-cols-2 gap-2">
+      <ul className="grid grid-cols-2 gap-3">
         {prochaines.map((d) => {
           const n = joursAvant(jour, d.date);
           return (
             <li key={d.date + d.nom} className="rounded-2xl bg-carte p-4">
-              <p className="text-3xl font-black text-orange">{n === 0 ? "Auj." : `${n} j`}</p>
+              <p className="text-3xl font-black" style={{ color: TONS.argent.couleur }}>
+                {n === 0 ? "Auj." : `${n} j`}
+              </p>
               <p className="mt-1 text-sm font-semibold">{d.nom}</p>
               <p className="text-sm text-discret">{formaterDate(d.date)}</p>
             </li>

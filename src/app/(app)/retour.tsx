@@ -23,7 +23,7 @@ export function ZoneRetour() {
 
   useEffect(() => {
     if (!retour) return;
-    const minuterie = setTimeout(() => setRetour(null), retour.ok ? 7000 : 10000);
+    const minuterie = setTimeout(() => setRetour(null), retour.ok ? 12000 : 15000);
     return () => clearTimeout(minuterie);
   }, [retour]);
 

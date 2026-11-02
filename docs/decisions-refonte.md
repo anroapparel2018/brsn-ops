@@ -17,3 +17,18 @@
 8. **Cartes = journal du pont.** Chaque création réussie est une ligne du journal (compagnie, agent, type, titre, date),
    affichée sur l'Accueil sous « Arrivé de Claude ». L'élément lui-même est dans sa table habituelle (source « claude »).
 9. **Flèche retour** ajoutée en haut de chaque écran (sauf l'Accueil), à la demande de Julien.
+
+## Page d'accueil (branche `accueil`, base de test seulement)
+
+10. **POOL ClickUp = la liste « 📥 À TRIER (boîte de réception) »** (901421797778). Elle n'a pas de statut « À TRIER » :
+    une alerte acceptée y devient une tâche au statut de départ « to do », sans date limite.
+11. **Supprimer ne supprime rien.** Dans l'app, l'élément est archivé (récupérable dans l'Historique). Dans ClickUp, la
+    tâche reçoit l'étiquette « archivé brsn ops » et sort des priorités ; elle n'est ni fermée ni effacée.
+12. **Accepter une tâche ClickUp** la passe à « in progress » ; **Reporter** met sa date limite au jour choisi, 9 h.
+13. **Priorités calculées** : urgence (en retard, aujourd'hui, marquée urgente) puis impact (argent, clients, employés,
+    reconnus par des mots clés du titre). Les éléments reportés à aujourd'hui sont à part, tout en haut.
+14. **Tâches urgentes** : seulement celles marquées urgentes ou dont l'échéance est arrivée (l'ancien « 31 » comptait
+    toutes les tâches). Le mot « Rappel » n'apparaît que si le rappel tombe aujourd'hui.
+15. **Bouton « + Note » retiré** de l'app (les demandes passent par Claude).
+16. **Approbation reportée** : elle quitte « Ce qui attend ton OK » et revient en haut le jour choisi ; Accepter la remet
+    dans la liste pour décider.

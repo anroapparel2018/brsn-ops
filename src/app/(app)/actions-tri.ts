@@ -70,7 +70,7 @@ export async function trier(
       .select(cible === "tache" ? "titre, clickup_id" : "titre")
       .maybeSingle();
     if (error || !data) return { ok: false, message: "Ton choix n'a pas pu être enregistré. Réessaie." };
-    const ligne = data as { titre: string; clickup_id?: string | null };
+    const ligne = data as unknown as { titre: string; clickup_id?: string | null };
     titre = ligne.titre;
     clickupId = ligne.clickup_id ?? null;
   }
