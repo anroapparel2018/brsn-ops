@@ -62,7 +62,7 @@ async function Contenu() {
           {cout.appels} appels · {cout.jetons.toLocaleString("fr-CA")} jetons (estimation en $ US).
         </p>
         <p className="mt-2 text-sm text-discret">
-          Modèles : {MODELES.complet} (conversations), {MODELES.rapide} (petites tâches). Mise en cache des
+          Modèles : {MODELES.complet} (traitements automatiques), {MODELES.rapide} (classement des notes). Mise en cache des
           instructions activée. Limite de dépenses : 50 $ US par mois dans la console Anthropic.
         </p>
       </section>

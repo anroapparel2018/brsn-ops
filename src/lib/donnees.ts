@@ -206,16 +206,3 @@ export async function lireAlertes(): Promise<Alerte[]> {
   return (data ?? []) as Alerte[];
 }
 
-export type MessageAgent = { id: string; role: "user" | "assistant"; contenu: string };
-
-// Les derniers messages échangés avec un agent, du plus ancien au plus récent.
-export async function lireMessages(agent: AgentId, nombre = 20): Promise<MessageAgent[]> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("messages_agents")
-    .select("id, role, contenu")
-    .eq("agent", agent)
-    .order("cree_le", { ascending: false })
-    .limit(nombre);
-  return ((data ?? []) as MessageAgent[]).reverse();
-}

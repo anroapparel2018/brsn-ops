@@ -15,16 +15,13 @@ import { DATES_IMPORTANTES, joursAvant, OBJECTIF_VENTES, PROMOS } from "@/lib/pr
 import { formaterDate, formaterRappel } from "@/lib/taches";
 import { Priorites } from "./priorites";
 import { Alertes } from "./alertes";
-import { Conversation } from "./conversation";
 import { Objectif } from "./objectif";
-import { Bilan } from "./bilan";
 import { AgendaDuJour } from "./agenda-du-jour";
 
-// Accueil : le brief du jour du Cerveau. Chaque section se charge à son rythme.
+// Accueil : le brief du jour. Chaque section se charge à son rythme.
 export default function Accueil() {
   return (
     <>
-      <p className="text-sm font-bold uppercase tracking-[0.2em] text-orange">🧠 Le Cerveau</p>
       <Suspense fallback={<h1 className="mt-2 text-3xl font-black">Salut&nbsp;!</h1>}>
         <Salutation />
       </Suspense>
@@ -33,10 +30,6 @@ export default function Accueil() {
         <Suspense fallback={<Chargement />}>
           <AgendaDuJour />
         </Suspense>
-      </Section>
-
-      <Section titre="Parler au Cerveau">
-        <Conversation agent="cerveau" />
       </Section>
 
       <Section titre="Mes 3 priorités du jour">
@@ -73,10 +66,6 @@ export default function Accueil() {
         <Suspense fallback={<Chargement />}>
           <SectionObjectif />
         </Suspense>
-      </Section>
-
-      <Section titre="Fin de journée">
-        <Bilan />
       </Section>
     </>
   );

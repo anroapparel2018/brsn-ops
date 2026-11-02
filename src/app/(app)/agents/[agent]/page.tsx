@@ -8,7 +8,6 @@ import { PROMOS } from "@/lib/promos";
 import { formaterDate } from "@/lib/taches";
 import { lireApprobations, lireFiches, lireTachesAFaire } from "@/lib/donnees";
 import { heureActuelle } from "@/lib/date";
-import { Conversation } from "../../conversation";
 import { CarteTache } from "../../a-faire/carte-tache";
 import { VueApprobations } from "../../approbations/vue-approbations";
 import type { Approbation } from "../../approbations/bloc-approbation";
@@ -68,11 +67,6 @@ export default async function EcranAgent({ params }: PageProps<"/agents/[agent]"
 
       <Extras agent={agent.id} />
 
-      <section className="mt-10">
-        <h2 className="mb-4 text-xl font-black">Parler à {agent.nom}</h2>
-        <Conversation agent={agent.id} />
-      </section>
-
       <Suspense fallback={null}>
         <TachesAgent agent={agent.id} />
       </Suspense>
@@ -124,7 +118,7 @@ async function TachesAgent({ agent }: { agent: AgentId }) {
         </ul>
       ) : (
         <p className="rounded-2xl bg-carte p-5 text-base text-discret">
-          Aucun dossier. Utilise « + Note » ou demande-lui de créer une tâche.
+          Aucun dossier. Utilise « + Note » ou demande-le à Claude.
         </p>
       )}
     </section>
