@@ -70,8 +70,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Toutes les pages, sauf les fichiers statiques et les images.
+  // Toutes les pages, sauf les fichiers statiques, les images et le pont Claude (protégé par son jeton).
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icones/|apple-icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!api/mcp|_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icones/|apple-icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

@@ -206,3 +206,27 @@ export async function lireAlertes(): Promise<Alerte[]> {
   return (data ?? []) as Alerte[];
 }
 
+
+export type CarteClaude = {
+  id: number;
+  type: "tache" | "rappel" | "approbation" | "note" | "decision";
+  agent: string | null;
+  titre: string | null;
+  ref_id: string;
+  cree_le: string;
+};
+
+// Ce que Claude a créé dans la compagnie active (7 derniers jours), du plus récent au plus ancien.
+export async function lireArrivesDeClaude(): Promise<CarteClaude[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("journal_pont")
+    .select("id, type, agent, titre, ref_id, cree_le")
+    .eq("compagnie_id", supabase.compagnie.id)
+    .eq("ok", true)
+    .not("ref_id", "is", null)
+    .gte("cree_le", new Date(Date.now() - 7 * 86_400_000).toISOString())
+    .order("cree_le", { ascending: false })
+    .limit(8);
+  return (data ?? []) as CarteClaude[];
+}

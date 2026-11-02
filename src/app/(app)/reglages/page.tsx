@@ -1,12 +1,13 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getUser } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 import { cleDisponible, MODELES } from "@/lib/ia";
 import { lireAgenda, lireCoutDuMois } from "@/lib/donnees";
 import { ReglageGoogle } from "./google";
 import { BoutonDeconnexion } from "../deconnexion";
 import { Notifications } from "./notifications";
 import { ChoixTheme } from "./theme";
+import { PontClaude, type LienClaude } from "./pont-claude";
 
 const BRANCHEMENTS = [
   { nom: "Supabase (base de données, connexion)", etat: "connecte" },
@@ -37,7 +38,16 @@ export default function Reglages() {
 async function Contenu() {
   const user = await getUser();
   const maintenant = new Date().toISOString();
-  const [cout, agenda] = await Promise.all([lireCoutDuMois(), lireAgenda(maintenant, maintenant)]);
+  const supabase = await createClient();
+  const [cout, agenda, { data: liens }] = await Promise.all([
+    lireCoutDuMois(),
+    lireAgenda(maintenant, maintenant),
+    supabase
+      .from("jetons_claude")
+      .select("id, nom, apercu, cree_le, dernier_usage_le")
+      .is("revoque_le", null)
+      .order("cree_le", { ascending: false }),
+  ]);
   const cle = cleDisponible();
   const argent = (n: number) =>
     new Intl.NumberFormat("fr-CA", { style: "currency", currency: "USD", minimumFractionDigits: 2 }).format(n);
@@ -53,6 +63,11 @@ async function Contenu() {
       <section className="mt-6 rounded-2xl bg-carte p-5">
         <h2 className="text-xl font-black">Affichage</h2>
         <ChoixTheme />
+      </section>
+
+      <section id="claude" className="mt-6 rounded-2xl bg-carte p-5">
+        <h2 className="text-xl font-black">Pont avec Claude</h2>
+        <PontClaude liens={(liens ?? []) as LienClaude[]} />
       </section>
 
       <section className="mt-6 rounded-2xl bg-carte p-5">

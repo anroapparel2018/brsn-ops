@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { changerCompagnie } from "./actions-compagnie";
 
@@ -32,10 +33,27 @@ export function EnTete({
 }) {
   const [ouvert, setOuvert] = useState(false);
   const [enCours, demarrer] = useTransition();
+  const chemin = usePathname();
+  const router = useRouter();
+
+  // Retour : page précédente, ou l'écran parent si on est arrivé directement (lien, app rouverte).
+  function retour() {
+    if (window.history.length > 1) router.back();
+    else router.push(chemin.replace(/\/outils\/[^/]+$/, "").split("/").slice(0, chemin.includes("/outils/") ? undefined : -1).join("/") || "/");
+  }
 
   return (
     <>
       <header className="mb-6 flex items-center gap-2">
+        {chemin !== "/" && (
+          <button
+            onClick={retour}
+            aria-label="Retour"
+            className="-ml-2 flex size-11 shrink-0 items-center justify-center rounded-xl text-3xl leading-none active:scale-95"
+          >
+            ‹
+          </button>
+        )}
         <button
           onClick={() => setOuvert(true)}
           disabled={compagnies.length < 2 && !superAdmin}

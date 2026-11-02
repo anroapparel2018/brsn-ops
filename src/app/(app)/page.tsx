@@ -7,6 +7,7 @@ import { aujourdhui, jourEnLettres } from "@/lib/date";
 import {
   lireAlertes,
   lireApprobationsEnAttente,
+  lireArrivesDeClaude,
   lirePriorites,
   lireTachesAFaire,
   lireVentesAnnee,
@@ -31,6 +32,10 @@ export default function Accueil() {
           <AgendaDuJour />
         </Suspense>
       </Section>
+
+      <Suspense fallback={null}>
+        <SectionClaude />
+      </Suspense>
 
       <Section titre="Mes 3 priorités du jour">
         <Suspense fallback={<Chargement />}>
@@ -93,6 +98,52 @@ async function Salutation() {
       <p className="mt-1 text-base text-discret first-letter:uppercase">{jourEnLettres()}</p>
     </>
   );
+}
+
+const TYPES_CLAUDE = {
+  tache: { icone: "✅", nom: "Tâche", lien: "/a-faire" },
+  rappel: { icone: "⏰", nom: "Rappel", lien: "/a-faire" },
+  approbation: { icone: "📥", nom: "Approbation", lien: "/approbations" },
+  note: { icone: "📝", nom: "Note", lien: "/recherche" },
+  decision: { icone: "⚖️", nom: "Décision", lien: "/recherche" },
+} as const;
+
+// Ce que Claude a créé ici dans les 7 derniers jours (rien si le pont n'a pas servi).
+async function SectionClaude() {
+  const cartes = await lireArrivesDeClaude();
+  if (!cartes.length) return null;
+  return (
+    <Section titre="Arrivé de Claude">
+      <ul className="flex flex-col gap-2">
+        {cartes.map((c) => {
+          const t = TYPES_CLAUDE[c.type];
+          return (
+            <li key={c.id}>
+              <Link href={t.lien} className="flex items-start gap-3 rounded-2xl bg-carte p-4 active:scale-[0.99]">
+                <span className="text-2xl leading-none">{t.icone}</span>
+                <span className="min-w-0">
+                  <span className="block truncate text-base font-bold">{c.titre}</span>
+                  <span className="block text-sm text-discret">
+                    {t.nom}
+                    {c.agent ? ` · ${trouverAgent(c.agent)?.court ?? c.agent}` : ""} · {formaterQuand(c.cree_le)}
+                  </span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </Section>
+  );
+}
+
+function formaterQuand(iso: string) {
+  return new Date(iso).toLocaleString("fr-CA", {
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "America/Toronto",
+  });
 }
 
 async function SectionPriorites() {
